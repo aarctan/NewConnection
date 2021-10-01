@@ -2,21 +2,21 @@
 Group project for cmput404 Fall 2021
 
 ## Getting started
-To get started with the server, create a virtual environment if it does not exit
-$ virtualenv venv --python=python3
 
-Start the environment with
-$ source venv/bin/activate
+To get started with the server, create a virtual environment if it does not exist<br>
+`$ virtualenv venv --python=python3`
 
-Install Django and the Django REST framework if the environment is new
-$ pip install django
-$ pip install djangorestframework
+Start the environment with<br>
+`$ source venv/bin/activate`
 
-Run the server with
-$ python server/manage.py runserver
+Install Django and the Django REST framework if the environment is new<br>
+`$ pip install django djangorestframework`
 
-Exit the environment with
-$ deactivate
+Run the server with<br>
+`$ python server/manage.py runserver`
+
+Exit the environment with<br>
+`$ deactivate`
 
 Instructions above taken from https://uofa-cmput404.github.io/lab-4-django.html
 

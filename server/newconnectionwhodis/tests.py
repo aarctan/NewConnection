@@ -10,6 +10,21 @@ def create_author(displayName, github):
 
 class AuthorModelTests(TestCase):
 
+    def test_type(self):
+        """
+        Check if type is equal to author.
+        """
+        author = Author(displayName="Dylan", github="dylandeco")
+        self.assertEqual(author.type, "author")
+
+    def test_displayName(self):
+        """
+        Check if name is equal to displayName.
+        """
+        author = Author(displayName="Dylan", github="dylandeco")
+        self.assertEqual(author.displayName, "Dylan")
+
+
     def test_github_url(self):
         """
         Check if get_github_link returns a valid github url.

@@ -12,8 +12,11 @@ Start the environment with<br>
 Install Django and the Django REST framework if the environment is new<br>
 `$ pip install django djangorestframework`
 
+Make migrations and migrate<br>
+`$ cd server;python manage.py makemigrations;python manage.py migrate`
+
 Run the server with<br>
-`$ python server/manage.py runserver`
+`$ python manage.py runserver`
 
 Exit the environment with<br>
 `$ deactivate`

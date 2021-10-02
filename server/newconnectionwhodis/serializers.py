@@ -22,8 +22,3 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     
     def get_github_url(self, obj):
         return f"https://github.com/{obj.github}"
-
-
-class AuthorsSerializer(serializers.Serializer):
-    type = serializers.CharField(max_length=6, default='authors')
-    items = AuthorSerializer()

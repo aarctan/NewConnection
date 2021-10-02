@@ -16,10 +16,10 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_host_url(self, obj):
         self.context['request']
-        return self.context['request'].build_absolute_uri(obj.host) + obj.host
+        return 'http://' + self.context['request'].get_host()
 
     def get_id_url(self, obj):
-        return self.context['request'].build_absolute_uri(obj.id)
+        return 'http://' + self.context['request'].get_host() + f"/{obj.type}/{obj.id}"
     
     def get_github_url(self, obj):
         return f"https://github.com/{obj.github}"

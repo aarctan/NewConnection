@@ -1,12 +1,11 @@
-from rest_framework import viewsets, generics
-from rest_framework.views import APIView
+from rest_framework import viewsets
 from rest_framework.response import Response
 
 from .serializers import AuthorSerializer
 from .models import Author
 
-class ListAuthors(APIView):
-    def get(self, request):
+class AuthorsViewSet(viewsets.ViewSet):
+    def list(self, request):
         response = {}
         response["type"] = "authors"
         response["items"] = AuthorSerializer(

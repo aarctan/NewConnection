@@ -7,9 +7,9 @@ from django.db import models
 class Author(models.Model):
     """
     An author is a basic user. For now, they have a name and a github.
-    """
+    """ 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.CharField(max_length=6, default='author', editable=False)
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4().hex, editable=False)
     host = models.URLField(max_length=32, editable=False)
     displayName = models.CharField(max_length=32)
     url = models.URLField(max_length=128, editable=False)

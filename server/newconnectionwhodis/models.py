@@ -6,12 +6,12 @@ class Author(models.Model):
     """
     An author is a basic user. For now, they have a name and a github.
     """
-    name = models.CharField(max_length=32)
-    github_username = models.CharField(max_length=40)
+    displayName = models.CharField(max_length=32)
+    github = models.CharField(max_length=40)
     def __str__(self):
-        return self.name
+        return self.displayName
     def get_github_link(self):
-        return f"https://github.com/{self.github_username}"
+        return f"https://github.com/{self.github}"
 
 
 # TODO: Visibility settings for posts?

@@ -5,5 +5,5 @@ from .models import Author
 
 
 class AuthorViewSet(viewsets.ModelViewSet):
-    queryset = Author.objects.all().order_by('name')
+    queryset = Author.objects.all().order_by('displayName')
     serializer_class = AuthorSerializer

@@ -1,15 +1,17 @@
 from django.urls import include, path
-from rest_framework import routers
+from rest_framework_nested import routers
 from . import views
 
-router = routers.DefaultRouter()
+router = routers.SimpleRouter()
 router.register(r'authors', views.AuthorsViewSet, basename='authors')
 router.register(r'author', views.AuthorViewSet)
 
+# https://github.com/alanjds/drf-nested-routers
+posts_router = routers.NestedSimpleRouter(router, r'author', lookup='author')
+posts_router.register(r'posts', views.PostViewSet, basename='author-posts')
 
-# Wire up our API using automatic URL routing.
-# Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('', include(router.urls)),
+    path('', include(posts_router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

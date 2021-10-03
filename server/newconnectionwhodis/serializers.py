@@ -1,6 +1,6 @@
 from rest_framework import serializers, relations
 
-from .models import Author
+from . import models
 
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     # https://stackoverflow.com/a/23918960
@@ -10,7 +10,7 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     github = serializers.SerializerMethodField('get_github_url')
 
     class Meta:
-        model = Author
+        model = models.Author
         fields = ('type', 'id', 'host', 'displayName', 'url', 'github')
 
     def get_host_url(self, obj):
@@ -22,3 +22,14 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     
     def get_github_url(self, obj):
         return f"https://github.com/{obj.github}"
+
+class PostSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.SerializerMethodField('get_id_url')
+
+    class Meta:
+        model = models.Post
+        fields = ('type', 'id', 'contentType', 'content', 'author')
+    
+    def get_id_url(self, obj):
+        return 'http://' + self.context['request'].get_host()\
+            + f'/author/{obj.author.id}/posts/{obj.id}'

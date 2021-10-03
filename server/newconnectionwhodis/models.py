@@ -11,8 +11,8 @@ class Author(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.CharField(max_length=6, default='author', editable=False)
     host = models.URLField(max_length=32, editable=False)
-    displayName = models.CharField(max_length=32)
     url = models.URLField(max_length=128, editable=False)
+    displayName = models.CharField(max_length=32)
     github = models.CharField(max_length=40)
     def __str__(self):
         return self.displayName
@@ -26,8 +26,11 @@ class Post(models.Model):
     A post has a many-to-one relationship with an author.
     For now, there is no content associated with a post.
     """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    type = models.CharField(max_length=4, default='post', editable=False)
+    contentType = models.TextField(default="text/plain", editable=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-
+    content = models.TextField(default="lorem ipsum dolor sit amet")
 
 class Like(models.Model):
     """

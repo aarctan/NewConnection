@@ -98,3 +98,26 @@ class AuthorsViewTests(TestCase):
         self.assertEquals(len(d['items']), SIZE)
         for i in range(SIZE):
             self.assertEquals(d['items'][i]["displayName"], f"Author_{(PAGE - 1) * SIZE + i}")
+
+class PostViewTests(TestCase):
+
+    def test_no_posts(self):
+        """
+        Tests that a db with a single author and nothing else has no posts.
+        """
+        author = create_author("Muhammad", "Exanut")
+        id = author.id
+        response = self.client.get('/author/{id}/posts/')
+        self.assertEqual(response.status_code, 200)
+        json_str = response.content.decode('utf-8').replace("'", "\"")
+        self.assertListEqual(json.loads(json_str), [])
+
+    def test_post_id_get(self):
+        """
+        Tests /author/<author_id>/posts/<post_id> returns the expected post
+        """
+    
+    def test_post_belongs_to_author(self):
+        """
+        Tests whether /author/<author_id>/posts/ returns ONLY that author's posts
+        """

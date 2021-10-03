@@ -10,8 +10,12 @@ router.register(r'author', views.AuthorViewSet, basename="author")
 posts_router = routers.NestedSimpleRouter(router, r'author', lookup='author')
 posts_router.register(r'posts', views.PostViewSet, basename='author-posts')
 
+comments_router = routers.NestedSimpleRouter(posts_router, r'posts', lookup='posts')
+comments_router.register(r'comments', views.CommentViewSet, basename='author-posts-comments')
+
 urlpatterns = [
     path('', include(router.urls)),
     path('', include(posts_router.urls)),
+    path('', include(comments_router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

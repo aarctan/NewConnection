@@ -34,3 +34,11 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PostSerializer
     def get_queryset(self):
         return models.Post.objects.filter(author=self.kwargs['author_pk'])
+
+class CommentViewSet(viewsets.ModelViewSet):
+    # TODO: Pagination
+    serializer_class = serializers.CommentSerializer
+    def get_queryset(self):
+        return models.Comment.objects.filter(
+            author=self.kwargs['author_pk'],
+            post=self.kwargs['posts_pk'])

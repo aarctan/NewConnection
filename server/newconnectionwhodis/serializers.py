@@ -1,4 +1,4 @@
-from rest_framework import serializers, relations
+from rest_framework import serializers
 
 from . import models
 
@@ -25,6 +25,7 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.SerializerMethodField('get_id_url')
+    # https://www.py4u.net/discuss/188993
     author = AuthorSerializer(many=False)
 
     class Meta:
@@ -34,3 +35,15 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
     def get_id_url(self, obj):
         host = self.context['request'].get_host()
         return f'http://{host}/author/{obj.author.id}/posts/{obj.id}'
+
+class CommentSerializer(serializers.HyperlinkedModelSerializer):
+    # TODO: Pagination
+    id = serializers.SerializerMethodField('get_id_url')
+    author = AuthorSerializer(many=False)
+    class Meta:
+        model = models.Comment
+        fields = ('type', 'author', 'comment', 'contentType', 'published', 'id')
+
+    def get_id_url(self, obj):
+        host = self.context['request'].get_host()
+        return f'http://{host}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.id}'

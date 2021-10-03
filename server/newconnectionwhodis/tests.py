@@ -2,7 +2,7 @@ import json
 
 from django.test import TestCase
 
-from .models import Author, Post
+from .models import Author, Post, Comment
 
 GITHUB_PREFIX = "https://github.com/"
 
@@ -17,6 +17,12 @@ def create_post(author, content):
     Create a new post given an author and content
     """
     return Post.objects.create(author=author, content=content)
+
+def create_comment(author, post, comment):
+    """
+    Create a new comment given an author, post, and content
+    """
+    return Comment.objects.create(author=author, post=post, comment=comment)
 
 def response_to_json(response):
     """
@@ -141,3 +147,43 @@ class PostViewTests(TestCase):
         """
         Tests whether /author/<author_id>/posts/ returns ONLY that author's posts
         """
+
+class CommentViewTests(TestCase):
+
+    def test_no_comments(self):
+        """
+        Tests that a db with a single author and post has no comments
+        """
+        AUTHOR_NAME, AUTHOR_GITHUB, POST_CONTENT = "Muhammad", "Exanut", 'Placeholder'
+        author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
+        author_id = author.id
+        post = create_post(author, POST_CONTENT)
+        post_id = post.id
+        response = self.client.get(f'/author/{author_id}/posts/{post_id}/comments/')
+        self.assertEqual(response.status_code, 200)
+        self.assertListEqual(response_to_json(response), [])
+    
+    def test_comment_id_get(self):
+        AUTHOR_NAME, AUTHOR_GITHUB, POST_CONTENT = "Muhammad", "Exanut", 'Placeholder'
+        COMMENT_CONTENT = "Comment_Placeholder"
+        author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
+        author_id = author.id
+        post = create_post(author, POST_CONTENT)
+        post_id = post.id
+        comment = create_comment(author, post, COMMENT_CONTENT)
+        comment_id = comment.id
+        response = self.client.get(f'/author/{author_id}/posts/{post_id}/comments/{comment_id}/')
+        self.assertEqual(response.status_code, 200)
+        d = response_to_json(response)
+        self.assertEqual(d['type'], 'comment')
+        self.assertEqual(len(d['author']), 6) # author has 6 fields
+        self.assertEqual(d['comment'], COMMENT_CONTENT)
+        self.assertEqual(d['contentType'], 'text/markdown')
+
+        # TODO: Check that the published date is ISO 8601
+
+        host = d['author']['host']
+        self.assertTrue('http' in host)
+        self.assertEquals(d['id'], f'{host}/author/{author_id}/posts/{post_id}/comments/{comment_id}')
+    
+    # TODO: More comment tests including pagination tests

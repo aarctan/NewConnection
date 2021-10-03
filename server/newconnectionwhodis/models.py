@@ -2,6 +2,7 @@
 import uuid
 
 from django.db import models
+from django.utils import timezone
 
 
 class Author(models.Model):
@@ -32,6 +33,18 @@ class Post(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     content = models.TextField(default="lorem ipsum dolor sit amet")
 
+class Comment(models.Model):
+    """
+    # TODO: Document this model
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    type = models.CharField(max_length=7, default='comment', editable=False)
+    published = models.DateTimeField(default=timezone.now().isoformat(), editable=False)
+    contentType = models.TextField(default='text/markdown', editable=False)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    comment = models.CharField(max_length=280)
+
 class Like(models.Model):
     """
     A like has a many-to-one relationship with a post.
@@ -41,12 +54,3 @@ class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
 
-class Comment(models.Model):
-    """
-    A comment has a many-to-one relationship with a post.
-    It can be identified by a post and an author that commented.
-    A comment contains a char text field.
-    """
-    commentor = models.ForeignKey(Author, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    comment = models.CharField(max_length=280)

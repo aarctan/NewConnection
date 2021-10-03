@@ -1,9 +1,8 @@
-import json, ast
+import json
 
 from django.test import TestCase
-from django.urls import reverse
 
-from .models import Author
+from .models import Author, Post
 
 GITHUB_PREFIX = "https://github.com/"
 
@@ -12,6 +11,20 @@ def create_author(displayName, github):
     Create a new author given a name and github username.
     """
     return Author.objects.create(displayName=displayName, github=github)
+
+def create_post(author, content):
+    """
+    Create a new post given an author and content
+    """
+    return Post.objects.create(author=author, content=content)
+
+def response_to_json(response):
+    """
+    Decodes the binary reponse to json
+    """
+    # https://stackoverflow.com/a/19391807
+    json_str = response.content.decode('utf-8').replace("'", "\"")
+    return json.loads(json_str)
 
 class AuthorModelTests(TestCase):
 
@@ -36,8 +49,7 @@ class AuthorViewTests(TestCase):
         id = author.id
         response = self.client.get(f'/author/{id}/')
         self.assertEqual(response.status_code, 200)
-        json_str = response.content.decode('utf-8').replace("'", "\"")
-        d = json.loads(json_str)
+        d = response_to_json(response)
         self.assertEqual(d['type'], 'author')
         host = d['host']
         self.assertIsNotNone(host)
@@ -50,11 +62,9 @@ class AuthorsViewTests(TestCase):
         """
         If no authors exist, the response should have no authors.
         """
-        # https://stackoverflow.com/a/19391807
         response = self.client.get('/authors/')
         self.assertEqual(response.status_code, 200)
-        json_str = response.content.decode('utf-8').replace("'", "\"")
-        d = json.loads(json_str)
+        d = response_to_json(response)
         self.assertEqual(d['type'], 'authors')
         self.assertListEqual(d['items'], [])
 
@@ -65,8 +75,7 @@ class AuthorsViewTests(TestCase):
         AUTHOR_NAME, AUTHOR_GITHUB = "Muhammad", "Exanut"
         create_author(AUTHOR_NAME, AUTHOR_GITHUB)
         response = self.client.get('/authors/')
-        json_str = response.content.decode('utf-8').replace("'", "\"")
-        d = json.loads(json_str)
+        d = response_to_json(response)
         self.assertEquals(len(d['items']), 1)
         author_in_response = d['items'][0]
         self.assertEquals(author_in_response['displayName'], AUTHOR_NAME)
@@ -80,8 +89,7 @@ class AuthorsViewTests(TestCase):
         for i in range(NUM_AUTHORS):
             create_author(f"Author_{i}", f"Github_{i}")
         response = self.client.get('/authors/')
-        json_str = response.content.decode('utf-8').replace("'", "\"")
-        d = json.loads(json_str)
+        d = response_to_json(response)
         self.assertEquals(len(d['items']), NUM_AUTHORS)
 
     def test_page_and_size(self):
@@ -93,8 +101,7 @@ class AuthorsViewTests(TestCase):
         for i in range(NUM_AUTHORS):
             create_author(f"Author_{i}", f"Github_{i}")
         response = self.client.get(f"/authors/?page={PAGE}&size={SIZE}")
-        json_str = response.content.decode('utf-8').replace("'", "\"")
-        d = json.loads(json_str)
+        d = response_to_json(response)
         self.assertEquals(len(d['items']), SIZE)
         for i in range(SIZE):
             self.assertEquals(d['items'][i]["displayName"], f"Author_{(PAGE - 1) * SIZE + i}")
@@ -107,15 +114,28 @@ class PostViewTests(TestCase):
         """
         author = create_author("Muhammad", "Exanut")
         id = author.id
-        response = self.client.get('/author/{id}/posts/')
+        response = self.client.get(f'/author/{id}/posts/')
         self.assertEqual(response.status_code, 200)
-        json_str = response.content.decode('utf-8').replace("'", "\"")
-        self.assertListEqual(json.loads(json_str), [])
+        self.assertListEqual(response_to_json(response), [])
 
     def test_post_id_get(self):
         """
-        Tests /author/<author_id>/posts/<post_id> returns the expected post
+        Tests that /author/<author_id>/posts/<post_id> returns the expected post
         """
+        AUTHOR_NAME, AUTHOR_GITHUB, POST_CONTENT = "Muhammad", "Exanut", 'Placeholder'
+        author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
+        author_id = author.id
+        post = create_post(author, POST_CONTENT)
+        post_id = post.id
+        response = self.client.get(f'/author/{author_id}/posts/{post_id}/')
+        self.assertEqual(response.status_code, 200)
+        d = response_to_json(response)
+        self.assertEqual(d['type'], 'post')
+        self.assertEquals(len(d['author']), 6) # author has 6 fields
+        host = d['author']['host']
+        self.assertTrue('http' in host)
+        self.assertEquals(d['id'], f'{host}/author/{author_id}/posts/{post_id}')
+        # TODO: Test content with various content types
     
     def test_post_belongs_to_author(self):
         """

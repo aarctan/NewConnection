@@ -9,11 +9,14 @@ To get started with the server, create a virtual environment if it does not exis
 Start the environment with<br>
 `$ source venv/bin/activate`
 
-Install Django and the Django REST framework if the environment is new<br>
-`$ pip install django djangorestframework`
+Install the dependencies if the environment is new<br>
+`$ cd server;pip install -r requirements.txt`
 
 Run migrations<br>
-`$ cd server;python manage.py migrate`
+`$ python manage.py migrate`
+
+Run tests<br>
+`$ python manage.py test`
 
 Run the server with<br>
 `$ python manage.py runserver`

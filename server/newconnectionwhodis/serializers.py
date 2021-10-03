@@ -25,11 +25,12 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.SerializerMethodField('get_id_url')
+    author = AuthorSerializer(many=False)
 
     class Meta:
         model = models.Post
         fields = ('type', 'id', 'contentType', 'content', 'author')
     
     def get_id_url(self, obj):
-        return 'http://' + self.context['request'].get_host()\
-            + f'/author/{obj.author.id}/posts/{obj.id}'
+        host = self.context['request'].get_host()
+        return f'http://{host}/author/{obj.author.id}/posts/{obj.id}'

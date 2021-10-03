@@ -31,5 +31,6 @@ class AuthorViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.AuthorSerializer
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = models.Post.objects.all() # TODO: filter to get posts by author
     serializer_class = serializers.PostSerializer
+    def get_queryset(self):
+        return models.Post.objects.filter(author=self.kwargs['author_pk'])

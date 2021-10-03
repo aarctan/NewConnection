@@ -4,7 +4,7 @@ from . import views
 
 router = routers.SimpleRouter()
 router.register(r'authors', views.AuthorsViewSet, basename='authors')
-router.register(r'author', views.AuthorViewSet)
+router.register(r'author', views.AuthorViewSet, basename="author")
 
 # https://github.com/alanjds/drf-nested-routers
 posts_router = routers.NestedSimpleRouter(router, r'author', lookup='author')

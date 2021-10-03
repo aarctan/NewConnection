@@ -25,6 +25,25 @@ class AuthorModelTests(TestCase):
         self.assertEqual(author.displayName, AUTHOR_NAME)
         self.assertEqual(author.get_github_link(), f"{GITHUB_PREFIX}{AUTHOR_GITHUB}")
 
+class AuthorViewTests(TestCase):
+
+    def test_author_view(self):
+        """
+        Test the author response by ensuring code 200 and absolute urls
+        """
+        AUTHOR_NAME, AUTHOR_GITHUB = "Muhammad", "Exanut"
+        author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
+        id = author.id
+        response = self.client.get(f'/author/{id}/')
+        self.assertEqual(response.status_code, 200)
+        json_str = response.content.decode('utf-8').replace("'", "\"")
+        d = json.loads(json_str)
+        self.assertEqual(d['type'], 'author')
+        host = d['host']
+        self.assertIsNotNone(host)
+        self.assertEquals(d['url'], f'{host}/author/{id}')
+
+
 class AuthorsViewTests(TestCase):
 
     def test_no_authors(self):
@@ -66,6 +85,9 @@ class AuthorsViewTests(TestCase):
         self.assertEquals(len(d['items']), NUM_AUTHORS)
 
     def test_page_and_size(self):
+        """
+        Test that the optional page and size query parameters work
+        """
         NUM_AUTHORS = 17
         PAGE, SIZE = 4, 3
         for i in range(NUM_AUTHORS):

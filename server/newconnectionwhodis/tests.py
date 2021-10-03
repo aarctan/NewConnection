@@ -42,7 +42,7 @@ class AuthorModelTests(TestCase):
         author = Author(displayName=AUTHOR_NAME, github=AUTHOR_GITHUB)
         self.assertEqual(author.type, "author")
         self.assertEqual(author.displayName, AUTHOR_NAME)
-        self.assertEqual(author.get_github_link(), f"{GITHUB_PREFIX}{AUTHOR_GITHUB}")
+        self.assertEqual(author.github, AUTHOR_GITHUB)
 
 class AuthorViewTests(TestCase):
 
@@ -105,7 +105,7 @@ class AuthorsViewTests(TestCase):
         self.assertEquals(len(d['items']), 1)
         author_in_response = d['items'][0]
         self.assertEquals(author_in_response['displayName'], AUTHOR_NAME)
-        self.assertEquals(author_in_response['github'], f"{GITHUB_PREFIX}{AUTHOR_GITHUB}")
+        self.assertEquals(author_in_response['github'], AUTHOR_GITHUB)
     
     def test_multiple_authors(self):
         """

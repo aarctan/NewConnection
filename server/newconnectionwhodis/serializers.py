@@ -7,7 +7,6 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.SerializerMethodField('get_id_url')
     host = serializers.SerializerMethodField('get_host_url')
     url = serializers.SerializerMethodField('get_id_url')
-    github = serializers.SerializerMethodField('get_github_url')
 
     class Meta:
         model = models.Author
@@ -19,9 +18,6 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_id_url(self, obj):
         return 'http://' + self.context['request'].get_host() + f"/{obj.type}/{obj.id}"
-    
-    def get_github_url(self, obj):
-        return f"https://github.com/{obj.github}"
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.SerializerMethodField('get_id_url')

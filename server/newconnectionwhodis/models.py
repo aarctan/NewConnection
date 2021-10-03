@@ -14,12 +14,9 @@ class Author(models.Model):
     host = models.URLField(max_length=32, editable=False)
     url = models.URLField(max_length=128, editable=False)
     displayName = models.CharField(max_length=32)
-    github = models.CharField(max_length=40)
+    github = models.TextField(max_length=60)
     def __str__(self):
         return self.displayName
-    def get_github_link(self):
-        return f"https://github.com/{self.github}"
-
 
 # TODO: Visibility settings for posts?
 class Post(models.Model):

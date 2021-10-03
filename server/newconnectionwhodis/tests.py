@@ -60,7 +60,27 @@ class AuthorViewTests(TestCase):
         host = d['host']
         self.assertIsNotNone(host)
         self.assertEquals(d['url'], f'{host}/author/{id}')
-
+    
+    def test_author_update(self):
+        """
+        Test that an existing author at /author/<id>/ can be updated by
+        PUT'ing to /author/<id>/.
+        """
+        AUTHOR_NAME, AUTHOR_GITHUB = "Muhammad", "Exanut"
+        author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
+        id = author.id
+        response = self.client.get(f'/author/{id}/')
+        d1 = response_to_json(response)
+        # Fix for 415 unsupported media type: https://stackoverflow.com/a/15154163
+        # Note that post will return 405 for an existing resource.
+        data = { 'displayName': 'updated_name', 'github': 'updated_github'}
+        response = self.client.put(f'/author/{id}/', data=json.dumps(data),
+            content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        d2 = response_to_json(response)
+        self.assertEquals(d1['id'], d2['id'])
+        self.assertNotEquals(d1['displayName'], d2['displayName'])
+        self.assertNotEquals(d1['github'], d2['github'])
 
 class AuthorsViewTests(TestCase):
 

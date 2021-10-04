@@ -22,6 +22,7 @@ def paginate_queryset(query_params, queryset):
     return queryset[page * size : page * size + size]
 
 class AuthorsViewSet(viewsets.ViewSet):
+    http_method_names = ['get']
     def list(self, request):
         return Response({
             'type': "authors",
@@ -33,12 +34,14 @@ class AuthorsViewSet(viewsets.ViewSet):
                 many=True).data})
 
 class AuthorViewSet(viewsets.ModelViewSet):
+    http_method_names = ['get', 'put']
     queryset = models.Author.objects.all().order_by('displayName')
     serializer_class = serializers.AuthorSerializer
     def list(self, request, *args, **kwargs):
-        return Http404("Cannot list author")
+        return Http404("Cannot list /author/")
 
 class PostViewSet(viewsets.ModelViewSet):
+    http_method_names = ['get', 'post']
     serializer_class = serializers.PostSerializer
     def get_queryset(self):
         return models.Post.objects.filter(

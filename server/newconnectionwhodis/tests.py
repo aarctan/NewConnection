@@ -182,7 +182,7 @@ class PostViewTests(TestCase):
 
     def test_post_post(self):
         """
-        Tests POSTing a post
+        Tests POSTing a post. TODO: require authentication
         """
         AUTHOR_NAME, AUTHOR_GITHUB, POST_CONTENT = "Muhammad", "Exanut", 'Placeholder'
         author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
@@ -208,6 +208,20 @@ class PostViewTests(TestCase):
         self.assertEquals(response.status_code, 201)
         response = self.client.get(f'/author/{author_id}/posts/')
         self.assertEquals(len(response_to_json(response)), 2)
+
+    def test_post_delete(self):
+        """
+        Test deleting an existing post
+        """
+        AUTHOR_NAME, AUTHOR_GITHUB, POST_CONTENT = "Muhammad", "Exanut", 'Placeholder'
+        author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
+        author_id = author.id
+        post = create_post(author, POST_CONTENT)
+        post_id = post.id
+        response = self.client.delete(f'/author/{author_id}/posts/{post_id}/')
+        self.assertEquals(response.status_code, 204)
+        self.assertEquals(len(Post.objects.all()), 0)
+
 
 class CommentViewTests(TestCase):
     # https://docs.djangoproject.com/en/3.2/topics/testing/overview/

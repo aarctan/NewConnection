@@ -41,7 +41,7 @@ class AuthorViewSet(viewsets.ModelViewSet):
         return Http404("Cannot list /author/")
 
 class PostViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get', 'post']
+    http_method_names = ['get', 'post', 'delete']
     serializer_class = serializers.PostSerializer
     def get_queryset(self):
         return models.Post.objects.filter(

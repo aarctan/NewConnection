@@ -2,11 +2,7 @@
 
 First you will need to download and install [node.js](https://nodejs.org/en/)
 
-Once complete run
-
-### `git clone https://github.com/dylandeco/NewConnectionWhoDis.git` 
-
-and cd into the `client` directory.
+Once complete run `git clone https://github.com/dylandeco/NewConnectionWhoDis.git` and cd into the `client` directory.
 
 Once inside of the client directory, run `npm install` to install the node_modules folder.
 

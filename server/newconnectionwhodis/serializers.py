@@ -4,7 +4,6 @@ from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 from . import models
 
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
-    # https://stackoverflow.com/a/23918960
     id = serializers.SerializerMethodField('get_id_url')
     host = serializers.SerializerMethodField('get_host_url')
     url = serializers.SerializerMethodField('get_id_url')
@@ -21,7 +20,6 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
 
 class PostSerializer(NestedHyperlinkedModelSerializer):
     id = serializers.SerializerMethodField('get_id_url')
-    # https://www.py4u.net/discuss/188993
     author = AuthorSerializer(many=False, read_only=True)
 
     class Meta:

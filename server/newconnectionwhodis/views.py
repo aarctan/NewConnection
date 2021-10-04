@@ -47,7 +47,6 @@ class PostViewSet(viewsets.ModelViewSet):
         return models.Post.objects.filter(
             author=self.kwargs['author_pk'])
     def perform_create(self, serializer):
-        # https://stackoverflow.com/a/34797456
         author_pk = self.kwargs['author_pk']
         author = models.Author.objects.filter(pk=author_pk).get()
         serializer.save(author=author)

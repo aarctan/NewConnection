@@ -30,7 +30,6 @@ def response_to_json(response):
     """
     Decodes the binary reponse to json
     """
-    # https://stackoverflow.com/a/19391807
     json_str = response.content.decode('utf-8').replace("'", "\"")
     return json.loads(json_str)
 
@@ -73,7 +72,6 @@ class AuthorViewTests(TestCase):
         id = author.id
         response = self.client.get(f'/author/{id}/')
         d1 = response_to_json(response)
-        # Fix for 415 unsupported media type: https://stackoverflow.com/a/15154163
         # Note that post will return 405 for an existing resource.
         data = { 'displayName': 'updated_name', 'github': 'updated_github'}
         response = self.client.put(f'/author/{id}/', data=json.dumps(data),
@@ -224,7 +222,6 @@ class PostViewTests(TestCase):
 
 
 class CommentViewTests(TestCase):
-    # https://docs.djangoproject.com/en/3.2/topics/testing/overview/
     def setUp(self):
         """
         Create a new post from a new author

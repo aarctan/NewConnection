@@ -37,7 +37,8 @@ class AuthorViewSet(viewsets.ModelViewSet):
 class PostViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PostSerializer
     def get_queryset(self):
-        return models.Post.objects.filter(author=self.kwargs['author_pk'])
+        return models.Post.objects.filter(
+            author=self.kwargs['author_pk'])
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.CommentSerializer

@@ -34,7 +34,7 @@ class PostSerializer(NestedHyperlinkedModelSerializer):
 
 class CommentSerializer(NestedHyperlinkedModelSerializer):
     id = serializers.SerializerMethodField('get_id_url')
-    author = AuthorSerializer(many=False)
+    author = AuthorSerializer(many=False, read_only=True)
     parent_lookup_kwargs = {
         'post_pk': 'post__pk',
         'author_pk': 'post__author__pk',

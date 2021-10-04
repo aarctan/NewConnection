@@ -47,11 +47,13 @@ class PostViewSet(viewsets.ModelViewSet):
         return models.Post.objects.filter(
             author=self.kwargs['author_pk'])
     def perform_create(self, serializer):
+        # https://stackoverflow.com/a/34797456
         author_pk = self.kwargs['author_pk']
         author = models.Author.objects.filter(pk=author_pk).get()
         serializer.save(author=author)
 
 class CommentViewSet(viewsets.ModelViewSet):
+    http_method_names = ['get', 'post']
     serializer_class = serializers.CommentSerializer
     def get_queryset(self):
         return paginate_queryset(
@@ -59,3 +61,9 @@ class CommentViewSet(viewsets.ModelViewSet):
             models.Comment.objects.order_by('-published').filter(
                 author=self.kwargs['author_pk'],
                 post=self.kwargs['posts_pk']))
+    def perform_create(self, serializer):
+        author_pk = self.kwargs['author_pk']
+        posts_pk = self.kwargs['posts_pk']
+        author = models.Author.objects.filter(pk=author_pk).get()
+        post = models.Post.objects.filter(pk=posts_pk).get()
+        serializer.save(author=author, post=post)

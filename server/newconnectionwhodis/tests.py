@@ -207,3 +207,20 @@ class CommentViewTests(TestCase):
         self.assertEquals(d['id'], f'{host}/author/{author_id}/posts/{post_id}/comments/{comment_id}')
     
     # TODO: More comment tests including pagination tests
+    def test_comments_pagination(self):
+        """
+        Test that the optional page and size query parameters work
+        """
+        NUM_COMMENTS = 20
+        PAGE, SIZE = 4, 3
+        author = create_author('Dylan', 'dylandeco')
+        author_id = author.id
+        post = create_post(author, 'test_comment')
+        post_id = post.id
+        for i in range(NUM_COMMENTS):
+            create_comment(author, post, f"Comment_{i}")
+        response = self.client.get(f'/author/{author_id}/posts/{post_id}/comments/?page={PAGE}&size={SIZE}')
+        d = response_to_json(response)
+        self.assertEquals(len(d), SIZE)
+        for i in range(SIZE):
+            self.assertEquals(d[i]["comment"], f"Comment_{(PAGE - 1) * SIZE + i}")

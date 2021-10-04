@@ -169,30 +169,34 @@ class PostViewTests(TestCase):
         """
 
 class CommentViewTests(TestCase):
+    # https://docs.djangoproject.com/en/3.2/topics/testing/overview/
+    def setUp(self):
+        """
+        Create a new post from a new author
+        """
+        AUTHOR_NAME, AUTHOR_GITHUB, POST_CONTENT = "Muhammad", "Exanut", 'Placeholder'
+        self.author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
+        self.author_id = self.author.id
+        self.post = create_post(self.author, POST_CONTENT)
+        self.post_id = self.post.id
 
     def test_no_comments(self):
         """
         Tests that a db with a single author and post has no comments
         """
-        AUTHOR_NAME, AUTHOR_GITHUB, POST_CONTENT = "Muhammad", "Exanut", 'Placeholder'
-        author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
-        author_id = author.id
-        post = create_post(author, POST_CONTENT)
-        post_id = post.id
-        response = self.client.get(f'/author/{author_id}/posts/{post_id}/comments/')
+        response = self.client.get(
+            f'/author/{self.author_id}/posts/{self.post_id}/comments/'
+        )
         self.assertEqual(response.status_code, 200)
         self.assertListEqual(response_to_json(response), [])
     
     def test_comment_id_get(self):
-        AUTHOR_NAME, AUTHOR_GITHUB, POST_CONTENT = "Muhammad", "Exanut", 'Placeholder'
         COMMENT_CONTENT = "Comment_Placeholder"
-        author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
-        author_id = author.id
-        post = create_post(author, POST_CONTENT)
-        post_id = post.id
-        comment = create_comment(author, post, COMMENT_CONTENT)
+        comment = create_comment(self.author, self.post, COMMENT_CONTENT)
         comment_id = comment.id
-        response = self.client.get(f'/author/{author_id}/posts/{post_id}/comments/{comment_id}/')
+        response = self.client.get(
+            f'/author/{self.author_id}/posts/{self.post_id}/comments/{comment_id}/'
+        )
         self.assertEqual(response.status_code, 200)
         d = response_to_json(response)
         self.assertEqual(d['type'], 'comment')
@@ -204,7 +208,9 @@ class CommentViewTests(TestCase):
 
         host = d['author']['host']
         self.assertTrue('http' in host)
-        self.assertEquals(d['id'], f'{host}/author/{author_id}/posts/{post_id}/comments/{comment_id}')
+        self.assertEquals(
+            d['id'],
+            f'{host}/author/{self.author_id}/posts/{self.post_id}/comments/{comment_id}')
     
     # TODO: More comment tests including pagination tests
     def test_comments_pagination(self):
@@ -213,13 +219,11 @@ class CommentViewTests(TestCase):
         """
         NUM_COMMENTS = 20
         PAGE, SIZE = 4, 3
-        author = create_author('Dylan', 'dylandeco')
-        author_id = author.id
-        post = create_post(author, 'test_comment')
-        post_id = post.id
         for i in range(NUM_COMMENTS):
-            create_comment(author, post, f"Comment_{i}")
-        response = self.client.get(f'/author/{author_id}/posts/{post_id}/comments/?page={PAGE}&size={SIZE}')
+            create_comment(self.author, self.post, f"Comment_{i}")
+        response = self.client.get(
+            f'/author/{self.author_id}/posts/{self.post_id}/comments/?page={PAGE}&size={SIZE}'
+        )
         d = response_to_json(response)
         self.assertEquals(len(d), SIZE)
         for i in range(SIZE):

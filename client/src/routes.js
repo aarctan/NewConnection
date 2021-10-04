@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
-import DashboardLayout from "src/components/DashboardLayout";
-import MainLayout from "src/components/MainLayout";
+import DashboardLayout from "src/layouts/DashboardLayout";
+import MainLayout from "src/layouts/MainLayout";
 import Dashboard from "src/pages/Dashboard";
 import Login from "src/pages/Login";
 import NotFound from "src/pages/NotFound";

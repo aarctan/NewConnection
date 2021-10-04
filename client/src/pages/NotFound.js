@@ -4,14 +4,14 @@ import { Box, Container, Typography } from "@mui/material";
 const NotFound = () => (
   <>
     <Helmet>
-      <title>404 | Material Kit</title>
+      <title>404 | NewConnectionWhoDis</title>
     </Helmet>
     <Box
       sx={{
         backgroundColor: "background.default",
         display: "flex",
         flexDirection: "column",
-        height: "100%",
+        height: "100vh",
         justifyContent: "center",
       }}
     >

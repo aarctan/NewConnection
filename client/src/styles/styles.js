@@ -1,5 +1,3 @@
-// Source: https://github.com/devias-io/material-kit-react
-// Referecne for styling: https://mui.com/styles/basics/#main-content
 import { createStyles, makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() =>

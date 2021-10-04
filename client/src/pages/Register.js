@@ -18,14 +18,14 @@ const Register = () => {
   return (
     <>
       <Helmet>
-        <title>Register | Weather app</title>
+        <title>Register | NewConnectWhoDis</title>
       </Helmet>
       <Box
         sx={{
           backgroundColor: "background.default",
           display: "flex",
           flexDirection: "column",
-          height: "100%",
+          height: "100vh",
           justifyContent: "center",
         }}
       >

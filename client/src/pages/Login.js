@@ -21,18 +21,20 @@ const Login = () => {
   return (
     <>
       <Helmet>
-        <title>Login | Weather app</title>
+        <title>Login | NewConnectionWhoDis</title>
       </Helmet>
       <Box
         sx={{
           backgroundColor: "background.default",
           display: "flex",
           flexDirection: "column",
-          height: "100%",
+          height: "100vh",
           justifyContent: "center",
+          p: 0,
         }}
+        mt={0}
       >
-        <Container maxWidth="sm">
+        <Container mt={0} sx={{ p: 0 }} maxWidth="sm">
           <Formik
             initialValues={{
               email: "",

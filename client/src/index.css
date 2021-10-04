@@ -1,4 +1,15 @@
-body > #root > div {
-  height: 100vh;
+body {
+  background-color: #f0f2f5;
+  margin: 0;
+  padding: 0;
+}
+
+.page-container {
   display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.content-wrap {
+  flex: 1;
 }

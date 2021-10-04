@@ -1,6 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 
+from django.http import Http404
+
 from . import serializers
 from . import models
 
@@ -33,12 +35,18 @@ class AuthorsViewSet(viewsets.ViewSet):
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = models.Author.objects.all().order_by('displayName')
     serializer_class = serializers.AuthorSerializer
+    def list(self, request, *args, **kwargs):
+        return Http404("Cannot list author")
 
 class PostViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PostSerializer
     def get_queryset(self):
         return models.Post.objects.filter(
             author=self.kwargs['author_pk'])
+    def perform_create(self, serializer):
+        author_pk = self.kwargs['author_pk']
+        author = models.Author.objects.filter(pk=author_pk).get()
+        serializer.save(author=author)
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.CommentSerializer

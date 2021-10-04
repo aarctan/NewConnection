@@ -14,7 +14,6 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('type', 'id', 'host', 'displayName', 'url', 'github')
 
     def get_host_url(self, obj):
-        self.context['request']
         return 'http://' + self.context['request'].get_host()
 
     def get_id_url(self, obj):
@@ -23,10 +22,7 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
 class PostSerializer(NestedHyperlinkedModelSerializer):
     id = serializers.SerializerMethodField('get_id_url')
     # https://www.py4u.net/discuss/188993
-    author = AuthorSerializer(many=False)
-    parent_lookup_kwargs = {
-        'author_pk', 'author__pk',
-    }
+    author = AuthorSerializer(many=False, read_only=True)
 
     class Meta:
         model = models.Post
@@ -37,7 +33,6 @@ class PostSerializer(NestedHyperlinkedModelSerializer):
         return f'http://{host}/author/{obj.author.id}/posts/{obj.id}'
 
 class CommentSerializer(NestedHyperlinkedModelSerializer):
-    # TODO: Pagination
     id = serializers.SerializerMethodField('get_id_url')
     author = AuthorSerializer(many=False)
     parent_lookup_kwargs = {

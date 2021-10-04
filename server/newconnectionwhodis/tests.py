@@ -1,8 +1,10 @@
 import json
+from django.http import request, response
 
 from django.test import TestCase
 
 from .models import Author, Post, Comment
+from . import serializers
 
 GITHUB_PREFIX = "https://github.com/"
 
@@ -167,6 +169,45 @@ class PostViewTests(TestCase):
         """
         Tests whether /author/<author_id>/posts/ returns ONLY that author's posts
         """
+        author1 = create_author('Muhammad', 'Exanut')
+        author2 = create_author('Dylan', 'dylandeco')
+        create_post(author1, 'post1')
+        create_post(author2, 'post2')
+        create_post(author2, 'post3')
+        response1 = self.client.get('/author/{}/posts/'.format(author1.id))
+        response2 = self.client.get('/author/{}/posts/'.format(author2.id))
+        self.assertEquals(len(response_to_json(response1)), 1)
+        self.assertEquals(len(response_to_json(response2)), 2)
+
+
+    def test_post_post(self):
+        """
+        Tests POSTing a post
+        """
+        AUTHOR_NAME, AUTHOR_GITHUB, POST_CONTENT = "Muhammad", "Exanut", 'Placeholder'
+        author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
+        author_id = author.id
+        response = self.client.get('')
+        request = response.wsgi_request
+        auth = serializers.AuthorSerializer(author, context={'request': request}).data
+        data = {
+            'author': auth,
+            'content': POST_CONTENT
+        }
+        response = self.client.post(
+            f'/author/{author_id}/posts/',
+            data,
+            format='json',
+        )
+        self.assertEquals(response.status_code, 201)
+        response = self.client.post(
+            f'/author/{author_id}/posts/',
+            {'author': auth, 'content': 'blah'},
+            format='json',
+        )
+        self.assertEquals(response.status_code, 201)
+        response = self.client.get(f'/author/{author_id}/posts/')
+        self.assertEquals(len(response_to_json(response)), 2)
 
 class CommentViewTests(TestCase):
     # https://docs.djangoproject.com/en/3.2/topics/testing/overview/

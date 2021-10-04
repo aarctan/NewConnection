@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 
 from . import models
 
@@ -19,10 +20,13 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     def get_id_url(self, obj):
         return 'http://' + self.context['request'].get_host() + f"/{obj.type}/{obj.id}"
 
-class PostSerializer(serializers.HyperlinkedModelSerializer):
+class PostSerializer(NestedHyperlinkedModelSerializer):
     id = serializers.SerializerMethodField('get_id_url')
     # https://www.py4u.net/discuss/188993
     author = AuthorSerializer(many=False)
+    parent_lookup_kwargs = {
+        'author_pk', 'author__pk',
+    }
 
     class Meta:
         model = models.Post
@@ -32,10 +36,14 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         host = self.context['request'].get_host()
         return f'http://{host}/author/{obj.author.id}/posts/{obj.id}'
 
-class CommentSerializer(serializers.HyperlinkedModelSerializer):
+class CommentSerializer(NestedHyperlinkedModelSerializer):
     # TODO: Pagination
     id = serializers.SerializerMethodField('get_id_url')
     author = AuthorSerializer(many=False)
+    parent_lookup_kwargs = {
+        'post_pk': 'post__pk',
+        'author_pk': 'post__author__pk',
+    }
     class Meta:
         model = models.Comment
         fields = ('type', 'author', 'comment', 'contentType', 'published', 'id')

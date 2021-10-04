@@ -269,3 +269,20 @@ class CommentViewTests(TestCase):
         self.assertEquals(len(d), SIZE)
         for i in range(SIZE):
             self.assertEquals(d[i]["comment"], f"Comment_{(PAGE - 1) * SIZE + i}")
+
+    def test_comment_push(self):    
+        response = self.client.get('')
+        request = response.wsgi_request
+        auth = serializers.AuthorSerializer(self.author, context={'request': request}).data
+        post = serializers.PostSerializer(self.post, context={'request': request}).data
+        data = {
+            'author': auth,
+            'post': post,
+            'comment': 'very post much wow',
+        }
+        response = self.client.post(
+            f'/author/{self.author_id}/posts/{self.post_id}/comments/',
+            data,
+            format='json',
+        )
+        self.assertEquals(response.status_code, 201)

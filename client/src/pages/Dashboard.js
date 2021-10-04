@@ -1,7 +1,25 @@
 import react from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const Dashboard = () => {
-  return <p>Hello World</p>;
+  const navigate = useNavigate();
+  const onLogoutHandler = () => {
+    navigate("/login", { replace: true });
+  };
+
+  return (
+    <Button
+      color="primary"
+      fullWidth
+      size="large"
+      type="submit"
+      variant="contained"
+      onClick={onLogoutHandler}
+    >
+      Logout
+    </Button>
+  );
 };
 
 export default Dashboard;

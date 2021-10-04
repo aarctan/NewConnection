@@ -36,10 +36,6 @@ const DashboardLayout = () => {
 
   return (
     <DashboardLayoutRoot>
-      <DashboardSidebar
-        onMobileClose={() => setMobileNavOpen(false)}
-        openMobile={isMobileNavOpen}
-      />
       <DashboardLayoutWrapper>
         <DashboardLayoutContainer>
           <DashboardLayoutContent>
@@ -51,4 +47,10 @@ const DashboardLayout = () => {
   );
 };
 
+{
+  /* <DashboardSidebar
+onMobileClose={() => setMobileNavOpen(false)}
+openMobile={isMobileNavOpen}
+/> */
+}
 export default DashboardLayout;

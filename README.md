@@ -35,3 +35,6 @@ https://medium.com/swlh/build-your-first-rest-api-with-django-rest-framework-e39
 
 Virtualenv instructions by Alexander Wong:
 https://uofa-cmput404.github.io/lab-4-django.html
+
+Client side based off of devias-io/material-kit-react
+https://github.com/devias-io/material-kit-react

@@ -52,7 +52,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
       >
         <RouterLink to="/" />
         <Typography color="white" variant="h5" p={2}>
-          WeatherJS
+          NewConnectionWhoDis
         </Typography>
       </Box>
       <Divider />

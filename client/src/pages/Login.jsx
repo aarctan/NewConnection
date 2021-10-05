@@ -11,8 +11,25 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { useContext } from "react";
 import AuthContext from "src/store/auth-context";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: "#EDECEC",
+  },
+  buttonContainer: {
+    textAlign: "center",
+  },
+  cardContent: {
+    padding: theme.spacing(3),
+  },
+  hr: {
+    backgroundColor: "#000000",
+    height: "1px",
+  },
+}));
 
 const Login = () => {
   const navigate = useNavigate();
@@ -25,7 +42,6 @@ const Login = () => {
       </Helmet>
       <Box
         sx={{
-          backgroundColor: "background.default",
           display: "flex",
           flexDirection: "column",
           height: "100vh",

@@ -6,12 +6,10 @@ import {
   Box,
   Button,
   Container,
-  Grid,
   Link,
   TextField,
   Typography,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import { useContext } from "react";
 import AuthContext from "src/store/auth-context";
 

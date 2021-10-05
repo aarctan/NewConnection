@@ -15,22 +15,6 @@ import { makeStyles } from "@mui/styles";
 import { useContext } from "react";
 import AuthContext from "src/store/auth-context";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: "#EDECEC",
-  },
-  buttonContainer: {
-    textAlign: "center",
-  },
-  cardContent: {
-    padding: theme.spacing(3),
-  },
-  hr: {
-    backgroundColor: "#000000",
-    height: "1px",
-  },
-}));
-
 const Login = () => {
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
@@ -46,11 +30,9 @@ const Login = () => {
           flexDirection: "column",
           height: "100vh",
           justifyContent: "center",
-          p: 0,
         }}
-        mt={0}
       >
-        <Container mt={0} sx={{ p: 0 }} maxWidth="sm">
+        <Container maxWidth="sm">
           <Formik
             initialValues={{
               email: "",
@@ -112,8 +94,22 @@ const Login = () => {
               values,
             }) => (
               <form onSubmit={handleSubmit}>
-                <Box sx={{ mb: 1 }}>
-                  <Typography color="textPrimary" variant="h2">
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography
+                    color="#1775ee"
+                    variant="h2"
+                    fontFamily="sans-serif"
+                    sx={{ mb: 6 }}
+                  >
+                    NewConnectionWhoDis
+                  </Typography>
+                  <Typography color="textPrimary" variant="h4">
                     Sign in
                   </Typography>
                 </Box>

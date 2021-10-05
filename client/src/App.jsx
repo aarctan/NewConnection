@@ -11,7 +11,7 @@ import GlobalStyles from "./styles/styles";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#167742",
+      main: "#1775ee",
     },
     secondary: {
       main: "#FEDB04",

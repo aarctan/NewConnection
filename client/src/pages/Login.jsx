@@ -2,52 +2,46 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import * as Yup from "yup";
 import { Formik } from "formik";
-import {
-  Box,
-  Button,
-  Link,
-  TextField,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useContext } from "react";
 import AuthContext from "src/store/auth-context";
 
 const Login = () => {
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
-  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("lg"));
 
   return (
     <>
       <Helmet>
-        <title>Login | NewConnectionWhoDis</title>
+        <title>Login | NewConnection</title>
       </Helmet>
       <Box
         sx={{
           display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-evenly",
+          flexDirection: "column",
+          justifyContent: "center",
           alignContent: "center",
           alignItems: "center",
           height: "100vh",
+          marginLeft: "8%",
+          marginRight: "8%",
         }}
       >
-        <Box justifyContent="center" px="30px">
+        <Box justifyContent="center" py="20px">
           <Typography
             display="flex"
             justifyContent="center"
             color="#1775ee"
-            variant="h2"
+            variant="h1"
             fontFamily="sans-serif"
           >
-            NewConnectionWhoDis
+            NewConnection
           </Typography>
           <Typography
             display="flex"
-            justifyContent={isSmallScreen ? "center" : "left"}
+            justifyContent="center"
             color="black"
-            variant="h6"
+            fontSize="22px"
             fontFamily="sans-serif"
             sx={{ mb: 4 }}
           >
@@ -58,7 +52,6 @@ const Login = () => {
           item
           px="30px"
           py="40px"
-          mt="10px"
           backgroundColor="white"
           borderRadius="10px"
           justifyContent="center"

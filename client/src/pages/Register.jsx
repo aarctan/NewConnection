@@ -18,11 +18,10 @@ const Register = () => {
   return (
     <>
       <Helmet>
-        <title>Register | NewConnectWhoDis</title>
+        <title>Register | NewConnection</title>
       </Helmet>
       <Box
         sx={{
-          backgroundColor: "background.default",
           display: "flex",
           flexDirection: "column",
           height: "100vh",
@@ -108,7 +107,7 @@ const Register = () => {
                   <Typography
                     color="textSecondary"
                     gutterBottom
-                    variant="body2"
+                    variant="body1"
                   >
                     Use your email to create new account
                   </Typography>

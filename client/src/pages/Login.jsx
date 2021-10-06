@@ -2,13 +2,21 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import * as Yup from "yup";
 import { Formik } from "formik";
-import { Box, Button, Link, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Link,
+  TextField,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useContext } from "react";
 import AuthContext from "src/store/auth-context";
 
 const Login = () => {
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("lg"));
 
   return (
     <>
@@ -25,19 +33,36 @@ const Login = () => {
           height: "100vh",
         }}
       >
-        <Box justifyContent="center">
+        <Box justifyContent="center" px="30px">
           <Typography
             display="flex"
             justifyContent="center"
             color="#1775ee"
             variant="h2"
             fontFamily="sans-serif"
-            sx={{ mb: 6 }}
           >
             NewConnectionWhoDis
           </Typography>
+          <Typography
+            display="flex"
+            justifyContent={isSmallScreen ? "center" : "left"}
+            color="black"
+            variant="h6"
+            fontFamily="sans-serif"
+            sx={{ mb: 4 }}
+          >
+            Distributed social network to connect with friends.
+          </Typography>
         </Box>
-        <Box item xs={12} sm={12} md={6}>
+        <Box
+          item
+          px="30px"
+          py="40px"
+          mt="10px"
+          backgroundColor="white"
+          borderRadius="10px"
+          justifyContent="center"
+        >
           <Formik
             initialValues={{
               email: "",

@@ -1,7 +1,9 @@
 import * as React from "react";
+import { useState } from "react";
 import { Card, CardContent, Box, Grid, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import SideProfile from "./SideProfile";
+import CreatePostModal from "./CreatePostModal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,6 +19,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Feed = () => {
   const classes = useStyles();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <Box display="flex" mx="20%" my="1%">
       <Grid container spacing={4} justifyContent="flex-start">
@@ -31,6 +35,7 @@ const Feed = () => {
                   backgroundColor: "#eaeaea",
                 }}
                 fullWidth
+                onClick={() => setIsModalOpen(true)}
               >
                 What's happening?
               </Button>
@@ -41,6 +46,10 @@ const Feed = () => {
           <SideProfile />
         </Grid>
       </Grid>
+      <CreatePostModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      ></CreatePostModal>
     </Box>
   );
 };

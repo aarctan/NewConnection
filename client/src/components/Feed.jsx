@@ -1,6 +1,7 @@
 import * as React from "react";
-import { Card, CardContent, Stack, Box, Grid } from "@mui/material";
+import { Card, CardContent, Box, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import SideProfile from "./SideProfile";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,16 +22,17 @@ const useStyles = makeStyles((theme) => ({
 const Feed = () => {
   const classes = useStyles();
   return (
-    <Box>
-      <Grid display="flex" container spacing={2}>
-        <Grid item xs={6}>
+    <Box display="flex" mx="20%" my="1%">
+      <Grid container spacing={4} justifyContent="flex-start">
+        <Grid item xs={8}>
           <Card className={classes.root}>
             <CardContent className={classes.cardContent}>
-              <Stack spacing={0.5}>
-                <h1>hello</h1>
-              </Stack>
+              <h1>Placeholder</h1>
             </CardContent>
           </Card>
+        </Grid>
+        <Grid item xs={4}>
+          <SideProfile />
         </Grid>
       </Grid>
     </Box>

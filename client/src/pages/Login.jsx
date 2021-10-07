@@ -19,7 +19,7 @@ const Login = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          marginTop: "10%",
           alignContent: "center",
           alignItems: "center",
           height: "100vh",
@@ -27,13 +27,13 @@ const Login = () => {
           marginRight: "8%",
         }}
       >
-        <Box justifyContent="center" py="20px">
+        <Box justifyContent="center" py="10px">
           <Typography
             display="flex"
             justifyContent="center"
-            color="#1775ee"
-            variant="h1"
-            fontFamily="sans-serif"
+            color="#2e8b57"
+            variant="h2"
+            fontFamily="Arial"
           >
             NewConnection
           </Typography>
@@ -41,11 +41,11 @@ const Login = () => {
             display="flex"
             justifyContent="center"
             color="black"
-            fontSize="22px"
-            fontFamily="sans-serif"
+            variant="h5"
+            fontFamily="Arial"
             sx={{ mb: 4 }}
           >
-            Distributed social network to connect with friends.
+            Distributed social network
           </Typography>
         </Box>
         <Box
@@ -58,14 +58,11 @@ const Login = () => {
         >
           <Formik
             initialValues={{
-              email: "",
+              username: "",
               password: "",
             }}
             validationSchema={Yup.object().shape({
-              email: Yup.string()
-                .email("Must be a valid email")
-                .max(255)
-                .required("Email is required"),
+              username: Yup.string().max(255).required("Username is required"),
               password: Yup.string().max(255).required("Password is required"),
             })}
             onSubmit={(values) => {
@@ -73,7 +70,7 @@ const Login = () => {
               fetch(url, {
                 method: "POST",
                 body: JSON.stringify({
-                  email: values.email,
+                  username: values.username,
                   password: values.password,
                   returnSecureToken: true,
                 }),
@@ -124,29 +121,22 @@ const Login = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Typography color="textPrimary" variant="h4">
-                    Sign in
-                  </Typography>
                 </Box>
                 <TextField
-                  error={Boolean(touched.email && errors.email)}
                   fullWidth
-                  helperText={touched.email && errors.email}
-                  label="Email Address"
-                  margin="normal"
-                  name="email"
+                  label="Username"
+                  margin="dense"
+                  name="username"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  type="email"
-                  value={values.email}
+                  type="username"
+                  value={values.username}
                   variant="outlined"
                 />
                 <TextField
-                  error={Boolean(touched.password && errors.password)}
                   fullWidth
-                  helperText={touched.password && errors.password}
                   label="Password"
-                  margin="normal"
+                  margin="dense"
                   name="password"
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -161,13 +151,18 @@ const Login = () => {
                     size="large"
                     type="submit"
                     variant="contained"
+                    style={{ background: "#FFFFFF", color: "black" }}
                   >
-                    Sign in now
+                    Sign in
                   </Button>
                 </Box>
-                <Typography color="textSecondary" variant="body1">
+                <Typography
+                  color="textSecondary"
+                  variant="body1"
+                  align="center"
+                >
                   Don&apos;t have an account?{" "}
-                  <Link component={RouterLink} to="/register" variant="h6">
+                  <Link component={RouterLink} to="/register" variant="body1">
                     Sign up
                   </Link>
                 </Typography>

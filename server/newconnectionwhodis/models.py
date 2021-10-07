@@ -1,14 +1,15 @@
 # models.py
 import uuid
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-
 
 class Author(models.Model):
     """
     An author is a basic user. For now, they have a name and a github.
-    """ 
+    """
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.CharField(max_length=6, default='author', editable=False)
     host = models.URLField(max_length=32, editable=False)

@@ -1,6 +1,6 @@
 import json
-from django.http import request, response
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 
 from .models import Author, Post, Comment
@@ -8,11 +8,12 @@ from . import serializers
 
 GITHUB_PREFIX = "https://github.com/"
 
-def create_author(displayName, github):
+def create_author(displayName, github, userName='testUser'):
     """
     Create a new author given a name and github username.
     """
-    return Author.objects.create(displayName=displayName, github=github)
+    user = User.objects.create(username=userName)
+    return Author.objects.create(user=user, displayName=displayName, github=github)
 
 def create_post(author, content):
     """
@@ -113,7 +114,7 @@ class AuthorsViewTests(TestCase):
         """
         NUM_AUTHORS = 2
         for i in range(NUM_AUTHORS):
-            create_author(f"Author_{i}", f"Github_{i}")
+            create_author(f"Author_{i}", f"Github_{i}", f"testUser_{i}")
         response = self.client.get('/authors/')
         d = response_to_json(response)
         self.assertEquals(len(d['items']), NUM_AUTHORS)
@@ -125,7 +126,7 @@ class AuthorsViewTests(TestCase):
         NUM_AUTHORS = 17
         PAGE, SIZE = 4, 3
         for i in range(NUM_AUTHORS):
-            create_author(f"Author_{i}", f"Github_{i}")
+            create_author(f"Author_{i}", f"Github_{i}", f"testUser_{i}")
         response = self.client.get(f"/authors/?page={PAGE}&size={SIZE}")
         d = response_to_json(response)
         self.assertEquals(len(d['items']), SIZE)
@@ -168,7 +169,7 @@ class PostViewTests(TestCase):
         Tests whether /author/<author_id>/posts/ returns ONLY that author's posts
         """
         author1 = create_author('Muhammad', 'Exanut')
-        author2 = create_author('Dylan', 'dylandeco')
+        author2 = create_author('Dylan', 'dylandeco', 'testUser2')
         create_post(author1, 'post1')
         create_post(author2, 'post2')
         create_post(author2, 'post3')

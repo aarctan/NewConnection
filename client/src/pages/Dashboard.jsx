@@ -1,4 +1,5 @@
 import Header from "src/components/Header";
+import Feed from "src/components/Feed";
 
 const Dashboard = () => {
   /*
@@ -8,7 +9,12 @@ const Dashboard = () => {
   };
   */
 
-  return <Header />;
+  return (
+    <>
+      <Header />
+      <Feed />
+    </>
+  );
 };
 
 export default Dashboard;

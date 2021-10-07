@@ -67,7 +67,7 @@ const Header = () => {
             mx: "20%",
           }}
         >
-          <Typography variant="h5" noWrap component="div" fontFamily="Arial">
+          <Typography variant="h5" noWrap component="div">
             NewConnection
           </Typography>
           <Search>

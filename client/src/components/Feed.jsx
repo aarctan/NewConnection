@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardContent, Box, Grid } from "@mui/material";
+import { Card, CardContent, Box, Grid, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import SideProfile from "./SideProfile";
 
@@ -13,10 +13,6 @@ const useStyles = makeStyles((theme) => ({
   cardContent: {
     padding: theme.spacing(3),
   },
-  hr: {
-    backgroundColor: "#000000",
-    height: "1px",
-  },
 }));
 
 const Feed = () => {
@@ -27,11 +23,21 @@ const Feed = () => {
         <Grid item xs={8}>
           <Card className={classes.root}>
             <CardContent className={classes.cardContent}>
-              <h1>Placeholder</h1>
+              <Button
+                variant="outlined"
+                sx={{
+                  borderRadius: "20px",
+                  justifyContent: "flex-start",
+                  backgroundColor: "#eaeaea",
+                }}
+                fullWidth
+              >
+                What's happening?
+              </Button>
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={4}>
+        <Grid display="flex" alignItems="center" item xs={4}>
           <SideProfile />
         </Grid>
       </Grid>

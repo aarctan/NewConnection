@@ -6,9 +6,15 @@ import { createTheme } from "@mui/material/styles";
 import GlobalStyles from "./styles/styles";
 
 const theme = createTheme({
+  typography: {
+    fontFamily: ["Arial"],
+    button: {
+      textTransform: "none",
+    },
+  },
   palette: {
     primary: {
-      main: "#1775ee",
+      main: "#00000",
     },
     secondary: {
       main: "#FEDB04",

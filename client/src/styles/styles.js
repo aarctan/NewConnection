@@ -7,7 +7,6 @@ const useStyles = makeStyles(() =>
         boxSizing: "border-box",
         margin: 0,
         padding: 0,
-        fontFamily: "sans-serif",
       },
       html: {
         "-webkit-font-smoothing": "antialiased",

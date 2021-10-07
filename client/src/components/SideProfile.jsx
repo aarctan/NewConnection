@@ -1,11 +1,16 @@
-import { Card, CardContent } from "@mui/material";
+import { Box, Typography, Avatar, Stack } from "@mui/material";
 
 export default function SideProfile() {
   return (
-    <Card>
-      <CardContent>
-        <h2>John Smith</h2>
-      </CardContent>
-    </Card>
+    <Box>
+      <Stack alignItems="center" direction="row" spacing={2}>
+        <Avatar
+          alt="Rebecca Sharp"
+          src="/static/images/avatars/rebecca.jpg"
+          sx={{ width: 56, height: 56 }}
+        />
+        <Typography variant="h6">Rebecca Sharp</Typography>
+      </Stack>
+    </Box>
   );
 }

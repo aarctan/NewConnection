@@ -1,4 +1,5 @@
 # cmput404-group-project
+
 Group project for cmput404 Fall 2021
 
 ## Getting started
@@ -27,6 +28,7 @@ Exit the environment with<br>
 Instructions above taken from https://uofa-cmput404.github.io/lab-4-django.html
 
 ## External Sources
+
 "Writing your first Django app", Django documentation:
 https://docs.djangoproject.com/en/3.2/intro/
 
@@ -56,3 +58,6 @@ https://stackoverflow.com/questions/23918619/django-rest-framework-and-filefield
 
 POST in ModelViewSet:
 https://stackoverflow.com/questions/34797050/django-rest-framework-create-child-of-nested-relationship/34797456#34797456
+
+Button Text Styling
+https://stackoverflow.com/a/57226626 + https://stackoverflow.com/a/65034457

@@ -60,10 +60,14 @@ const Feed = () => {
           </Card>
           {posts.map((post) => (
             <Post
+              title={post.title}
+              description={post.description}
               likes={post.likes}
-              name={post.name}
-              contentUrl={post.contentUrl}
-              pfpUrl={post.pfpUrl}
+              picture={post.author.picture}
+              displayName={post.author.displayName}
+              contentType={post.contentType}
+              content={post.content}
+              count={post.count}
             />
           ))}
         </Grid>

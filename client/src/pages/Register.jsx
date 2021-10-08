@@ -13,7 +13,6 @@ import GitHub from "@mui/icons-material/GitHub";
 import InputAdornment from "@mui/material/InputAdornment";
 
 const API_URL = process.env.REACT_APP_API_URL;
-
 const Register = () => {
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");

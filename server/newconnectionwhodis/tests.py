@@ -34,6 +34,32 @@ def response_to_json(response):
     json_str = response.content.decode('utf-8').replace("'", "\"")
     return json.loads(json_str)
 
+class AuthenticationTests(TestCase):
+
+    def setUp(self):
+        #self.user = User.objects.create(username='username')
+        #self.author = Author.objects.create(user=self.user, displayName='author')
+        pass
+
+    def test_new_user(self):
+        data = {
+            'username': "Username",
+            "password1": "Thequickbrownfox23",
+            "password2": "Thequickbrownfox23",
+        }
+        response = self.client.post(
+            f'/dj-rest-auth/registration/',
+            data,
+            format='json',
+        )
+        self.assertEquals(response.status_code, 201)
+        self.assertEquals(len(User.objects.all()), 1)
+        print(response.content)
+        x = User.objects.all()
+        print(Author.objects.all())
+        print(x)
+
+'''
 class AuthorModelTests(TestCase):
 
     def test_fields(self):
@@ -298,3 +324,4 @@ class CommentViewTests(TestCase):
             format='json',
         )
         self.assertEquals(response.status_code, 201)
+'''

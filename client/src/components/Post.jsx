@@ -71,7 +71,6 @@ const Post = (props) => {
           />
         </CardContent>
       )}
-
       <CardActions
         className={classes.root}
         disableSpacing

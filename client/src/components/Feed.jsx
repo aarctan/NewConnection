@@ -62,12 +62,11 @@ const Feed = () => {
             <Post
               title={post.title}
               description={post.description}
-              likes={post.likes}
-              picture={post.author.picture}
               displayName={post.author.displayName}
               contentType={post.contentType}
               content={post.content}
               count={post.count}
+              profileImage={post.author.profileImage}
             />
           ))}
         </Grid>

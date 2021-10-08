@@ -8,6 +8,8 @@ import {
   Paper,
   InputBase,
   Divider,
+  Avatar,
+  Link,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -26,13 +28,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-/*
-  Posts takes in these props:
-  likes: String
-  name: String
-  content: String
-  avatarUrl: String
-*/
 const Post = (props) => {
   const classes = useStyles();
 
@@ -47,9 +42,22 @@ const Post = (props) => {
           backgroundColor: "#fafafa",
         }}
       >
-        <Typography variant="body1" color="text.primary" fontWeight="600">
-          {props.title}
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Avatar
+            alt="Chad"
+            src={props.profileImage}
+            sx={{ width: 38, height: 38, marginRight: 2 }}
+          />
+          <Typography variant="body1" color="text.primary" fontWeight="600">
+            {props.title}
+          </Typography>
+        </Box>
         <IconButton aria-label="settings">
           <MoreHorizIcon />
         </IconButton>
@@ -96,7 +104,7 @@ const Post = (props) => {
           fontWeight="600"
           sx={{ paddingBottom: 0.5 }}
         >
-          {props.likes} likes
+          8,032 likes
         </Typography>
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <Typography
@@ -111,9 +119,15 @@ const Post = (props) => {
             {props.description}
           </Typography>
         </Box>
-        <Typography variant="body2" color="text.secondary" fontWeight="600">
-          View all {props.count} comments
-        </Typography>
+        <Link
+          component="button"
+          variant="body2"
+          color="text.secondary"
+          fontWeight="600"
+          underline="hover"
+        >
+          View all comments
+        </Link>
       </CardContent>
       <form>
         <Paper

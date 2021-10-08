@@ -1,4 +1,4 @@
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import * as Yup from "yup";
 import { Formik } from "formik";
@@ -10,8 +10,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import GitHub from '@mui/icons-material/GitHub';
-import InputAdornment from '@mui/material/InputAdornment';
+import GitHub from "@mui/icons-material/GitHub";
+import InputAdornment from "@mui/material/InputAdornment";
 
 const Register = () => {
   return (

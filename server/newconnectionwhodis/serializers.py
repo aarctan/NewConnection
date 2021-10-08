@@ -1,7 +1,17 @@
 from rest_framework import serializers
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 
+from dj_rest_auth.serializers import LoginSerializer
+from dj_rest_auth.registration.serializers import RegisterSerializer
+
 from . import models
+
+# https://stackoverflow.com/a/55128035
+class LoginSerializer(LoginSerializer):
+    email = None
+
+class CustomRegisterSerializer(RegisterSerializer):
+    email = None
 
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.SerializerMethodField('get_id_url')

@@ -36,11 +36,11 @@ INSTALLED_APPS = [
     'rest_framework', # Django REST framework
 
     # https://dj-rest-auth.readthedocs.io/
+    'rest_framework.authtoken',
     'dj_rest_auth',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',
     'dj_rest_auth.registration',
 
     'django.contrib.admin',
@@ -137,3 +137,23 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "username"
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'newconnectionwhodis.serializers.CustomRegisterSerializer'
+}
+REST_AUTH_SERIALIZERS = {
+    'LOGIN_SERIALIZER': 'newconnectionwhodis.serializers.LoginSerializer'
+}

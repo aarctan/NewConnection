@@ -1,8 +1,7 @@
 import {
   Card,
   CardContent,
-  CardHeader,
-  Avatar,
+  Box,
   CardActions,
   Typography,
   CardMedia,
@@ -39,29 +38,39 @@ const Post = (props) => {
 
   return (
     <Card sx={{ my: "25px" }}>
-      <CardHeader
-        className={classes.root}
-        avatar={
-          <Avatar
-            alt="Chad"
-            src={props.pfpUrl}
-            sx={{ width: 38, height: 38 }}
+      <CardContent
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: "#fafafa",
+        }}
+      >
+        <Typography variant="body1" color="text.primary" fontWeight="600">
+          {props.title}
+        </Typography>
+        <IconButton aria-label="settings">
+          <MoreHorizIcon />
+        </IconButton>
+      </CardContent>
+      {props.contentType === "text/plain" && (
+        <CardContent className={classes.root}>
+          <Typography variant="body2" color="text.secondary">
+            {props.content}
+          </Typography>
+        </CardContent>
+      )}
+      {props.contentType === "image/png;base64" && (
+        <CardContent className={classes.root} sx={{ padding: 0 }}>
+          <CardMedia
+            component="img"
+            height="600"
+            image={props.content}
+            alt="selfie"
           />
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreHorizIcon />
-          </IconButton>
-        }
-        titleTypographyProps={{ variant: "h6" }}
-        title={props.name}
-      />
-      <CardMedia
-        component="img"
-        height="600"
-        image={props.contentUrl}
-        alt="selfie"
-      />
+        </CardContent>
+      )}
       <CardActions
         className={classes.root}
         disableSpacing
@@ -81,8 +90,29 @@ const Post = (props) => {
         sx={{ py: "0px", paddingBottom: "8px" }}
         className={classes.root}
       >
-        <Typography variant="body2" color="text.primary" fontWeight="600">
+        <Typography
+          variant="body2"
+          color="text.primary"
+          fontWeight="600"
+          sx={{ paddingBottom: 0.5 }}
+        >
           {props.likes} likes
+        </Typography>
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+          <Typography
+            sx={{ paddingBottom: 0.5, marginRight: 1 }}
+            variant="body2"
+            color="text.primary"
+            fontWeight="600"
+          >
+            {props.displayName}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" fontWeight="500">
+            {props.description}
+          </Typography>
+        </Box>
+        <Typography variant="body2" color="text.secondary" fontWeight="600">
+          View all {props.count} comments
         </Typography>
       </CardContent>
       <form>

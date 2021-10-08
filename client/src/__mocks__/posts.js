@@ -34,11 +34,10 @@ const posts = [
       url: "http://127.0.0.1:5454/author/9de17f29c12e8f97bcbbd34cc908f1baba40658e",
       // HATEOS url for Github API
       github: "http://github.com/chad",
-      picture: "/static/images/avatars/chad.jpg",
+      profileImage: "/static/images/avatars/chad.jpg",
     },
     // categories this post fits into (a list of strings
     categories: ["web", "tutorial"],
-    likes: 8000,
     // comments about the post
     // return a maximum number of comments
     // total number of comments for this post
@@ -62,7 +61,7 @@ const posts = [
           displayName: "Rebecca Smiles",
           // HATEOS url for Github API
           github: "http://github.com/rebbecas",
-          picture: "/static/images/avatars/rebecca.jpg",
+          profileImage: "/static/images/avatars/rebecca.jpg",
         },
         comment: "Sick Olde English",
         contentType: "text/plain",

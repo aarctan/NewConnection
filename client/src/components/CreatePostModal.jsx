@@ -29,12 +29,7 @@ const CreatePostModal = ({ isModalOpen, setIsModalOpen }) => {
   const handleClose = () => setIsModalOpen(false);
   return (
     <>
-      <Modal
-        open={isModalOpen}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={isModalOpen} onClose={handleClose}>
         <Box sx={style}>
           <Typography
             id="modal-modal-title"
@@ -44,9 +39,19 @@ const CreatePostModal = ({ isModalOpen, setIsModalOpen }) => {
           >
             Create a new post
           </Typography>
+          <br />
 
           <TextField
-            label="What's happening, Rebecca?"
+            label="Title"
+            id="filled-size-normal"
+            variant="filled"
+            fullWidth
+            size="small"
+            inputProps={{ style: { textAlign: "center" } }}
+          />
+
+          <TextField
+            label="What's happening, Chad?"
             multiline
             rows={5}
             variant="filled"

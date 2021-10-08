@@ -49,6 +49,7 @@ const Feed = () => {
                     borderRadius: "20px",
                     justifyContent: "flex-start",
                     backgroundColor: "#eaeaea",
+                    color: "#8b8b8b",
                   }}
                   fullWidth
                   onClick={() => setIsModalOpen(true)}

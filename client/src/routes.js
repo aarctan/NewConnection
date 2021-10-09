@@ -8,22 +8,22 @@ import Register from "src/pages/Register";
 
 const routes = [
   {
+    path: "app",
+    element: <DashboardLayout />,
+    children: [
+      { path: "dashboard", element: <Dashboard /> },
+      { path: "*", element: <Navigate to="/404" /> },
+    ],
+  },
+  {
     path: "/",
     element: <MainLayout />,
     children: [
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
       { path: "404", element: <NotFound /> },
-      { path: "/", element: <Navigate to="/login" replace={true} /> },
+      { path: "/", element: <Navigate to="/app/dashboard" replace={true} /> },
       { path: "*", element: <Navigate to="/404" replace={true} /> },
-    ],
-  },
-  {
-    path: "app",
-    element: <DashboardLayout />,
-    children: [
-      { path: "dashboard", element: <Dashboard /> },
-      { path: "*", element: <Navigate to="/404" /> },
     ],
   },
 ];

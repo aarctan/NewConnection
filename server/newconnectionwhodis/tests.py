@@ -7,13 +7,17 @@ from .models import Author, Post, Comment
 from . import serializers
 
 GITHUB_PREFIX = "https://github.com/"
+USER_PASSWORD = 'Thequickbrownfox23'
 
-def create_author(displayName, github, userName='testUser'):
+def create_author(displayName, github):
     """
     Create a new author given a name and github username.
     """
-    user = User.objects.create(username=userName)
-    return Author.objects.create(user=user, displayName=displayName, github=github)
+    user = User.objects.create(username=displayName, password=USER_PASSWORD)
+    author = Author.objects.filter(user=user).get()
+    author.github = github
+    author.save()
+    return author
 
 def create_post(author, content):
     """
@@ -34,16 +38,16 @@ def response_to_json(response):
     json_str = response.content.decode('utf-8').replace("'", "\"")
     return json.loads(json_str)
 
+
 class AuthenticationTests(TestCase):
 
     def setUp(self):
-        #self.user = User.objects.create(username='username')
-        #self.author = Author.objects.create(user=self.user, displayName='author')
-        pass
+        response = self.client.get('')
+        self.request = response.wsgi_request
 
     def test_new_user(self):
         data = {
-            'username': "Username",
+            'username': "Arctan",
             "password1": "Thequickbrownfox23",
             "password2": "Thequickbrownfox23",
         }
@@ -54,12 +58,7 @@ class AuthenticationTests(TestCase):
         )
         self.assertEquals(response.status_code, 201)
         self.assertEquals(len(User.objects.all()), 1)
-        print(response.content)
-        x = User.objects.all()
-        print(Author.objects.all())
-        print(x)
 
-'''
 class AuthorModelTests(TestCase):
 
     def test_fields(self):
@@ -74,16 +73,17 @@ class AuthorModelTests(TestCase):
 
 class AuthorViewTests(TestCase):
 
+    def setUp(self):
+        self.author = create_author("Muhammad", "Exanut")
+
     def test_author_view(self):
         """
         Test the author response by ensuring code 200 and absolute urls
         """
-        AUTHOR_NAME, AUTHOR_GITHUB = "Muhammad", "Exanut"
-        author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
-        id = author.id
-        response = self.client.get(f'/author/{id}/')
-        self.assertEqual(response.status_code, 200)
-        d = response_to_json(response)
+        id = self.author.id
+        request = self.client.get(f'/author/{id}/')
+        self.assertEqual(request.status_code, 200)
+        d = response_to_json(request)
         self.assertEqual(d['type'], 'author')
         host = d['host']
         self.assertIsNotNone(host)
@@ -94,9 +94,7 @@ class AuthorViewTests(TestCase):
         Test that an existing author at /author/<id>/ can be updated by
         PUT'ing to /author/<id>/.
         """
-        AUTHOR_NAME, AUTHOR_GITHUB = "Muhammad", "Exanut"
-        author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
-        id = author.id
+        id = self.author.id
         response = self.client.get(f'/author/{id}/')
         d1 = response_to_json(response)
         # Note that post will return 405 for an existing resource.
@@ -140,7 +138,7 @@ class AuthorsViewTests(TestCase):
         """
         NUM_AUTHORS = 2
         for i in range(NUM_AUTHORS):
-            create_author(f"Author_{i}", f"Github_{i}", f"testUser_{i}")
+            create_author(f"Author_{i}", f"Github_{i}")
         response = self.client.get('/authors/')
         d = response_to_json(response)
         self.assertEquals(len(d['items']), NUM_AUTHORS)
@@ -152,7 +150,7 @@ class AuthorsViewTests(TestCase):
         NUM_AUTHORS = 17
         PAGE, SIZE = 4, 3
         for i in range(NUM_AUTHORS):
-            create_author(f"Author_{i}", f"Github_{i}", f"testUser_{i}")
+            create_author(f"Author_{i}", f"Github_{i}")
         response = self.client.get(f"/authors/?page={PAGE}&size={SIZE}")
         d = response_to_json(response)
         self.assertEquals(len(d['items']), SIZE)
@@ -161,13 +159,15 @@ class AuthorsViewTests(TestCase):
 
 class PostViewTests(TestCase):
 
+    def setUp(self):
+        self.author = create_author("Muhammad", "Exanut")
+        self.author_id =self.author.id
+
     def test_no_posts(self):
         """
         Tests that a db with a single author and nothing else has no posts.
         """
-        author = create_author("Muhammad", "Exanut")
-        id = author.id
-        response = self.client.get(f'/author/{id}/posts/')
+        response = self.client.get(f'/author/{self.author_id}/posts/')
         self.assertEqual(response.status_code, 200)
         self.assertListEqual(response_to_json(response), [])
 
@@ -175,75 +175,64 @@ class PostViewTests(TestCase):
         """
         Tests that /author/<author_id>/posts/<post_id> returns the expected post
         """
-        AUTHOR_NAME, AUTHOR_GITHUB, POST_CONTENT = "Muhammad", "Exanut", 'Placeholder'
-        author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
-        author_id = author.id
-        post = create_post(author, POST_CONTENT)
+        post = create_post(self.author, 'Placeholder')
         post_id = post.id
-        response = self.client.get(f'/author/{author_id}/posts/{post_id}/')
+        response = self.client.get(f'/author/{self.author_id}/posts/{post_id}/')
         self.assertEqual(response.status_code, 200)
         d = response_to_json(response)
         self.assertEqual(d['type'], 'post')
         self.assertEquals(len(d['author']), 6) # author has 6 fields
         host = d['author']['host']
         self.assertTrue('http' in host)
-        self.assertEquals(d['id'], f'{host}/author/{author_id}/posts/{post_id}')
+        self.assertEquals(d['id'], f'{host}/author/{self.author_id}/posts/{post_id}')
         # TODO: Test content with various content types
-    
+
     def test_post_belongs_to_author(self):
         """
         Tests whether /author/<author_id>/posts/ returns ONLY that author's posts
         """
-        author1 = create_author('Muhammad', 'Exanut')
-        author2 = create_author('Dylan', 'dylandeco', 'testUser2')
-        create_post(author1, 'post1')
+        author2 = create_author('Dylan', 'dylandeco')
+        create_post(self.author, 'post1')
         create_post(author2, 'post2')
         create_post(author2, 'post3')
-        response1 = self.client.get('/author/{}/posts/'.format(author1.id))
+        response1 = self.client.get('/author/{}/posts/'.format(self.author_id))
         response2 = self.client.get('/author/{}/posts/'.format(author2.id))
         self.assertEquals(len(response_to_json(response1)), 1)
         self.assertEquals(len(response_to_json(response2)), 2)
-
 
     def test_post_post(self):
         """
         Tests POSTing a post. TODO: require authentication
         """
-        AUTHOR_NAME, AUTHOR_GITHUB, POST_CONTENT = "Muhammad", "Exanut", 'Placeholder'
-        author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
-        author_id = author.id
         response = self.client.get('')
         request = response.wsgi_request
-        auth = serializers.AuthorSerializer(author, context={'request': request}).data
+        auth = serializers.AuthorSerializer(self.author, context={'request': request}).data
         data = {
             'author': auth,
-            'content': POST_CONTENT
+            'content': 'Placeholder'
         }
         response = self.client.post(
-            f'/author/{author_id}/posts/',
+            f'/author/{self.author_id}/posts/',
             data,
             format='json',
         )
         self.assertEquals(response.status_code, 201)
         response = self.client.post(
-            f'/author/{author_id}/posts/',
+            f'/author/{self.author_id}/posts/',
             {'author': auth, 'content': 'blah'},
             format='json',
         )
         self.assertEquals(response.status_code, 201)
-        response = self.client.get(f'/author/{author_id}/posts/')
+        response = self.client.get(f'/author/{self.author_id}/posts/')
         self.assertEquals(len(response_to_json(response)), 2)
 
     def test_post_delete(self):
         """
         Test deleting an existing post
         """
-        AUTHOR_NAME, AUTHOR_GITHUB, POST_CONTENT = "Muhammad", "Exanut", 'Placeholder'
-        author = create_author(AUTHOR_NAME, AUTHOR_GITHUB)
-        author_id = author.id
-        post = create_post(author, POST_CONTENT)
+        post = create_post(self.author, 'Placeholder')
         post_id = post.id
-        response = self.client.delete(f'/author/{author_id}/posts/{post_id}/')
+        response = self.client.delete(f'/author/{self.author_id}/posts/{post_id}/')
         self.assertEquals(response.status_code, 204)
         self.assertEquals(len(Post.objects.all()), 0)
 
@@ -324,4 +313,3 @@ class CommentViewTests(TestCase):
             format='json',
         )
         self.assertEquals(response.status_code, 201)
-'''

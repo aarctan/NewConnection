@@ -64,7 +64,7 @@ const Post = (props) => {
       </CardContent>
       {props.contentType === "text/plain" && (
         <CardContent className={classes.root}>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body1" color="text.primary">
             {props.content}
           </Typography>
         </CardContent>

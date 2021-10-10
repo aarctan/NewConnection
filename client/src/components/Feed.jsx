@@ -32,50 +32,52 @@ const Feed = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <Box display="flex" mx="20%" my="1%">
+    <Box display="flex" mx="20%" my="85px">
       <Grid container spacing={4} justifyContent="flex-start">
         <Grid item xs={8}>
           <Card className={classes.root}>
-            <CardContent className={classes.cardContent}>
-              <Grid container spacing={1} justifyContent="flex-start">
-                <Grid item xs={2}>
-                  <Avatar
-                    alt="Chad"
-                    src="/static/images/avatars/chad.jpg"
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={10}>
-                  <Stack alignItems="center" direction="column" spacing={1}>
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        borderRadius: "15px",
-                        justifyContent: "center",
-                        backgroundColor: "#eaeaea",
-                      }}
-                      fullWidth
-                      onClick={() => setIsModalOpen(true)}
-                    >
-                      Write a text post
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        borderRadius: "15px",
-                        justifyContent: "center",
-                        backgroundColor: "#eaeaea",
-                      }}
-                      fullWidth
-                    >
-                      Upload an image
-                    </Button>
-                  </Stack>
-                </Grid>
-              </Grid>
+            <CardContent
+              className={classes.cardContent}
+              sx={{ display: "flex", alignItems: "center" }}
+            >
+              <Avatar
+                alt="Chad"
+                src="/static/images/avatars/chad.jpg"
+                sx={{ width: 56, height: 56, marginRight: 1.5 }}
+              />
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flexGrow: 1,
+                  px: 1,
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  sx={{
+                    borderRadius: "15px",
+                    justifyContent: "center",
+                    backgroundColor: "#eaeaea",
+                    marginBottom: 1.3,
+                  }}
+                  fullWidth
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  Write a text post
+                </Button>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    borderRadius: "15px",
+                    justifyContent: "center",
+                    backgroundColor: "#eaeaea",
+                  }}
+                  fullWidth
+                >
+                  Upload an image
+                </Button>
+              </Box>
             </CardContent>
           </Card>
           {posts.map((post) => (

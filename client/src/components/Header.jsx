@@ -63,7 +63,7 @@ const Header = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
-        position="static"
+        position="fixed"
         style={{ background: "#FFFFFF", color: "black" }}
       >
         <Toolbar
@@ -74,7 +74,11 @@ const Header = () => {
             mx: "20%",
           }}
         >
-          <img src="/newconnectionlogo.png" alt="logo" className={classes.logo} />
+          <img
+            src="/newconnectionlogo.png"
+            alt="logo"
+            className={classes.logo}
+          />
           <Search>
             <SearchIconWrapper>
               <SearchIcon />

@@ -31,14 +31,22 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
 class PostSerializer(NestedHyperlinkedModelSerializer):
     id = serializers.SerializerMethodField('get_id_url')
     author = AuthorSerializer(many=False, read_only=True)
+    # TODO: source and origin probably need to be changed
+    source = serializers.SerializerMethodField('get_origin_url')
+    origin = serializers.SerializerMethodField('get_origin_url')
 
     class Meta:
         model = models.Post
-        fields = ('type', 'id', 'contentType', 'content', 'author')
+        fields = ('type', 'id', 'contentType',
+            'content', 'author', 'title', 'description',
+            'source', 'origin')
     
     def get_id_url(self, obj):
         host = self.context['request'].get_host()
         return f'http://{host}/author/{obj.author.id}/posts/{obj.id}'
+    
+    def get_origin_url(self, obj):
+        return 'http://' + self.context['request'].get_host()
 
 class CommentSerializer(NestedHyperlinkedModelSerializer):
     id = serializers.SerializerMethodField('get_id_url')

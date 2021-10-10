@@ -55,18 +55,20 @@ class PostViewTests(TestCase):
         auth = serializers.AuthorSerializer(self.author, context={'request': request}).data
         data = {
             'author': auth,
-            'content': 'Placeholder'
+            'content': 'Placeholder',
+            'title': 'Title',
+            'description': 'Description',
         }
         response = self.client.post(
             f'/author/{self.author_id}/posts/',
-            data,
+            data=data,
             format='json',
         )
         print(response.content)
         self.assertEquals(response.status_code, 201)
         response = self.client.post(
             f'/author/{self.author_id}/posts/',
-            {'author': auth, 'content': 'blah'},
+            data=data,
             format='json',
         )
         self.assertEquals(response.status_code, 201)

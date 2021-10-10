@@ -67,6 +67,7 @@ const Feed = () => {
               content={post.content}
               count={post.count}
               profileImage={post.author.profileImage}
+              comments={post.comments}
             />
           ))}
         </Grid>

@@ -11,6 +11,7 @@ import {
   Avatar,
   Link,
 } from "@mui/material";
+import Comment from "./Comment";
 import IconButton from "@mui/material/IconButton";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShareIcon from "@mui/icons-material/Share";
@@ -82,7 +83,7 @@ const Post = (props) => {
       <CardActions
         className={classes.root}
         disableSpacing
-        sx={{ paddingBottom: "0px" }}
+        sx={{ paddingBottom: "5px" }}
       >
         <IconButton aria-label="add to favorites">
           <FavoriteBorderIcon />
@@ -95,7 +96,7 @@ const Post = (props) => {
         </IconButton>
       </CardActions>
       <CardContent
-        sx={{ py: "0px", paddingBottom: "8px" }}
+        sx={{ py: "0px", paddingBottom: 0 }}
         className={classes.root}
       >
         <Typography
@@ -128,6 +129,15 @@ const Post = (props) => {
         >
           View all comments
         </Link>
+      </CardContent>
+      {/* Comments */}
+      <CardContent className={classes.root} sx={{ py: 1 }}>
+        {props.comments.map((comment) => (
+          <Comment
+            user={comment.author.displayName}
+            comment={comment.comment}
+          />
+        ))}
       </CardContent>
       <form>
         <Paper

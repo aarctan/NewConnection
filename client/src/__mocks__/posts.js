@@ -63,7 +63,7 @@ const posts = [
           github: "http://github.com/rebbecas",
           profileImage: "/static/images/avatars/rebecca.jpg",
         },
-        comment: "Sick Olde English",
+        comment: "Looking good 😍",
         contentType: "text/plain",
         // ISO 8601 TIMESTAMP
         published: "2015-03-09T13:07:04+00:00",
@@ -112,7 +112,7 @@ const posts = [
       // # the home host of the author
       host: "http://127.0.0.1:5454/",
       // the display name of the author
-      displayName: "Rebecca",
+      displayName: "Rebecca Smiles",
       // url to the authors profile
       url: "http://127.0.0.1:5454/author/9de17f29c12e8f97bcbbd34cc908f1baba40658e",
       // HATEOS url for Github API
@@ -141,12 +141,33 @@ const posts = [
           // url to the authors information
           url: "http://127.0.0.1:5454/author/1d698d25ff008f7538453c120f581471",
           host: "http://127.0.0.1:5454/",
-          displayName: "Rebecca Smiles",
+          displayName: "Chad",
           // HATEOS url for Github API
-          github: "http://github.com/rebbecas",
-          profileImage: "/static/images/avatars/rebecca.jpg",
+          github: "http://github.com/chad",
+          profileImage: "/static/images/avatars/chad.jpg",
         },
-        comment: "Sick Olde English",
+        comment: "Very cool",
+        contentType: "text/plain",
+        // ISO 8601 TIMESTAMP
+        published: "2015-03-09T13:07:04+00:00",
+        // ID of the Comment (UUID)
+        id: "http://127.0.0.1:5454/author/9de17f29c12e8f97bcbbd34cc908f1baba40658e/posts/de305d54-75b4-431b-adb2-eb6b9e546013/comments/f6255bb01c648fe967714d52a89e8e9c",
+      },
+      {
+        type: "comment",
+        author: {
+          type: "author",
+          // ID of the Author (UUID)
+          id: "http://127.0.0.1:5454/author/1d698d25ff008f7538453c120f581471",
+          // url to the authors information
+          url: "http://127.0.0.1:5454/author/1d698d25ff008f7538453c120f581471",
+          host: "http://127.0.0.1:5454/",
+          displayName: "Chad",
+          // HATEOS url for Github API
+          github: "http://github.com/chad",
+          profileImage: "/static/images/avatars/chad.jpg",
+        },
+        comment: "Commenting twice because I am chad",
         contentType: "text/plain",
         // ISO 8601 TIMESTAMP
         published: "2015-03-09T13:07:04+00:00",

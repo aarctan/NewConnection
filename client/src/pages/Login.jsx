@@ -5,12 +5,20 @@ import { Formik } from "formik";
 import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useContext } from "react";
 import AuthContext from "src/store/auth-context";
+import { makeStyles } from "@mui/styles";
 
 const API_URL = process.env.REACT_APP_API_URL;
+
+const useStyles = makeStyles({
+  logo: {
+    maxWidth: 400,
+  },
+});
+
 const Login = () => {
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
-
+  const classes = useStyles();
   return (
     <>
       <Helmet>
@@ -29,25 +37,13 @@ const Login = () => {
         }}
       >
         <Box justifyContent="center" py="10px">
-          <Typography
-            display="flex"
+          <img
+            src="/newconnectionlogo.png"
+            alt="logo"
+            className={classes.logo}
             justifyContent="center"
-            color="#2e8b57"
-            variant="h2"
-            fontFamily="Arial"
-          >
-            NewConnection
-          </Typography>
-          <Typography
             display="flex"
-            justifyContent="center"
-            color="black"
-            variant="h5"
-            fontFamily="Arial"
-            sx={{ mb: 4 }}
-          >
-            Distributed social network
-          </Typography>
+          />
         </Box>
         <Box
           item

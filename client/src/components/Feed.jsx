@@ -37,25 +37,45 @@ const Feed = () => {
         <Grid item xs={8}>
           <Card className={classes.root}>
             <CardContent className={classes.cardContent}>
-              <Stack alignItems="center" direction="row" spacing={2}>
-                <Avatar
-                  alt="Chad"
-                  src="/static/images/avatars/chad.jpg"
-                  sx={{ width: 38, height: 38 }}
-                />
-                <Button
-                  variant="outlined"
-                  sx={{
-                    borderRadius: "20px",
-                    justifyContent: "flex-start",
-                    backgroundColor: "#eaeaea",
-                  }}
-                  fullWidth
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  What's happening?
-                </Button>
-              </Stack>
+              <Grid container spacing={1} justifyContent="flex-start">
+                <Grid item xs={2}>
+                  <Avatar
+                    alt="Chad"
+                    src="/static/images/avatars/chad.jpg"
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={10}>
+                  <Stack alignItems="center" direction="column" spacing={1}>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        borderRadius: "15px",
+                        justifyContent: "center",
+                        backgroundColor: "#eaeaea",
+                      }}
+                      fullWidth
+                      onClick={() => setIsModalOpen(true)}
+                    >
+                      Write a text post
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        borderRadius: "15px",
+                        justifyContent: "center",
+                        backgroundColor: "#eaeaea",
+                      }}
+                      fullWidth
+                    >
+                      Upload an image
+                    </Button>
+                  </Stack>
+                </Grid>
+              </Grid>
             </CardContent>
           </Card>
           {posts.map((post) => (

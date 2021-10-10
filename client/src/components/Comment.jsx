@@ -1,6 +1,6 @@
 import { Box, Typography, Link } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+//import IconButton from "@mui/material/IconButton";
+//import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const Comment = (props) => {
   return (

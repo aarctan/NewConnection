@@ -1,14 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import {
-  Avatar,
-  Card,
-  CardContent,
-  Box,
-  Grid,
-  Button,
-  Stack,
-} from "@mui/material";
+import { Avatar, Card, CardContent, Box, Grid, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import SideProfile from "./SideProfile";
 import CreatePostModal from "./CreatePostModal";

@@ -1,12 +1,14 @@
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  styled,
+} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import { styled } from "@mui/material/styles";
+import { useState } from "react";
 
 const style = {
   position: "absolute",
@@ -25,8 +27,11 @@ const Input = styled("input")({
 });
 
 const CreatePostModal = ({ isModalOpen, setIsModalOpen }) => {
-  if (!isModalOpen) return null;
   const handleClose = () => setIsModalOpen(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [text, setText] = useState("");
+  if (!isModalOpen) return null;
   return (
     <>
       <Modal
@@ -44,29 +49,37 @@ const CreatePostModal = ({ isModalOpen, setIsModalOpen }) => {
           >
             Create a new post
           </Typography>
-
+          <TextField
+            label="Title"
+            fullWidth
+            multiline
+            margin="dense"
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+          />
+          <TextField
+            label="Description"
+            fullWidth
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
+          />
           <TextField
             label="What's happening, Rebecca?"
             multiline
             rows={5}
-            variant="filled"
             fullWidth
             margin="dense"
+            onChange={(e) => {
+              setText(e.target.value);
+            }}
           />
 
           <Grid container>
-            <Grid item xs={6} align="left">
-              <Button
-                variant="text"
-                startIcon={<InsertPhotoIcon />}
-                component="label"
-              >
-                Add a Picture
-                <Input accept="image/*" id="upload-image" type="file" />
-              </Button>
-            </Grid>
+            <Grid item xs={6} align="left"></Grid>
             <Grid item xs={6} align="right">
-              <Button variant="text" endIcon={<SendIcon />}>
+              <Button variant="text" endIcon={<SendIcon />} align="center">
                 Post
               </Button>
             </Grid>

@@ -66,3 +66,19 @@ class CommentViewSet(viewsets.ModelViewSet):
         author = models.Author.objects.filter(pk=author_pk).get()
         post = models.Post.objects.filter(pk=posts_pk).get()
         serializer.save(author=author, post=post)
+
+class LikeViewSet(viewsets.ModelViewSet):
+    http_method_names = ['get', 'post']
+    serializer_class = serializers.LikeSerializer
+    def get_queryset(self):
+        return paginate_queryset(
+            self.request.query_params,
+            models.Like.objects.filter(
+                author=self.kwargs['author_pk'],
+                post=self.kwargs['posts_pk']))
+    def perform_create(self, serializer):
+        author_pk = self.kwargs['author_pk']
+        posts_pk = self.kwargs['posts_pk']
+        author = models.Author.objects.filter(pk=author_pk).get()
+        post = models.Post.objects.filter(pk=posts_pk).get()
+        serializer.save(author=author, post=post)

@@ -10,6 +10,7 @@ author_router = routers.NestedSimpleRouter(router, r'author', lookup='author')
 author_router.register(r'posts', views.PostViewSet, basename='posts')
 
 posts_router = routers.NestedSimpleRouter(author_router, r'posts', lookup='posts')
+posts_router.register(r'likes', views.LikeViewSet, basename='likes')
 posts_router.register(r'comments', views.CommentViewSet, basename='comments')
 
 urlpatterns = [

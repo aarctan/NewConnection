@@ -73,7 +73,7 @@ class PostLikeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return paginate_queryset(
             self.request.query_params,
-            models.Like.objects.filter(
+            models.Like.objects.filter(comment=None,
                 author=self.kwargs['author_pk'],
                 post=self.kwargs['posts_pk']))
     def perform_create(self, serializer):

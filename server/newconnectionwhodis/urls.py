@@ -8,13 +8,14 @@ router.register(r'author', views.AuthorViewSet, basename='author')
 
 author_router = routers.NestedSimpleRouter(router, r'author', lookup='author')
 author_router.register(r'posts', views.PostViewSet, basename='posts')
+author_router.register(r'liked', views.LikedViewSet, basename='liked')
 
 posts_router = routers.NestedSimpleRouter(author_router, r'posts', lookup='posts')
-posts_router.register(r'likes', views.PostLikeViewSet, basename='likes')
+posts_router.register(r'likes', views.PostLikesViewSet, basename='likes')
 posts_router.register(r'comments', views.CommentViewSet, basename='comments')
 
 comments_router = routers.NestedSimpleRouter(posts_router, r'comments', lookup='comments')
-comments_router.register(r'likes', views.CommentLikeViewSet, basename='likes')
+comments_router.register(r'likes', views.CommentLikesViewSet, basename='likes')
 
 urlpatterns = [
     path('', include(router.urls)),

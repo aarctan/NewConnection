@@ -62,34 +62,28 @@ class CommentSerializer(NestedHyperlinkedModelSerializer):
     def get_id_url(self, obj):
         host = self.context['request'].get_host()
         return f'http://{host}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.id}'
-
-class LikePostSerializer(NestedHyperlinkedModelSerializer):
+        
+class LikeSerializer(NestedHyperlinkedModelSerializer):
     summary = serializers.SerializerMethodField('get_liker')
-    object = serializers.SerializerMethodField('get_post_url')
+    object = serializers.SerializerMethodField('get_id_url')
     author = AuthorSerializer(many=False, read_only=True)
     class Meta:
         model = models.Like
         fields = ('summary', 'type', 'author', 'object')
 
-    def get_post_url(self, obj):
+    def get_id_url(self, obj):
         host = self.context['request'].get_host()
-        return f'http://{host}/author/{obj.author.id}/posts/{obj.post.id}'
+        post = obj.post
+        comment = obj.comment
+        if comment:
+            return f'http://{host}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.comment.id}'
+        elif post:
+            return f'http://{host}/author/{obj.author.id}/posts/{obj.post.id}'
 
     def get_liker(self, obj):
-        return obj.author.displayName + " likes your post"
-
-class LikeCommentSerializer(NestedHyperlinkedModelSerializer):
-    summary = serializers.SerializerMethodField('get_liker')
-    object = serializers.SerializerMethodField('get_comment_url')
-    author = AuthorSerializer(many=False, read_only=True)
-    class Meta:
-        model = models.Like
-        fields = ('summary', 'type', 'author', 'object')
-
-    def get_comment_url(self, obj):
-        host = self.context['request'].get_host()
-        # return str(obj.comment.id)
-        return f'http://{host}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.comment.id}'
-
-    def get_liker(self, obj):
-        return obj.author.displayName + " likes your comment"
+        post = obj.post
+        comment = obj.comment
+        if comment:
+            return obj.author.displayName + " likes your %s" % (comment.type)
+        elif post:
+            return obj.author.displayName + " likes your %s" % (post.type)

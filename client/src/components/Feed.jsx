@@ -27,7 +27,7 @@ const Feed = () => {
     <Box display="flex" mx="20%" my="85px">
       <Grid container spacing={4} justifyContent="flex-start">
         <Grid item xs={8}>
-          <Card className={classes.root}>
+          <Card sx={{ paddingBottom: 0, backgroundColor: "EDECEC" }}>
             <CardContent
               className={classes.cardContent}
               sx={{ display: "flex", alignItems: "center" }}

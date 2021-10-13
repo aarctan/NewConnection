@@ -63,7 +63,8 @@ const posts = [
           github: "http://github.com/rebbecas",
           profileImage: "/static/images/avatars/rebecca.jpg",
         },
-        comment: "Looking good 😍",
+        comment:
+          "Looking good 😍 Testing wrap around on comment. This is a longer comment. Test test test test test test test test test test test test test test",
         contentType: "text/plain",
         // ISO 8601 TIMESTAMP
         published: "2015-03-09T13:07:04+00:00",
@@ -146,7 +147,8 @@ const posts = [
           github: "http://github.com/chad",
           profileImage: "/static/images/avatars/chad.jpg",
         },
-        comment: "Very cool",
+        comment:
+          "Very cool, this is a longer commment so that I can test the wrap around on comments. :)",
         contentType: "text/plain",
         // ISO 8601 TIMESTAMP
         published: "2015-03-09T13:07:04+00:00",

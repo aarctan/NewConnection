@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -12,6 +13,7 @@ import {
   Link,
 } from "@mui/material";
 import Comment from "./Comment";
+import PostModal from "./PostModal";
 import IconButton from "@mui/material/IconButton";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShareIcon from "@mui/icons-material/Share";
@@ -31,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Post = (props) => {
   const classes = useStyles();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <Card sx={{ my: "25px" }}>
@@ -126,6 +129,7 @@ const Post = (props) => {
           color="text.secondary"
           fontWeight="600"
           underline="hover"
+          onClick={() => setIsModalOpen(true)}
         >
           View all comments
         </Link>
@@ -160,6 +164,11 @@ const Post = (props) => {
           </IconButton>
         </Paper>
       </form>
+      <PostModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        post={props}
+      />
     </Card>
   );
 };

@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from django.http import Http404
@@ -20,6 +21,17 @@ def paginate_queryset(query_params, queryset):
     page = int(page) - 1 if page else 0
     size = int(size) if size else num_models
     return queryset[page * size : page * size + size]
+
+class UserdataViewSet(viewsets.ViewSet):
+    """
+    Maps user to its author and returns the authors serialized data
+    """
+    http_method_names = ['get']
+    def retrieve(self, request, user):
+        author = models.Author.objects.get(user__username=user)
+        serializer = serializers.AuthorSerializer(
+            author,context={'request': request})
+        return Response(serializer.data)
 
 class AuthorsViewSet(viewsets.ViewSet):
     http_method_names = ['get']

@@ -22,6 +22,7 @@ urlpatterns = [
     path('', include(author_router.urls)),
     path('', include(posts_router.urls)),
     path('', include(comments_router.urls)),
+    path('userdata/<str:user>/', views.UserdataViewSet.as_view({'get': 'retrieve'})),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),

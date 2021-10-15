@@ -55,7 +55,7 @@ class Comment(models.Model):
 class Like(models.Model):
     """
     A like has a many-to-one relationship with a post and a comment.
-    It can be identified by a post or a comment and an author that added a like.
+    It can be identified by either a post or a comment and the author that added the like.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.CharField(max_length=4, default='Like', editable=False)

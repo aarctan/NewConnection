@@ -32,6 +32,18 @@ def create_comment(author, post, comment):
     """
     return models.Comment.objects.create(author=author, post=post, comment=comment)
 
+def create_post_like(author, post):
+    """
+    Create a new post like given an author and post
+    """
+    return models.Like.objects.create(author=author, post=post)
+
+def create_comment_like(author, post, comment):
+    """
+    Create a new comment like given an author, post, and comment
+    """
+    return models.Like.objects.create(author=author, post=post, comment=comment)
+
 def response_to_json(response):
     """
     Decodes the binary reponse to json

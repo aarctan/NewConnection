@@ -1,14 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import {
-  Avatar,
-  Card,
-  CardContent,
-  Box,
-  Grid,
-  Button,
-  Stack,
-} from "@mui/material";
+import { Avatar, Card, CardContent, Box, Grid, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import SideProfile from "./SideProfile";
 import CreatePostModal from "./CreatePostModal";
@@ -32,43 +24,64 @@ const Feed = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <Box display="flex" mx="20%" my="1%">
+    <Box display="flex" mx="20%" my="85px">
       <Grid container spacing={4} justifyContent="flex-start">
         <Grid item xs={8}>
-          <Card className={classes.root}>
-            <CardContent className={classes.cardContent}>
-              <Stack alignItems="center" direction="row" spacing={2}>
-                <Avatar
-                  alt="Chad"
-                  src="/static/images/avatars/chad.jpg"
-                  sx={{ width: 38, height: 38 }}
-                />
+          <Card sx={{ paddingBottom: 0, backgroundColor: "EDECEC" }}>
+            <CardContent
+              className={classes.cardContent}
+              sx={{ display: "flex", alignItems: "center" }}
+            >
+              <Avatar
+                alt="Chad"
+                src="/static/images/avatars/chad.jpg"
+                sx={{ width: 56, height: 56, marginRight: 1.5 }}
+              />
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flexGrow: 1,
+                  px: 1,
+                }}
+              >
                 <Button
                   variant="outlined"
                   sx={{
-                    borderRadius: "20px",
-                    justifyContent: "flex-start",
+                    borderRadius: "15px",
+                    justifyContent: "center",
                     backgroundColor: "#eaeaea",
-                    color: "#8b8b8b",
+                    marginBottom: 1.3,
                   }}
                   fullWidth
                   onClick={() => setIsModalOpen(true)}
                 >
-                  What's happening?
+                  Write a text post
                 </Button>
-              </Stack>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    borderRadius: "15px",
+                    justifyContent: "center",
+                    backgroundColor: "#eaeaea",
+                  }}
+                  fullWidth
+                >
+                  Upload an image
+                </Button>
+              </Box>
             </CardContent>
           </Card>
           {posts.map((post) => (
             <Post
               title={post.title}
               description={post.description}
-              likes={post.likes}
-              picture={post.author.picture}
               displayName={post.author.displayName}
               contentType={post.contentType}
               content={post.content}
               count={post.count}
+              profileImage={post.author.profileImage}
+              comments={post.comments}
             />
           ))}
         </Grid>

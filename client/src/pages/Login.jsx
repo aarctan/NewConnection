@@ -5,11 +5,20 @@ import { Formik } from "formik";
 import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useContext } from "react";
 import AuthContext from "src/store/auth-context";
+import { makeStyles } from "@mui/styles";
+
+const API_URL = process.env.REACT_APP_API_URL;
+
+const useStyles = makeStyles({
+  logo: {
+    maxWidth: 400,
+  },
+});
 
 const Login = () => {
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
-
+  const classes = useStyles();
   return (
     <>
       <Helmet>
@@ -28,25 +37,13 @@ const Login = () => {
         }}
       >
         <Box justifyContent="center" py="10px">
-          <Typography
-            display="flex"
+          <img
+            src="/newconnectionlogo.png"
+            alt="logo"
+            className={classes.logo}
             justifyContent="center"
-            color="#2e8b57"
-            variant="h2"
-            fontFamily="Arial"
-          >
-            NewConnection
-          </Typography>
-          <Typography
             display="flex"
-            justifyContent="center"
-            color="black"
-            variant="h5"
-            fontFamily="Arial"
-            sx={{ mb: 4 }}
-          >
-            Distributed social network
-          </Typography>
+          />
         </Box>
         <Box
           item
@@ -66,13 +63,12 @@ const Login = () => {
               password: Yup.string().max(255).required("Password is required"),
             })}
             onSubmit={(values) => {
-              const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_AUTH_KEY}`;
+              const url = `${API_URL}/dj-rest-auth/login/`;
               fetch(url, {
                 method: "POST",
                 body: JSON.stringify({
                   username: values.username,
                   password: values.password,
-                  returnSecureToken: true,
                 }),
                 headers: {
                   "Content-Type": "application/json",
@@ -93,10 +89,7 @@ const Login = () => {
                   }
                 })
                 .then((data) => {
-                  const expirationTime = new Date(
-                    new Date().getTime() + +data.expiresIn * 1000
-                  );
-                  authCtx.login(data.idToken, expirationTime.toISOString());
+                  authCtx.login(data.key);
                   navigate("/app/dashboard", { replace: true });
                 })
                 .catch((err) => {
@@ -104,15 +97,7 @@ const Login = () => {
                 });
             }}
           >
-            {({
-              errors,
-              handleBlur,
-              handleChange,
-              handleSubmit,
-              isSubmitting,
-              touched,
-              values,
-            }) => (
+            {({ handleBlur, handleChange, handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
                 <Box
                   sx={{
@@ -120,8 +105,7 @@ const Login = () => {
                     flexDirection: "column",
                     alignItems: "center",
                   }}
-                >
-                </Box>
+                ></Box>
                 <TextField
                   fullWidth
                   label="Username"

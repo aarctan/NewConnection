@@ -66,3 +66,50 @@ class CommentViewSet(viewsets.ModelViewSet):
         author = models.Author.objects.filter(pk=author_pk).get()
         post = models.Post.objects.filter(pk=posts_pk).get()
         serializer.save(author=author, post=post)
+
+class PostLikesViewSet(viewsets.ModelViewSet):
+    http_method_names = ['get', 'post']
+    serializer_class = serializers.LikeSerializer
+    def get_queryset(self):
+        return paginate_queryset(
+            self.request.query_params,
+            models.Like.objects.filter(comment=None,
+                author=self.kwargs['author_pk'],
+                post=self.kwargs['posts_pk']))
+    def perform_create(self, serializer):
+        author_pk = self.kwargs['author_pk']
+        posts_pk = self.kwargs['posts_pk']
+        author = models.Author.objects.filter(pk=author_pk).get()
+        post = models.Post.objects.filter(pk=posts_pk).get()
+        serializer.save(author=author, post=post)
+
+class CommentLikesViewSet(viewsets.ModelViewSet):
+    http_method_names = ['get', 'post']
+    serializer_class = serializers.LikeSerializer
+    def get_queryset(self):
+        return paginate_queryset(
+            self.request.query_params,
+            models.Like.objects.filter(
+                author=self.kwargs['author_pk'],
+                comment=self.kwargs['comments_pk']))
+    def perform_create(self, serializer):
+        author_pk = self.kwargs['author_pk']
+        posts_pk = self.kwargs['posts_pk']
+        comments_pk = self.kwargs['comments_pk']
+        author = models.Author.objects.filter(pk=author_pk).get()
+        post = models.Post.objects.filter(pk=posts_pk).get()
+        comment = models.Comment.objects.filter(pk=comments_pk).get()
+        serializer.save(author=author, post=post, comment=comment)
+
+class LikedViewSet(viewsets.ModelViewSet):
+    http_method_names = ['get']
+    def list(self, request, **kwargs):
+        return Response({
+            'type': "Liked",
+            'items': serializers.LikeSerializer(
+                paginate_queryset(
+                    self.request.query_params,
+                    models.Like.objects.filter(
+                author=kwargs.get("author_pk"))),
+                context={'request': request},
+                many=True).data})

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -8,7 +9,11 @@ import {
   Paper,
   InputBase,
   Divider,
+  Avatar,
+  Link,
 } from "@mui/material";
+import Comment from "./Comment";
+import PostModal from "./PostModal";
 import IconButton from "@mui/material/IconButton";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShareIcon from "@mui/icons-material/Share";
@@ -26,15 +31,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-/*
-  Posts takes in these props:
-  likes: String
-  name: String
-  content: String
-  avatarUrl: String
-*/
 const Post = (props) => {
   const classes = useStyles();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <Card sx={{ my: "25px" }}>
@@ -47,16 +46,29 @@ const Post = (props) => {
           backgroundColor: "#fafafa",
         }}
       >
-        <Typography variant="body1" color="text.primary" fontWeight="600">
-          {props.title}
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Avatar
+            alt="Chad"
+            src={props.profileImage}
+            sx={{ width: 38, height: 38, marginRight: 2 }}
+          />
+          <Typography variant="body1" color="text.primary" fontWeight="600">
+            {props.title}
+          </Typography>
+        </Box>
         <IconButton aria-label="settings">
           <MoreHorizIcon />
         </IconButton>
       </CardContent>
       {props.contentType === "text/plain" && (
         <CardContent className={classes.root}>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body1" color="text.primary">
             {props.content}
           </Typography>
         </CardContent>
@@ -74,7 +86,7 @@ const Post = (props) => {
       <CardActions
         className={classes.root}
         disableSpacing
-        sx={{ paddingBottom: "0px" }}
+        sx={{ paddingBottom: "5px" }}
       >
         <IconButton aria-label="add to favorites">
           <FavoriteBorderIcon />
@@ -87,7 +99,7 @@ const Post = (props) => {
         </IconButton>
       </CardActions>
       <CardContent
-        sx={{ py: "0px", paddingBottom: "8px" }}
+        sx={{ py: "0px", paddingBottom: 0 }}
         className={classes.root}
       >
         <Typography
@@ -96,7 +108,7 @@ const Post = (props) => {
           fontWeight="600"
           sx={{ paddingBottom: 0.5 }}
         >
-          {props.likes} likes
+          8,032 likes
         </Typography>
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <Typography
@@ -111,9 +123,25 @@ const Post = (props) => {
             {props.description}
           </Typography>
         </Box>
-        <Typography variant="body2" color="text.secondary" fontWeight="600">
-          View all {props.count} comments
-        </Typography>
+        <Link
+          component="button"
+          variant="body2"
+          color="text.secondary"
+          fontWeight="600"
+          underline="hover"
+          onClick={() => setIsModalOpen(true)}
+        >
+          View all comments
+        </Link>
+      </CardContent>
+      {/* Comments */}
+      <CardContent className={classes.root} sx={{ py: 1 }}>
+        {props.comments.map((comment) => (
+          <Comment
+            user={comment.author.displayName}
+            comment={comment.comment}
+          />
+        ))}
       </CardContent>
       <form>
         <Paper
@@ -136,6 +164,11 @@ const Post = (props) => {
           </IconButton>
         </Paper>
       </form>
+      <PostModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        post={props}
+      />
     </Card>
   );
 };

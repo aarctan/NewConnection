@@ -4,13 +4,13 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { makeStyles } from "@mui/styles";
 
 // TODO: search bar border width?
 const Search = styled("div")(({ theme }) => ({
@@ -50,13 +50,19 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const useStyles = makeStyles({
+  logo: {
+    maxWidth: 160,
+  },
+});
+
 const Header = () => {
   const menuId = "primary-search-account-menu";
-
+  const classes = useStyles();
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
-        position="static"
+        position="fixed"
         style={{ background: "#FFFFFF", color: "black" }}
       >
         <Toolbar
@@ -67,9 +73,11 @@ const Header = () => {
             mx: "20%",
           }}
         >
-          <Typography variant="h5" noWrap component="div">
-            NewConnection
-          </Typography>
+          <img
+            src="/newconnectionlogo.png"
+            alt="logo"
+            className={classes.logo}
+          />
           <Search>
             <SearchIconWrapper>
               <SearchIcon />

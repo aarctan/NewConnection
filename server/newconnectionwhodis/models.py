@@ -27,9 +27,18 @@ class Post(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.CharField(max_length=4, default='post', editable=False)
+    source = models.URLField(editable=False)
+    origin = models.URLField(editable=False)
     contentType = models.TextField(default="text/plain", editable=False)
+    published = models.DateTimeField(default=timezone.now().isoformat(), editable=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    content = models.TextField(default="lorem ipsum dolor sit amet")
+    visibility = models.TextField(default='PUBLIC')
+    title = models.TextField()
+    description = models.TextField()
+    content = models.TextField()
+    # https://stackoverflow.com/a/7151813
+    #categories = models.TextField(null=True)
+    #unlisted = models.BooleanField(default=False)
 
 class Comment(models.Model):
     """
@@ -45,10 +54,11 @@ class Comment(models.Model):
 
 class Like(models.Model):
     """
-    A like has a many-to-one relationship with a post.
-    It can be identified by a post and an author that added a like.
+    A like has a many-to-one relationship with a post and a comment.
+    It can be identified by either a post or a comment and the author that added the like.
     """
-    liker = models.ForeignKey(Author, on_delete=models.CASCADE)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    type = models.CharField(max_length=4, default='Like', editable=False)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-
-
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True, blank=True)

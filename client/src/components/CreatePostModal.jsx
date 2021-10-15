@@ -61,15 +61,6 @@ const CreatePostModal = ({ isModalOpen, setIsModalOpen }) => {
             }}
           />
           <TextField
-            label="Title"
-            id="filled-size-normal"
-            variant="filled"
-            fullWidth
-            size="small"
-            inputProps={{ style: { textAlign: "center" } }}
-          />
-
-          <TextField
             label="What's happening, Chad?"
             multiline
             rows={5}

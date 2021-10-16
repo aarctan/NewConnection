@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import {
   Box,
@@ -14,6 +14,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 
 const API_URL = process.env.REACT_APP_API_URL;
 const Register = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [password, setPassword] = useState("");
@@ -35,14 +36,10 @@ const Register = () => {
           "Content-Type": "application/json",
         },
       });
-      if (!response.ok) {
-        console.log("bad");
+      if (response.ok) {
+        navigate("/login", { replace: true });
       } else {
-        const response_json = response.json();
-        const userdata = await fetch(`${API_URL}/userdata/${username}/`).then(
-          (response) => response.json()
-        );
-        console.log(userdata);
+        console.log("Error logging in");
       }
     } catch (error) {
       let errorMessage = "Authentication failed!";

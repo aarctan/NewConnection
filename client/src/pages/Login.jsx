@@ -3,6 +3,8 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { useContext } from "react";
+import AuthContext from "src/store/auth-context";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -13,6 +15,7 @@ const useStyles = makeStyles({
 });
 
 const Login = () => {
+  const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
   const classes = useStyles();
   const [username, setUsername] = useState("");
@@ -20,7 +23,8 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     try {
-      const response = await fetch(`${API_URL}/dj-rest-auth/login/`, {
+      // Get the token
+      const tokenResponse = await fetch(`${API_URL}/dj-rest-auth/login/`, {
         method: "POST",
         body: JSON.stringify({
           username: username,
@@ -30,15 +34,16 @@ const Login = () => {
           "Content-Type": "application/json",
         },
       });
-      if (!response.ok) {
-        console.log("bad");
-      } else {
-        const response_json = response.json();
-        const userdata = await fetch(`${API_URL}/userdata/${username}/`).then(
-          (response) => response.json()
-        );
-        console.log(userdata);
+      if (tokenResponse.ok) {
+        const tokenData = await tokenResponse.json();
+        // Get the userdata
+        const userResponse = await fetch(`${API_URL}/userdata/${username}/`);
+        const userData = await userResponse.json();
+        authCtx.login(tokenData.key, userData);
+        console.log(tokenData);
+        console.log(userData);
         navigate("/app/dashboard", { replace: true });
+      } else {
       }
     } catch (error) {
       let errorMessage = "Authentication failed!";

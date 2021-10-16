@@ -23,35 +23,32 @@ const Register = () => {
     console.log(
       `username: ${username}\ndisplayName: ${displayName}\npassword: ${password}\ngithub: ${github}\n`
     );
-    const url = `${API_URL}/dj-rest-auth/registration/`;
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify({
-        username: username,
-        password1: password,
-        password2: password,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          return res.json().then((data) => {
-            let errorMessage = "Authentication failed!";
-            throw new Error(errorMessage);
-          });
-        }
-      })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => {
-        alert(err.message);
+    try {
+      const response = await fetch(`${API_URL}/dj-rest-auth/registration/`, {
+        method: "POST",
+        body: JSON.stringify({
+          username: username,
+          password1: password,
+          password2: password,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
-    console.log(`${API_URL}`);
+      if (!response.ok) {
+        console.log("bad");
+      } else {
+        const response_json = response.json();
+        const userdata = await fetch(`${API_URL}/userdata/${username}/`).then(
+          (response) => response.json()
+        );
+        console.log(userdata);
+      }
+    } catch (error) {
+      let errorMessage = "Authentication failed!";
+      console.log(error.message);
+      alert(errorMessage);
+    }
   };
 
   return (

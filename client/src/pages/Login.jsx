@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { Box, Button, Link, TextField, Typography } from "@mui/material";
-import { useContext } from "react";
-import AuthContext from "src/store/auth-context";
 import { makeStyles } from "@mui/styles";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -16,44 +14,37 @@ const useStyles = makeStyles({
 
 const Login = () => {
   const navigate = useNavigate();
-  const authCtx = useContext(AuthContext);
   const classes = useStyles();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
-    const url = `${API_URL}/dj-rest-auth/login/`;
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          return res.json().then((data) => {
-            let errorMessage = "Authentication failed!";
-            // if (data && data.error && data.error.message) {
-            //   errorMessage = data.error.message;
-            // }
-
-            throw new Error(errorMessage);
-          });
-        }
-      })
-      .then((data) => {
-        authCtx.login(data.key);
-        navigate("/app/dashboard", { replace: true });
-      })
-      .catch((err) => {
-        alert(err.message);
+  const handleLogin = async (e) => {
+    try {
+      const response = await fetch(`${API_URL}/dj-rest-auth/login/`, {
+        method: "POST",
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+      if (!response.ok) {
+        console.log("bad");
+      } else {
+        const response_json = response.json();
+        const userdata = await fetch(`${API_URL}/userdata/${username}/`).then(
+          (response) => response.json()
+        );
+        console.log(userdata);
+        navigate("/app/dashboard", { replace: true });
+      }
+    } catch (error) {
+      let errorMessage = "Authentication failed!";
+      console.log(error.message);
+      alert(errorMessage);
+    }
   };
 
   return (

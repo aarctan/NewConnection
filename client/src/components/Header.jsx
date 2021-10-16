@@ -16,7 +16,8 @@ import { makeStyles } from "@mui/styles";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.black, 0.06),
+  border: "solid 1px #CECECE",
+  backgroundColor: alpha(theme.palette.common.black, 0.04),
   marginRight: theme.spacing(2),
   marginLeft: 0,
   width: "100%",
@@ -37,9 +38,8 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
   "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
+    padding: theme.spacing(0.2, 1),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
@@ -62,15 +62,17 @@ const Header = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
+        elevation={1}
         position="fixed"
         style={{ background: "#FFFFFF", color: "black" }}
       >
         <Toolbar
+          variant="dense"
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            mx: "20%",
+            mx: "15%",
           }}
         >
           <img
@@ -83,7 +85,7 @@ const Header = () => {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search…"
+              placeholder="Search"
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
@@ -95,15 +97,6 @@ const Header = () => {
             >
               <Badge badgeContent={4} color="error">
                 <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
               </Badge>
             </IconButton>
             <IconButton

@@ -1,56 +1,55 @@
 import * as React from "react";
-import { InputBase, styled, alpha } from "@mui/material";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import { InputAdornment } from "@mui/material";
+import { useEffect, useState } from "react";
+
 import SearchIcon from "@mui/icons-material/Search";
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  border: "solid 1px #CECECE",
-  backgroundColor: alpha(theme.palette.common.black, 0.04),
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
+const API_URL = process.env.REACT_APP_API_URL;
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
+export default function SearchTab() {
+  const [authors, setAuthors] = useState([]);
+  useEffect(() => {
+    fetch(`${API_URL}/authors/`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data.items);
+        setAuthors(data.items);
+      })
+      .catch((error) => console.log("Dashboard useEffect", error));
+  }, []);
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(0.2, 1),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
-
-const SearchTab = () => {
   return (
-    <Search>
-      <SearchIconWrapper>
-        <SearchIcon />
-      </SearchIconWrapper>
-      <StyledInputBase
-        placeholder="Search"
-        inputProps={{ "aria-label": "search" }}
-      />
-    </Search>
+    <Autocomplete
+      style={{ width: "30%" }}
+      size="small"
+      freeSolo
+      options={authors.map((author) => author.displayName)}
+      renderInput={(params) => (
+        <TextField
+          style={{
+            border: "solid 1px #f2f2f2",
+            borderRadius: "5px",
+            backgroundColor: "#f0f0f0",
+          }}
+          {...params}
+          placeholder="Search"
+          InputProps={{
+            ...params.InputProps,
+            startAdornment: (
+              <>
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+                {params.InputProps.startAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+    />
   );
-};
-
-export default SearchTab;
+}

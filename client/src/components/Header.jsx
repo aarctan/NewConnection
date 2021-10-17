@@ -3,7 +3,6 @@ import { AppBar, Box, Toolbar, IconButton, Badge } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import { makeStyles } from "@mui/styles";
-
 import Search from "src/components/Search";
 
 const useStyles = makeStyles({

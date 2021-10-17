@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import SideProfile from "./SideProfile";
 import CreatePostModal from "./CreatePostModal";
 import Post from "./Post";
-import mockPosts from "../__mocks__/posts";
 import CreateNewPostContainer from "./CreateNewPostContainer";
 
 const Feed = (props) => {
@@ -30,32 +29,29 @@ const Feed = (props) => {
       <Grid container spacing={4} justifyContent="flex-start">
         <Grid item xs={8}>
           <CreateNewPostContainer setIsModalOpen={setIsModalOpen} />
-          {posts.map((post, idx) => (
-            <Post
-              key={idx}
-              title={post.title}
-              description={post.description}
-              displayName={post.author.displayName}
-              contentType={post.contentType}
-              content={post.content}
-              count={idx}
-              profileImage={post.profileImage}
-              comments={[]}
-            />
-          ))}
-          {mockPosts.map((post, idx) => (
-            <Post
-              key={idx}
-              title={post.title}
-              description={post.description}
-              displayName={post.author.displayName}
-              contentType={post.contentType}
-              content={post.content}
-              count={post.count}
-              profileImage={post.author.profileImage}
-              comments={post.comments}
-            />
-          ))}
+          {posts.length ? (
+            posts.map((post, idx) => (
+              <Post
+                key={idx}
+                title={post.title}
+                description={post.description}
+                displayName={post.author.displayName}
+                contentType={post.contentType}
+                content={post.content}
+                count={idx}
+                profileImage={post.profileImage}
+                comments={[]}
+              />
+            ))
+          ) : (
+            <Typography
+              variant="h6"
+              align="center"
+              sx={{ color: "#858585", marginTop: "10%" }}
+            >
+              <i>It's quiet here, why not add a new post?</i>
+            </Typography>
+          )}
         </Grid>
         <Grid
           display="flex"

@@ -3,19 +3,21 @@ import { Box, Grid } from "@mui/material";
 import SideProfile from "./SideProfile";
 import CreatePostModal from "./CreatePostModal";
 import Post from "./Post";
-import posts from "../__mocks__/posts";
+import mockPosts from "../__mocks__/posts";
 import CreateNewPostContainer from "./CreateNewPostContainer";
 
 const Feed = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [posts, setPosts] = useState([]);
 
   return (
     <Box display="flex" mx="20%" my="85px">
       <Grid container spacing={4} justifyContent="flex-start">
         <Grid item xs={8}>
           <CreateNewPostContainer setIsModalOpen={setIsModalOpen} />
-          {posts.map((post) => (
+          {mockPosts.map((post, idx) => (
             <Post
+              key={idx}
               title={post.title}
               description={post.description}
               displayName={post.author.displayName}

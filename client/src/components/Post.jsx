@@ -136,34 +136,33 @@ const Post = (props) => {
       </CardContent>
       {/* Comments */}
       <CardContent className={classes.root} sx={{ py: 1 }}>
-        {props.comments.map((comment) => (
+        {props.comments.map((comment, idx) => (
           <Comment
+            key={idx}
             user={comment.author.displayName}
             comment={comment.comment}
           />
         ))}
       </CardContent>
-      <form>
-        <Paper
-          component="form"
-          sx={{
-            p: "2px 4px",
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: "#fafafa",
-          }}
-        >
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="Comment..."
-            inputProps={{ "aria-label": "comment" }}
-          />
-          <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-          <IconButton color="primary" sx={{ p: "10px" }} aria-label="send">
-            <SendIcon />
-          </IconButton>
-        </Paper>
-      </form>
+      <Paper
+        component="form"
+        sx={{
+          p: "2px 4px",
+          display: "flex",
+          alignItems: "center",
+          backgroundColor: "#fafafa",
+        }}
+      >
+        <InputBase
+          sx={{ ml: 1, flex: 1 }}
+          placeholder="Comment..."
+          inputProps={{ "aria-label": "comment" }}
+        />
+        <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+        <IconButton color="primary" sx={{ p: "10px" }} aria-label="send">
+          <SendIcon />
+        </IconButton>
+      </Paper>
       <PostModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}

@@ -16,7 +16,7 @@ export default function SideProfile(props) {
 
         <Typography variant="body2">Recently joined NewConnection</Typography>
         {recentAuthors.map(function (author, idx) {
-          return <Typography variant="body2">{author.displayName}</Typography>;
+          return <Typography variant="body2" key={idx}>{author.displayName}</Typography>;
         })}
       </Stack>
     </Box>

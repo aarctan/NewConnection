@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { Avatar, Card, CardContent, Box, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import AuthContext from "src/store/auth-context";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateNewPostContainer = (props) => {
   const classes = useStyles();
+  const authCtx = useContext(AuthContext);
 
   return (
     <Card sx={{ paddingBottom: 0, backgroundColor: "EDECEC" }}>
@@ -23,8 +26,8 @@ const CreateNewPostContainer = (props) => {
         sx={{ display: "flex", alignItems: "center" }}
       >
         <Avatar
-          alt="Chad"
-          src="/static/images/avatars/chad.jpg"
+          alt="Avatar"
+          src={authCtx.userdata.profileImage}
           sx={{ width: 56, height: 56, marginRight: 1.5 }}
         />
         <Box

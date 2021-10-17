@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import SideProfile from "./SideProfile";
 import CreatePostModal from "./CreatePostModal";
 import Post from "./Post";
@@ -39,7 +39,7 @@ const Feed = (props) => {
               contentType={post.contentType}
               content={post.content}
               count={idx}
-              profileImage="/static/images/avatars/rebecca.jpg"
+              profileImage={post.profileImage}
               comments={[]}
             />
           ))}

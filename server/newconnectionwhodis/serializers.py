@@ -20,7 +20,7 @@ class AuthorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Author
-        fields = ('type', 'id', 'host', 'displayName', 'url', 'github')
+        fields = ('type', 'id', 'host', 'displayName', 'url', 'github', 'profileImage')
 
     def get_host_url(self, obj):
         return 'http://' + self.context['request'].get_host()

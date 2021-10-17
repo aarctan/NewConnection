@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
+BLANK_PIC_URL = "https://i.imgur.com/7MUSXf9.png"
+
 class Author(models.Model):
     """
     An author is a basic user. For now, they have a name and a github.
@@ -16,6 +18,7 @@ class Author(models.Model):
     url = models.URLField(max_length=128, editable=False)
     displayName = models.CharField(max_length=32)
     github = models.TextField(max_length=60)
+    profileImage = models.URLField(default=BLANK_PIC_URL)
     def __str__(self):
         return self.displayName
 

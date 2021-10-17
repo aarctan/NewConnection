@@ -30,7 +30,7 @@ class PostLikesViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         d = util.response_to_json(response)
         self.assertEqual(d['type'], 'Like')
-        self.assertEquals(len(d['author']), 6) # author has 6 fields
+        self.assertEquals(len(d['author']), 7) # author has 6 fields
         host = d['author']['host']
         self.assertTrue('http' in host)
         self.assertEquals(d['object'], f'{host}/author/{self.author_id}/posts/{self.post_id}')

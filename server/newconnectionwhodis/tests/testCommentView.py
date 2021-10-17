@@ -34,7 +34,7 @@ class CommentViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         d = util.response_to_json(response)
         self.assertEqual(d['type'], 'comment')
-        self.assertEqual(len(d['author']), 6) # author has 6 fields
+        self.assertEqual(len(d['author']), 7) # author has 6 fields
         self.assertEqual(d['comment'], COMMENT_CONTENT)
         self.assertEqual(d['contentType'], 'text/markdown')
 

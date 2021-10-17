@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Feed = () => {
+const Feed = (props) => {
   const classes = useStyles();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -92,7 +92,7 @@ const Feed = () => {
           xs={4}
           sx={{ marginTop: 1 }}
         >
-          <SideProfile />
+          <SideProfile recentAuthors={props.recentAuthors}/>
         </Grid>
       </Grid>
       <CreatePostModal

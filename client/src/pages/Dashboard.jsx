@@ -28,7 +28,7 @@ const Dashboard = () => {
   return (
     <>
       <Header />
-      <Feed />
+      <Feed recentAuthors={authors}/>
     </>
   );
 };

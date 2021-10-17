@@ -1,77 +1,19 @@
-import * as React from "react";
 import { useState } from "react";
-import { Avatar, Card, CardContent, Box, Grid, Button } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Box, Grid } from "@mui/material";
 import SideProfile from "./SideProfile";
 import CreatePostModal from "./CreatePostModal";
 import Post from "./Post";
 import posts from "../__mocks__/posts";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: "#EDECEC",
-  },
-  buttonContainer: {
-    textAlign: "center",
-  },
-  cardContent: {
-    padding: theme.spacing(3),
-  },
-}));
+import CreateNewPostContainer from "./CreateNewPostContainer";
 
 const Feed = (props) => {
-  const classes = useStyles();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <Box display="flex" mx="20%" my="85px">
       <Grid container spacing={4} justifyContent="flex-start">
         <Grid item xs={8}>
-          <Card sx={{ paddingBottom: 0, backgroundColor: "EDECEC" }}>
-            <CardContent
-              className={classes.cardContent}
-              sx={{ display: "flex", alignItems: "center" }}
-            >
-              <Avatar
-                alt="Chad"
-                src="/static/images/avatars/chad.jpg"
-                sx={{ width: 56, height: 56, marginRight: 1.5 }}
-              />
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  flexGrow: 1,
-                  px: 1,
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  sx={{
-                    borderRadius: "15px",
-                    justifyContent: "center",
-                    backgroundColor: "#eaeaea",
-                    marginBottom: 1.3,
-                  }}
-                  fullWidth
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  Write a text post
-                </Button>
-                <Button
-                  variant="outlined"
-                  sx={{
-                    borderRadius: "15px",
-                    justifyContent: "center",
-                    backgroundColor: "#eaeaea",
-                  }}
-                  fullWidth
-                >
-                  Upload an image
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
+          <CreateNewPostContainer setIsModalOpen={setIsModalOpen} />
           {posts.map((post) => (
             <Post
               title={post.title}
@@ -92,7 +34,7 @@ const Feed = (props) => {
           xs={4}
           sx={{ marginTop: 1 }}
         >
-          <SideProfile recentAuthors={props.recentAuthors}/>
+          <SideProfile recentAuthors={props.recentAuthors} />
         </Grid>
       </Grid>
       <CreatePostModal

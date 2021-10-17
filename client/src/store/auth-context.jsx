@@ -16,47 +16,34 @@ const retrieveStoredToken = () => {
   };
 };
 
-const retrieveStoredUserData = () => {
-  const storedUserData = localStorage.getItem("userdata");
-
-  return {
-    userdata: storedUserData,
-  };
-};
-
 export const AuthContextProvider = (props) => {
   const tokenData = retrieveStoredToken();
-  const userData = retrieveStoredUserData();
+
   let initialToken;
-  let initialUserdata;
   if (tokenData) {
     initialToken = tokenData.token;
   }
-  if (userData) {
-    initialUserdata = userData.userdata;
-  }
+
   const [token, setToken] = useState(initialToken);
-  const [user, setUser] = useState(initialUserdata);
+  const [userdata, setUserdata] = useState({});
 
   const userIsLoggedIn = !!token;
 
   const logoutHandler = useCallback(() => {
     setToken(null);
-    setUser(null);
+    setUserdata(null);
     localStorage.removeItem("token");
-    localStorage.removeItem("userdata");
   }, []);
 
-  const loginHandler = (token, user) => {
+  const loginHandler = (token, userdata) => {
     setToken(token);
-    setUser(user);
+    setUserdata(userdata);
     localStorage.setItem("token", token);
-    localStorage.setItem("userdata", JSON.stringify(user));
   };
 
   const contextValue = {
     token: token,
-    userdata: JSON.parse(user),
+    userdata: userdata,
     isLoggedIn: userIsLoggedIn,
     login: loginHandler,
     logout: logoutHandler,

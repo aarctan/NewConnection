@@ -9,6 +9,10 @@ const Feed = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [posts, setPosts] = useState([]);
 
+  const handlePostSubmit = (e, post) => {
+    setPosts([...posts, post]);
+  };
+
   useEffect(() => {
     for (let i = 0; i < props.recentAuthors.length; i++) {
       fetch(`${props.recentAuthors[i].id}/posts/`)
@@ -66,6 +70,7 @@ const Feed = (props) => {
       <CreatePostModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
+        handlePostSubmit={handlePostSubmit}
       ></CreatePostModal>
     </Box>
   );

@@ -1,11 +1,4 @@
-import {
-  Modal,
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Grid,
-} from "@mui/material";
+import { Modal, Box, Typography, TextField, Button, Grid } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useContext } from "react";
 import AuthContext from "src/store/auth-context";
@@ -22,8 +15,11 @@ const style = {
   borderRadius: "8px",
 };
 
-
-export default function CreatePostModal({ isModalOpen, setIsModalOpen }) {
+export default function CreatePostModal({
+  isModalOpen,
+  setIsModalOpen,
+  handlePostSubmit,
+}) {
   const handleClose = () => setIsModalOpen(false);
   const authCtx = useContext(AuthContext);
   const [title, setTitle] = useState("");
@@ -49,6 +45,8 @@ export default function CreatePostModal({ isModalOpen, setIsModalOpen }) {
         },
       });
       if (postResponse.ok) {
+        const postData = await postResponse.json();
+        handlePostSubmit(e, postData);
         setIsModalOpen(false);
       } else {
       }
@@ -58,7 +56,7 @@ export default function CreatePostModal({ isModalOpen, setIsModalOpen }) {
       alert(errorMessage);
     }
   };
-  
+
   return (
     <>
       <Modal open={isModalOpen} onClose={handleClose}>

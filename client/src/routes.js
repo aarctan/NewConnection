@@ -5,6 +5,7 @@ import Dashboard from "src/pages/Dashboard";
 import Login from "src/pages/Login";
 import NotFound from "src/pages/NotFound";
 import Register from "src/pages/Register";
+import Profile from "./pages/Profile";
 
 const routes = [
   {
@@ -12,6 +13,7 @@ const routes = [
     element: <DashboardLayout />,
     children: [
       { path: "dashboard", element: <Dashboard /> },
+      { path: "author/:authorID", element: <Profile /> },
       { path: "*", element: <Navigate to="/404" /> },
     ],
   },

@@ -63,6 +63,9 @@ const Header = () => {
             src="/newconnectionlogo.png"
             alt="logo"
             className={classes.logo}
+            onClick={() => {
+              navigate(`/app/dashboard`);
+            }}
           />
           <Search />
           <Box>
@@ -120,7 +123,13 @@ const Header = () => {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem>
+            <MenuItem
+              onClick={() => {
+                const words = authCtx.userdata.id.split("/");
+                const word = words[words.length - 1];
+                navigate(`/app/author/${word}`);
+              }}
+            >
               <Avatar /> Profile
             </MenuItem>
             <Divider />

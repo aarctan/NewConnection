@@ -14,7 +14,7 @@ const routes = [
     children: [
       { path: "dashboard", element: <Dashboard /> },
       { path: "author/:authorID", element: <Profile /> },
-      { path: "*", element: <Navigate to="/404" /> },
+      { path: "*", element: <Navigate to="/404" replace={true} /> },
     ],
   },
   {

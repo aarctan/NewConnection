@@ -127,7 +127,7 @@ const Header = () => {
               onClick={() => {
                 const words = authCtx.userdata.id.split("/");
                 const word = words[words.length - 1];
-                navigate(`/app/author/${word}`);
+                navigate(`/app/author/${word}`, { state: authCtx.userdata });
               }}
             >
               <Avatar /> Profile

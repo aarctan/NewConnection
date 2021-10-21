@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import {
   Box,
   Typography,
@@ -7,23 +6,21 @@ import {
   IconButton,
   Divider,
 } from "@mui/material";
-import AuthContext from "src/store/auth-context";
 import SettingsIcon from "@mui/icons-material/Settings";
 
 const Banner = (props) => {
-  const authCtx = useContext(AuthContext);
   return (
     <>
       <Box display="flex" mx="30%" mt="85px" mb="45px">
         <Avatar
           alt="Avatar"
-          src={authCtx.userdata.profileImage}
+          src={props.author.profileImage}
           sx={{ width: 135, height: 135, marginRight: 12 }}
         />
         <Box>
           <Box display="flex" alignItems="flex-start">
             <Typography variant="body1" fontSize="20pt">
-              {authCtx.userdata.displayName}
+              {props.author.displayName}
             </Typography>
             <Button
               style={{

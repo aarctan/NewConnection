@@ -4,7 +4,7 @@ import { Box, Container, Typography } from "@mui/material";
 const NotFound = () => (
   <>
     <Helmet>
-      <title>404 | NewConnectionWhoDis</title>
+      <title>404 | NewConnection</title>
     </Helmet>
     <Box
       sx={{
@@ -16,12 +16,11 @@ const NotFound = () => (
       }}
     >
       <Container maxWidth="md">
-        <Typography align="center" color="textPrimary" variant="h1">
+        <Typography align="center" color="textPrimary" variant="h3">
           404: The page you are looking for isn’t here
         </Typography>
-        <Typography align="center" color="textPrimary" variant="subtitle2">
+        <Typography align="center" color="textPrimary" variant="subtitle1">
           You either tried some shady route or you came here by mistake.
-          Whichever it is, try using the navigation
         </Typography>
         <Box sx={{ textAlign: "center" }}>
           <img

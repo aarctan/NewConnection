@@ -21,6 +21,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import SendIcon from "@mui/icons-material/Send";
 import { makeStyles } from "@mui/styles";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 const Post = (props) => {
   const classes = useStyles();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <Card sx={{ my: "25px" }}>
@@ -55,8 +57,13 @@ const Post = (props) => {
         >
           <Avatar
             alt="Chad"
-            src={props.profileImage}
+            src={props.author.profileImage}
             sx={{ width: 38, height: 38, marginRight: 2 }}
+            onClick={() => {
+              const words = props.author.id.split("/");
+              const word = words[words.length - 1];
+              navigate(`/app/author/${word}`, { state: props.author });
+            }}
           />
           <Typography variant="body1" color="text.primary" fontWeight="600">
             {props.title}
@@ -111,15 +118,21 @@ const Post = (props) => {
           8,032 likes
         </Typography>
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography
-            sx={{ paddingBottom: 0.5, marginRight: 1 }}
+          <Link
+            component="button"
             variant="body2"
-            color="text.primary"
+            underline="hover"
             fontWeight="600"
+            sx={{ marginRight: 1 }}
+            onClick={() => {
+              const words = props.author.id.split("/");
+              const word = words[words.length - 1];
+              navigate(`/app/author/${word}`, { state: props.author });
+            }}
           >
-            {props.displayName}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" fontWeight="500">
+            {props.author.displayName}
+          </Link>
+          <Typography variant="body2" color="text.secondary" fontSize="10pt">
             {props.description}
           </Typography>
         </Box>

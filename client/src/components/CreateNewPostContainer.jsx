@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Avatar, Card, CardContent, Box, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import AuthContext from "src/store/auth-context";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
 const CreateNewPostContainer = (props) => {
   const classes = useStyles();
   const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
 
   return (
     <Card sx={{ paddingBottom: 0, backgroundColor: "EDECEC" }}>
@@ -29,6 +31,11 @@ const CreateNewPostContainer = (props) => {
           alt="Avatar"
           src={authCtx.userdata.profileImage}
           sx={{ width: 56, height: 56, marginRight: 1.5 }}
+          onClick={() => {
+            const words = authCtx.userdata.id.split("/");
+            const word = words[words.length - 1];
+            navigate(`/app/author/${word}`, { state: authCtx.userdata });
+          }}
         />
         <Box
           sx={{

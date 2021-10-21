@@ -3,13 +3,14 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { InputAdornment } from "@mui/material";
 import { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export default function SearchTab() {
+const SearchTab = () => {
   const [authors, setAuthors] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
     fetch(`${API_URL}/authors/`)
       .then((response) => {
@@ -27,7 +28,13 @@ export default function SearchTab() {
       style={{ width: "30%" }}
       size="small"
       freeSolo
-      options={authors.map((author) => author.displayName)}
+      options={authors}
+      getOptionLabel={(option) => option.displayName}
+      onChange={(e, value) => {
+        const words = value.id.split("/");
+        const word = words[words.length - 1];
+        navigate(`/app/author/${word}`, { state: value });
+      }}
       renderInput={(params) => (
         <TextField
           style={{
@@ -52,4 +59,6 @@ export default function SearchTab() {
       )}
     />
   );
-}
+};
+
+export default SearchTab;

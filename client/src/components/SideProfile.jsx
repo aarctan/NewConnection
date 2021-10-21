@@ -15,6 +15,11 @@ const SideProfile = (props) => {
             alt="Avatar"
             src={authCtx.userdata.profileImage}
             sx={{ width: 56, height: 56 }}
+            onClick={() => {
+              const words = authCtx.userdata.id.split("/");
+              const word = words[words.length - 1];
+              navigate(`/app/author/${word}`, { state: authCtx.userdata });
+            }}
           />
           <Typography variant="h6">{authCtx.userdata.displayName}</Typography>
         </Stack>

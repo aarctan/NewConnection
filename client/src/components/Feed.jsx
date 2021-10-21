@@ -39,11 +39,10 @@ const Feed = (props) => {
                 key={idx}
                 title={post.title}
                 description={post.description}
-                displayName={post.author.displayName}
+                author={post.author}
                 contentType={post.contentType}
                 content={post.content}
                 count={idx}
-                profileImage={post.profileImage}
                 comments={[]}
               />
             ))

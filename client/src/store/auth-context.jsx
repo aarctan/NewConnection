@@ -6,6 +6,7 @@ const AuthContext = React.createContext({
   isLoggedIn: false,
   login: (token, userdata) => {},
   logout: () => {},
+  update: (userdata) => {},
 });
 
 const retrieveStoredToken = () => {
@@ -56,12 +57,19 @@ export const AuthContextProvider = (props) => {
     localStorage.setItem("userdata", JSON.stringify(user));
   };
 
+  const updateHandler = (user) => {
+    setUser(user);
+    // Need to turn JSON into a string to store in local storage
+    localStorage.setItem("userdata", JSON.stringify(user));
+  };
+
   const contextValue = {
     token: token,
     userdata: user,
     isLoggedIn: userIsLoggedIn,
     login: loginHandler,
     logout: logoutHandler,
+    update: updateHandler,
   };
 
   return (

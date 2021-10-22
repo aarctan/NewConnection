@@ -6,7 +6,6 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 const ProfileFeed = (props) => {
   const [posts, setPosts] = useState([]);
-
   useEffect(() => {
     setPosts([]);
     fetch(`${API_URL}/author/${props.authorID}/posts/`)
@@ -29,7 +28,7 @@ const ProfileFeed = (props) => {
             key={idx}
             title={post.title}
             description={post.description}
-            author={post.author}
+            author={props.author}
             contentType={post.contentType}
             content={post.content}
             count={idx}

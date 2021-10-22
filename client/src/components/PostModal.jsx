@@ -30,6 +30,8 @@ const style = {
   borderRadius: "0px",
 };
 
+// This is a modal that contains a post and is primarily used for viewing all comments of a post
+// This modal is rendered in Post.jsx
 const PostModal = ({ isModalOpen, setIsModalOpen, post }) => {
   if (!isModalOpen) return null;
   const handleClose = () => setIsModalOpen(false);

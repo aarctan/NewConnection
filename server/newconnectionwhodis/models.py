@@ -65,3 +65,11 @@ class Like(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True, blank=True)
+
+class Follower(models.Model):
+    """
+    This model represents a sending author following a receiving author.
+    If the receiving author also follows the sending author, we consider it a friendship.
+    """
+    sender = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='sender')
+    receiver = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='receiver')

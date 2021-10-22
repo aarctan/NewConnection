@@ -25,7 +25,11 @@ const SearchTab = () => {
 
   return (
     <Autocomplete
-      style={{ width: "30%" }}
+      style={{
+        width: "200pt",
+        marginLeft: "24pt",
+        marginRight: "16pt",
+      }}
       size="small"
       freeSolo
       options={authors}
@@ -38,13 +42,17 @@ const SearchTab = () => {
       renderInput={(params) => (
         <TextField
           style={{
-            border: "solid 1px #f2f2f2",
-            borderRadius: "5px",
+            border: "solid 1pt #f2f2f2",
+            borderRadius: "5pt",
             backgroundColor: "#f0f0f0",
           }}
           {...params}
           placeholder="Search"
           InputProps={{
+            style: {
+              padding: "1pt 8pt",
+              width: "100%",
+            },
             ...params.InputProps,
             startAdornment: (
               <>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   Card,
   CardContent,
@@ -22,6 +22,8 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import SendIcon from "@mui/icons-material/Send";
 import { makeStyles } from "@mui/styles";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "src/store/auth-context";
+import MenuModal from "src/components/MenuModal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +37,15 @@ const useStyles = makeStyles((theme) => ({
 const Post = (props) => {
   const classes = useStyles();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const authCtx = useContext(AuthContext);
+
+  // Determine if this is the post of the author who is logged in
+  let isAuthor = false;
+  if (props.author.id === authCtx.userdata.id) {
+    isAuthor = true;
+  }
 
   return (
     <Card sx={{ my: "25px" }}>
@@ -70,7 +80,7 @@ const Post = (props) => {
           </Typography>
         </Box>
         <IconButton aria-label="settings">
-          <MoreHorizIcon />
+          <MoreHorizIcon onClick={() => setIsMenuOpen(true)} />
         </IconButton>
       </CardContent>
       {props.contentType === "text/plain" && (
@@ -181,6 +191,10 @@ const Post = (props) => {
         setIsModalOpen={setIsModalOpen}
         post={props}
       />
+
+      {isAuthor && (
+        <MenuModal isModalOpen={isMenuOpen} setIsModalOpen={setIsMenuOpen} />
+      )}
     </Card>
   );
 };

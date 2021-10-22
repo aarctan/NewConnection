@@ -64,7 +64,6 @@ class PostViewTests(TestCase):
             data=data,
             format='json',
         )
-        print(response.content)
         self.assertEquals(response.status_code, 201)
         response = self.client.post(
             f'/author/{self.author_id}/posts/',

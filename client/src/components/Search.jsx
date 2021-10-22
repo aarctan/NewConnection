@@ -8,6 +8,8 @@ import SearchIcon from "@mui/icons-material/Search";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
+// This is a input component used to search for users
+// This component is rendered in the Header.jsx file
 const SearchTab = () => {
   const [authors, setAuthors] = useState([]);
   const navigate = useNavigate();

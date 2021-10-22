@@ -25,6 +25,9 @@ const useStyles = makeStyles({
   },
 });
 
+// Header of the app.
+// This is rendered in Dashboard.jsx and Profile.jsx
+// This component contains a logo, a search input and navigation icons
 const Header = () => {
   const classes = useStyles();
   const authCtx = useContext(AuthContext);

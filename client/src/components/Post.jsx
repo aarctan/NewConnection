@@ -24,6 +24,7 @@ import { makeStyles } from "@mui/styles";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "src/store/auth-context";
 import MenuModal from "src/components/MenuModal";
+import DeletePostModal from "src/components/DeletePostModal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,6 +39,7 @@ const Post = (props) => {
   const classes = useStyles();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
 
@@ -186,14 +188,26 @@ const Post = (props) => {
           <SendIcon />
         </IconButton>
       </Paper>
+      {/* Opens the post in a modal to view all comments */}
       <PostModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         post={props}
       />
-
+      {/* If the author is a user, open these modals */}
       {isAuthor && (
-        <MenuModal isModalOpen={isMenuOpen} setIsModalOpen={setIsMenuOpen} />
+        <>
+          <MenuModal
+            isMenuOpen={isMenuOpen}
+            setIsMenuOpen={setIsMenuOpen}
+            setIsDeleteModalOpen={setIsDeleteModalOpen}
+          />
+          <DeletePostModal
+            isDeleteModalOpen={isDeleteModalOpen}
+            setIsDeleteModalOpen={setIsDeleteModalOpen}
+            post={props}
+          />
+        </>
       )}
     </Card>
   );

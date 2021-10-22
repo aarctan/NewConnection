@@ -16,14 +16,16 @@ const style = {
   borderRadius: "8px",
 };
 
-const MenuModal = ({ isModalOpen, setIsModalOpen }) => {
-  const handleClose = () => setIsModalOpen(false);
-
-  if (!isModalOpen) return null;
+// This modal opens up a menu when the user clicks on the 3 dots in the top right corner of a post.
+// Menu is conditionally rendered based on if the user is the author of the post or not.
+// This modal is rendered in Post.jsx
+const MenuModal = ({ isMenuOpen, setIsMenuOpen, setIsDeleteModalOpen }) => {
+  const handleClose = () => setIsMenuOpen(false);
+  if (!isMenuOpen) return null;
 
   return (
     <>
-      <Modal open={isModalOpen} onClose={handleClose}>
+      <Modal open={isMenuOpen} onClose={handleClose}>
         <Box sx={style}>
           <Button
             variant="outlined"
@@ -31,8 +33,13 @@ const MenuModal = ({ isModalOpen, setIsModalOpen }) => {
               justifyContent: "center",
               backgroundColor: "white",
               color: "red",
+              fontWeight: "bold",
             }}
             fullWidth
+            onClick={() => {
+              handleClose();
+              setIsDeleteModalOpen(true);
+            }}
           >
             Delete
           </Button>

@@ -4,11 +4,15 @@ import { useState, useContext } from "react";
 import AuthContext from "src/store/auth-context";
 
 const style = {
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-around",
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 500,
+  width: "400pt",
+  height: "325pt",
   bgcolor: "background.paper",
   boxShadow: 20,
   p: 3,
@@ -61,49 +65,58 @@ export default function CreatePostModal({
     <>
       <Modal open={isModalOpen} onClose={handleClose}>
         <Box sx={style}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            align="center"
-          >
-            Create a new post
-          </Typography>
-          <TextField
-            label="Title"
-            fullWidth
-            multiline
-            margin="dense"
-            onChange={(e) => {
-              setTitle(e.target.value);
-            }}
-          />
-          <TextField
-            label="Description"
-            fullWidth
-            onChange={(e) => {
-              setDescription(e.target.value);
-            }}
-          />
-          <TextField
-            label="What's happening, Chad?"
-            multiline
-            rows={5}
-            fullWidth
-            margin="dense"
-            onChange={(e) => {
-              setText(e.target.value);
-            }}
-          />
-
-          <Grid container>
-            <Grid item xs={6} align="left"></Grid>
-            <Grid item xs={6} align="right">
-              <Button endIcon={<SendIcon />} onClick={handleCreate}>
-                Post
-              </Button>
-            </Grid>
-          </Grid>
+          <Box>
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+              align="center"
+            >
+              Create a new post
+            </Typography>
+          </Box>
+          <Box display="flex" flexDirection="column">
+            <TextField
+              label="Title"
+              fullWidth
+              margin="dense"
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
+            />
+            <TextField
+              label="Description"
+              fullWidth
+              margin="dense"
+              onChange={(e) => {
+                setDescription(e.target.value);
+              }}
+            />
+            <TextField
+              label={`What's happening, ${authCtx.userdata.displayName} ?`}
+              multiline
+              rows={5}
+              fullWidth
+              margin="dense"
+              onChange={(e) => {
+                setText(e.target.value);
+              }}
+            />
+          </Box>
+          <Box display="flex" justifyContent="flex-end">
+            <Button
+              endIcon={<SendIcon />}
+              onClick={handleCreate}
+              style={{
+                backgroundColor: "#0095f6",
+                color: "white",
+                display: "flex",
+                width: "80pt",
+              }}
+            >
+              Post
+            </Button>
+          </Box>
         </Box>
       </Modal>
     </>

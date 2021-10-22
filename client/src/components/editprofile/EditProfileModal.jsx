@@ -108,13 +108,20 @@ const EditProfileModal = ({ isModalOpen, setIsModalOpen }) => {
               }}
             />
           </Box>
-          <Button
-            endIcon={<SendIcon />}
-            onClick={handleUpdate}
-            style={{ backgroundColor: "#0095f6", color: "white" }}
-          >
-            Update Profile
-          </Button>
+          <Box display="flex" justifyContent="flex-end">
+            <Button
+              endIcon={<SendIcon />}
+              onClick={handleUpdate}
+              style={{
+                backgroundColor: "#0095f6",
+                color: "white",
+                display: "flex",
+                width: "120pt",
+              }}
+            >
+              Update Profile
+            </Button>
+          </Box>
         </Box>
       </Modal>
     </>

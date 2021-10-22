@@ -125,3 +125,16 @@ class LikedViewSet(viewsets.ModelViewSet):
                 author=kwargs.get("author_pk"))),
                 context={'request': request},
                 many=True).data})
+
+class FollowersViewSet(viewsets.ViewSet):
+    http_method_names = ['get', 'delete', 'post', 'put']
+
+    # GET /author/{AUTHOR_ID}/followers
+    def list(self, request, **kwargs):
+        receiver = models.Author.objects.get(pk=kwargs.get("author_pk"))
+        return Response({
+            'type': "followers",
+            'items': serializers.AuthorSerializer(
+                    models.Author.objects.filter(sender__receiver=receiver),
+                    context={'request': request},
+                    many=True).data})

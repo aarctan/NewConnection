@@ -9,6 +9,7 @@ router.register(r'author', views.AuthorViewSet, basename='author')
 author_router = routers.NestedSimpleRouter(router, r'author', lookup='author')
 author_router.register(r'posts', views.PostViewSet, basename='posts')
 author_router.register(r'liked', views.LikedViewSet, basename='liked')
+author_router.register(r'followers', views.FollowersViewSet, basename='followers')
 
 posts_router = routers.NestedSimpleRouter(author_router, r'posts', lookup='posts')
 posts_router.register(r'likes', views.PostLikesViewSet, basename='likes')

@@ -20,7 +20,11 @@ const style = {
   borderRadius: "8px",
 };
 
-const EditPostModal = ({ isModalOpen, setIsModalOpen }) => {
+// This modal edits the user/author profile
+// When the user clicks update profile, it navigates to the users profile page.
+// This updates the local storage userdata and sends the new author object to the Profile page so that all of the posts
+// on the users profile get updated accordingly.
+const EditProfileModal = ({ isModalOpen, setIsModalOpen }) => {
   const handleClose = () => setIsModalOpen(false);
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
@@ -49,6 +53,7 @@ const EditPostModal = ({ isModalOpen, setIsModalOpen }) => {
         authCtx.update(putData);
         const words = putData.id.split("/");
         const word = words[words.length - 1];
+        // Pass the new author to the profile page so that it updates properly
         navigate(`/app/author/${word}`, { state: putData });
         setIsModalOpen(false);
       } else {
@@ -116,4 +121,4 @@ const EditPostModal = ({ isModalOpen, setIsModalOpen }) => {
   );
 };
 
-export default EditPostModal;
+export default EditProfileModal;

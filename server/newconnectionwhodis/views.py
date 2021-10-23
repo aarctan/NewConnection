@@ -227,7 +227,7 @@ class InboxView(APIView):
     def delete(self, request, author_id):
         author = Author.objects.get(pk=author_id)
         inbox = Inbox.objects.get(author=author)
-        inbox.set_items('[]')
+        inbox.set_items(json.loads('[]'))
         inbox.save()
         inbox.refresh_from_db()
         return Response(InboxSerializer(inbox, context={'request': request}).data)

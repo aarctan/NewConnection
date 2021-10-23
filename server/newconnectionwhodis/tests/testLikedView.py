@@ -17,10 +17,10 @@ class LikedViewTests(TestCase):
         """
         If no likes exist, the response should have no likes.
         """
-        response = self.client.get(f'/author/{self.author.id}/liked/')
+        response = self.client.get(f'/api/v1/author/{self.author.id}/liked/')
         self.assertEqual(response.status_code, 200)
         d = util.response_to_json(response)
-        self.assertEqual(d['type'], 'Liked')
+        self.assertEqual(d['type'], 'liked')
         self.assertListEqual(d['items'], [])
 
     def test_post_like(self):
@@ -28,13 +28,11 @@ class LikedViewTests(TestCase):
         Create a post like and test that it is the only one returned
         """
         util.create_post_like(self.author, self.post)
-        response = self.client.get(f'/author/{self.author_id}/liked/')
+        response = self.client.get(f'/api/v1/author/{self.author_id}/liked/')
         d = util.response_to_json(response)
-        self.assertEqual(d['type'], 'Liked')
         self.assertEquals(len(d['items']), 1)
         like_in_response = d['items'][0]
         host = like_in_response['author']['host']
-        self.assertTrue('http' in host)
         self.assertEquals(like_in_response['object'], f'{host}/author/{self.author_id}/posts/{self.post_id}')
 
     def test_comment_like(self):
@@ -42,9 +40,9 @@ class LikedViewTests(TestCase):
         Create a comment like and test that it is the only one returned
         """
         util.create_comment_like(self.author, self.post, self.comment)
-        response = self.client.get(f'/author/{self.author_id}/liked/')
+        response = self.client.get(f'/api/v1/author/{self.author_id}/liked/')
         d = util.response_to_json(response)
-        self.assertEqual(d['type'], 'Liked')
+        self.assertEqual(d['type'], 'liked')
         self.assertEquals(len(d['items']), 1)
         like_in_response = d['items'][0]
         host = like_in_response['author']['host']
@@ -59,10 +57,10 @@ class LikedViewTests(TestCase):
         NUM_LIKES = 2
         for i in range(NUM_LIKES):
             util.create_post_like(self.author, self.post)
-        response = self.client.get(f'/author/{self.author_id}/liked/')
+        response = self.client.get(f'/api/v1/author/{self.author_id}/liked/')
         d = util.response_to_json(response)
         self.assertEquals(len(d['items']), NUM_LIKES)
-    
+
     def test_multiple_different_likes(self):
         """
         Create one post like and one comment like,
@@ -71,7 +69,7 @@ class LikedViewTests(TestCase):
         NUM_LIKES = 2
         util.create_post_like(self.author, self.post)
         util.create_comment_like(self.author, self.post, self.comment)
-        response = self.client.get(f'/author/{self.author_id}/liked/')
+        response = self.client.get(f'/api/v1/author/{self.author_id}/liked/')
         d = util.response_to_json(response)
         post_like = d['items'][0]
         comment_like = d['items'][1]

@@ -14,7 +14,7 @@ class AuthenticationTests(TestCase):
             "password2": "Thequickbrownfox23",
         }
         response = self.client.post(
-            f'/dj-rest-auth/registration/',
+            f'/api/v1/dj-rest-auth/registration/',
             data,
             format='json',
         )

@@ -19,33 +19,13 @@ class CommentViewTests(TestCase):
         Tests that a db with a single author and post has no comments
         """
         response = self.client.get(
-            f'/author/{self.author_id}/posts/{self.post_id}/comments/'
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertListEqual(util.response_to_json(response), [])
-    
-    def test_comment_id_get(self):
-        COMMENT_CONTENT = "Comment_Placeholder"
-        comment = util.create_comment(self.author, self.post, COMMENT_CONTENT)
-        comment_id = comment.id
-        response = self.client.get(
-            f'/author/{self.author_id}/posts/{self.post_id}/comments/{comment_id}/'
+            f'/api/v1/author/{self.author_id}/posts/{self.post_id}/comments/'
         )
         self.assertEqual(response.status_code, 200)
         d = util.response_to_json(response)
-        self.assertEqual(d['type'], 'comment')
-        self.assertEqual(len(d['author']), 7) # author has 6 fields
-        self.assertEqual(d['comment'], COMMENT_CONTENT)
-        self.assertEqual(d['contentType'], 'text/markdown')
+        self.assertEqual(d['type'], 'comments')
+        self.assertListEqual(d['comments'], [])
 
-        # TODO: Check that the published date is ISO 8601
-
-        host = d['author']['host']
-        self.assertTrue('http' in host)
-        self.assertEquals(
-            d['id'],
-            f'{host}/author/{self.author_id}/posts/{self.post_id}/comments/{comment_id}')
-    
     # TODO: More comment tests including pagination tests
     def test_comments_pagination(self):
         """
@@ -56,26 +36,26 @@ class CommentViewTests(TestCase):
         for i in range(NUM_COMMENTS):
             util.create_comment(self.author, self.post, f"Comment_{i}")
         response = self.client.get(
-            f'/author/{self.author_id}/posts/{self.post_id}/comments/?page={PAGE}&size={SIZE}'
+            f'/api/v1/author/{self.author_id}/posts/{self.post_id}/comments/?page={PAGE}&size={SIZE}'
         )
         d = util.response_to_json(response)
-        self.assertEquals(len(d), SIZE)
+        self.assertEquals(d['type'], 'comments')
+        comments = d['comments']
+        self.assertEquals(len(comments), SIZE)
         for i in range(SIZE):
-            self.assertEquals(d[i]["comment"], f"Comment_{(PAGE - 1) * SIZE + i}")
+            self.assertEquals(comments[i]["comment"], f"Comment_{(PAGE - 1) * SIZE + i}")
 
     def test_comment_push(self):    
-        response = self.client.get('')
-        request = response.wsgi_request
-        auth = serializers.AuthorSerializer(self.author, context={'request': request}).data
-        post = serializers.PostSerializer(self.post, context={'request': request}).data
         data = {
-            'author': auth,
-            'post': post,
+            'author': self.author_id,
+            'post': self.post_id,
             'comment': 'very post much wow',
         }
         response = self.client.post(
-            f'/author/{self.author_id}/posts/{self.post_id}/comments/',
+            f'/api/v1/author/{self.author_id}/posts/{self.post_id}/comments/',
             data,
             format='json',
         )
         self.assertEquals(response.status_code, 201)
+        d = util.response_to_json(response)
+

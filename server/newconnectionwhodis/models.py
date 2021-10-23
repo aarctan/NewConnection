@@ -22,6 +22,14 @@ class Author(models.Model):
     def __str__(self):
         return self.displayName
 
+class Follower(models.Model):
+    """
+    This model represents a sending author following a receiving author.
+    If the receiving author also follows the sending author, we consider it a friendship.
+    """
+    sender = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='sender')
+    receiver = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='receiver')
+    
 # TODO: Visibility settings for posts?
 class Post(models.Model):
     """
@@ -66,10 +74,3 @@ class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True, blank=True)
 
-class Follower(models.Model):
-    """
-    This model represents a sending author following a receiving author.
-    If the receiving author also follows the sending author, we consider it a friendship.
-    """
-    sender = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='sender')
-    receiver = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='receiver')

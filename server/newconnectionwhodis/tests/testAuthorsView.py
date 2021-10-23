@@ -9,7 +9,7 @@ class AuthorsViewTests(TestCase):
         """
         If no authors exist, the response should have no authors.
         """
-        response = self.client.get('/authors/')
+        response = self.client.get('/api/v1/authors/')
         self.assertEqual(response.status_code, 200)
         d = util.response_to_json(response)
         self.assertEqual(d['type'], 'authors')
@@ -21,7 +21,7 @@ class AuthorsViewTests(TestCase):
         """
         AUTHOR_NAME, AUTHOR_GITHUB = "Muhammad", "Exanut"
         util.create_author(AUTHOR_NAME, AUTHOR_GITHUB)
-        response = self.client.get('/authors/')
+        response = self.client.get('/api/v1/authors/')
         d = util.response_to_json(response)
         self.assertEquals(len(d['items']), 1)
         author_in_response = d['items'][0]
@@ -35,7 +35,7 @@ class AuthorsViewTests(TestCase):
         NUM_AUTHORS = 2
         for i in range(NUM_AUTHORS):
             util.create_author(f"Author_{i}", f"Github_{i}")
-        response = self.client.get('/authors/')
+        response = self.client.get('/api/v1/authors/')
         d = util.response_to_json(response)
         self.assertEquals(len(d['items']), NUM_AUTHORS)
 
@@ -47,7 +47,7 @@ class AuthorsViewTests(TestCase):
         PAGE, SIZE = 4, 3
         for i in range(NUM_AUTHORS):
             util.create_author(f"Author_{i}", f"Github_{i}")
-        response = self.client.get(f"/authors/?page={PAGE}&size={SIZE}")
+        response = self.client.get(f'/api/v1/authors/?page={PAGE}&size={SIZE}')
         d = util.response_to_json(response)
         self.assertEquals(len(d['items']), SIZE)
         for i in range(SIZE):

@@ -4,7 +4,9 @@ from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 from dj_rest_auth.serializers import LoginSerializer
 from dj_rest_auth.registration.serializers import RegisterSerializer
 
-from . import models
+from .models import *
+
+SERVICE = '/api/v1/'
 
 # https://stackoverflow.com/a/55128035
 class LoginSerializer(LoginSerializer):
@@ -13,20 +15,24 @@ class LoginSerializer(LoginSerializer):
 class CustomRegisterSerializer(RegisterSerializer):
     email = None
 
+
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.SerializerMethodField('get_id_url')
     host = serializers.SerializerMethodField('get_host_url')
     url = serializers.SerializerMethodField('get_id_url')
 
     class Meta:
-        model = models.Author
+        model = Author
         fields = ('type', 'id', 'host', 'displayName', 'url', 'github', 'profileImage')
 
     def get_host_url(self, obj):
-        return 'http://' + self.context['request'].get_host()
+        host = self.context['request'].get_host()
+        return f'http://{host}'
 
     def get_id_url(self, obj):
-        return 'http://' + self.context['request'].get_host() + f"/{obj.type}/{obj.id}"
+        host = self.context['request'].get_host()
+        return f'http://{host}{SERVICE}author/{obj.id}'
+
 
 class PostSerializer(NestedHyperlinkedModelSerializer):
     id = serializers.SerializerMethodField('get_id_url')
@@ -36,7 +42,7 @@ class PostSerializer(NestedHyperlinkedModelSerializer):
     origin = serializers.SerializerMethodField('get_origin_url')
 
     class Meta:
-        model = models.Post
+        model = Post
         fields = ('type', 'id', 'contentType',
             'content', 'author', 'title', 'description',
             'source', 'origin')
@@ -48,42 +54,37 @@ class PostSerializer(NestedHyperlinkedModelSerializer):
     def get_origin_url(self, obj):
         return 'http://' + self.context['request'].get_host()
 
+
 class CommentSerializer(NestedHyperlinkedModelSerializer):
     id = serializers.SerializerMethodField('get_id_url')
     author = AuthorSerializer(many=False, read_only=True)
-    parent_lookup_kwargs = {
-        'post_pk': 'post__pk',
-        'author_pk': 'post__author__pk',
-    }
+
     class Meta:
-        model = models.Comment
+        model = Comment
         fields = ('type', 'author', 'comment', 'contentType', 'published', 'id')
 
     def get_id_url(self, obj):
         host = self.context['request'].get_host()
         return f'http://{host}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.id}'
         
+        
 class LikeSerializer(NestedHyperlinkedModelSerializer):
     summary = serializers.SerializerMethodField('get_liker')
     object = serializers.SerializerMethodField('get_id_url')
     author = AuthorSerializer(many=False, read_only=True)
     class Meta:
-        model = models.Like
+        model = Like
         fields = ('summary', 'type', 'author', 'object')
 
     def get_id_url(self, obj):
         host = self.context['request'].get_host()
-        post = obj.post
-        comment = obj.comment
-        if comment:
+        if obj.comment:
             return f'http://{host}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.comment.id}'
-        elif post:
+        elif obj.post:
             return f'http://{host}/author/{obj.author.id}/posts/{obj.post.id}'
 
     def get_liker(self, obj):
-        post = obj.post
-        comment = obj.comment
-        if comment:
-            return obj.author.displayName + " likes your %s" % (comment.type)
-        elif post:
-            return obj.author.displayName + " likes your %s" % (post.type)
+        if obj.comment:
+            return obj.author.displayName + " likes your %s" % (obj.comment.type)
+        elif obj.post:
+            return obj.author.displayName + " likes your %s" % (obj.post.type)

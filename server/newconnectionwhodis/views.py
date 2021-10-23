@@ -1,140 +1,202 @@
-from rest_framework import viewsets
-from rest_framework.generics import get_object_or_404
+from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from django.http import Http404
+from .serializers import *
+from .models import *
+from . import view_util
 
-from . import serializers
-from . import models
-
-def paginate_queryset(query_params, queryset):
-    """
-    Utility function to slice a queryset if pagination parameters
-    'page' and 'size' are provided.
-    """
-    num_models = len(queryset)
-    # slicing empty or singleton querysets does not return queryset.
-    if num_models <= 1:
-        return queryset
-    page = query_params.get('page')
-    size = query_params.get('size')
-    page = int(page) - 1 if page else 0
-    size = int(size) if size else num_models
-    return queryset[page * size : page * size + size]
 
 class UserdataViewSet(viewsets.ViewSet):
-    """
-    Maps user to its author and returns the authors serialized data
-    """
     http_method_names = ['get']
+
+    # GET maps user to its author and returns the authors serialized data
     def retrieve(self, request, user):
-        author = models.Author.objects.get(user__username=user)
-        serializer = serializers.AuthorSerializer(
-            author,context={'request': request})
+        author = Author.objects.get(user__username=user)
+        serializer = AuthorSerializer(author, context={'request': request})
         return Response(serializer.data)
 
-class AuthorsViewSet(viewsets.ViewSet):
+
+class AuthorsView(APIView):
     http_method_names = ['get']
-    def list(self, request):
+
+    # GET: retrieve all profiles on the server paginated
+    def get(self, request):
         return Response({
             'type': "authors",
-            'items': serializers.AuthorSerializer(
-                paginate_queryset(
+            'items': AuthorSerializer(
+                view_util.paginate_queryset(
                     self.request.query_params,
-                    models.Author.objects.all()),
+                    Author.objects.all()),
                 context={'request': request},
                 many=True).data})
 
-class AuthorViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get', 'put']
-    queryset = models.Author.objects.all().order_by('displayName')
-    serializer_class = serializers.AuthorSerializer
-    def list(self, request, *args, **kwargs):
-        return Http404("Cannot list /author/")
 
-class PostViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get', 'post', 'delete']
-    serializer_class = serializers.PostSerializer
-    def get_queryset(self):
-        return models.Post.objects.filter(
-            author=self.kwargs['author_pk'])
-    def perform_create(self, serializer):
-        author_pk = self.kwargs['author_pk']
-        author = models.Author.objects.filter(pk=author_pk).get()
-        serializer.save(author=author)
-
-class CommentViewSet(viewsets.ModelViewSet):
+class AuthorView(APIView):
     http_method_names = ['get', 'post']
-    serializer_class = serializers.CommentSerializer
-    def get_queryset(self):
-        return paginate_queryset(
-            self.request.query_params,
-            models.Comment.objects.order_by('-published').filter(
-                author=self.kwargs['author_pk'],
-                post=self.kwargs['posts_pk']))
-    def perform_create(self, serializer):
-        author_pk = self.kwargs['author_pk']
-        posts_pk = self.kwargs['posts_pk']
-        author = models.Author.objects.filter(pk=author_pk).get()
-        post = models.Post.objects.filter(pk=posts_pk).get()
-        serializer.save(author=author, post=post)
 
-class PostLikesViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get', 'post']
-    serializer_class = serializers.LikeSerializer
-    def get_queryset(self):
-        return paginate_queryset(
-            self.request.query_params,
-            models.Like.objects.filter(comment=None,
-                author=self.kwargs['author_pk'],
-                post=self.kwargs['posts_pk']))
-    def perform_create(self, serializer):
-        author_pk = self.kwargs['author_pk']
-        posts_pk = self.kwargs['posts_pk']
-        author = models.Author.objects.filter(pk=author_pk).get()
-        post = models.Post.objects.filter(pk=posts_pk).get()
-        serializer.save(author=author, post=post)
+    # GET: retrieve their profile
+    def get(self, request, author_id):
+        author = Author.objects.get(pk=author_id)
+        serializer = AuthorSerializer(author, context={'request': request})
+        return Response(serializer.data)
 
-class CommentLikesViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get', 'post']
-    serializer_class = serializers.LikeSerializer
-    def get_queryset(self):
-        return paginate_queryset(
-            self.request.query_params,
-            models.Like.objects.filter(
-                author=self.kwargs['author_pk'],
-                comment=self.kwargs['comments_pk']))
-    def perform_create(self, serializer):
-        author_pk = self.kwargs['author_pk']
-        posts_pk = self.kwargs['posts_pk']
-        comments_pk = self.kwargs['comments_pk']
-        author = models.Author.objects.filter(pk=author_pk).get()
-        post = models.Post.objects.filter(pk=posts_pk).get()
-        comment = models.Comment.objects.filter(pk=comments_pk).get()
-        serializer.save(author=author, post=post, comment=comment)
+    # POST: update profile
+    def post(self, request, author_id):
+        author = Author.objects.get(pk=author_id)
+        serializer = AuthorSerializer(author, context={'request': request})
+        view_util.model_update(author, request.data)
+        return Response(serializer.data)
 
-class LikedViewSet(viewsets.ModelViewSet):
+
+class FollowerListView(APIView):
     http_method_names = ['get']
-    def list(self, request, **kwargs):
-        return Response({
-            'type': "Liked",
-            'items': serializers.LikeSerializer(
-                paginate_queryset(
-                    self.request.query_params,
-                    models.Like.objects.filter(
-                author=kwargs.get("author_pk"))),
-                context={'request': request},
-                many=True).data})
 
-class FollowersViewSet(viewsets.ViewSet):
-    http_method_names = ['get', 'delete', 'post', 'put']
-
-    # GET /author/{AUTHOR_ID}/followers
-    def list(self, request, **kwargs):
-        receiver = models.Author.objects.get(pk=kwargs.get("author_pk"))
+    # GET: get a list of authors who are their followers
+    def get(self, request, author_id):
         return Response({
             'type': "followers",
-            'items': serializers.AuthorSerializer(
-                    models.Author.objects.filter(sender__receiver=receiver),
-                    context={'request': request},
-                    many=True).data})
+            'items': AuthorSerializer(
+                Author.objects.filter(sender__receiver=author_id),
+                context={'request': request},
+                many=True).data})
+
+
+class FollowerView(APIView):
+    http_method_names = ['delete', 'put', 'get']
+
+    # DELETE: remove a follower
+    def delete(self, request, author_id, follower_id):
+        pass
+
+    # PUT: Add a follower (must be authenticated)
+    def put(self, request, author_id, follower_id):
+        pass
+
+    # GET check if follower
+    def get(self, request, author_id, follower_id):
+        pass
+
+
+class PostListView(APIView):
+    http_method_names = ['get', 'post']
+
+    # GET get recent posts of author (paginated)
+    def get(self, request, author_id):
+        author = Author.objects.get(pk=author_id)
+        return Response(PostSerializer(
+            view_util.paginate_queryset(
+                self.request.query_params,
+                Post.objects.filter(author=author)),
+            context={'request': request},
+            many=True).data)
+
+    # POST create a new post but generate a post_id
+    def post(self, request, author_id):
+        author = Author.objects.get(pk=author_id)
+        data = request.data
+        post = view_util.create_post_with_id(author, data)
+        return Response(
+            PostSerializer(post, context={'request': request}).data,
+            status=status.HTTP_201_CREATED)
+
+
+class PostView(APIView):
+    http_method_names = ['get', 'post', 'delete', 'put']
+
+    # GET get the public post
+    def get(self, request, author_id, post_id):
+        post = Post.objects.get(pk=post_id)
+        serializer = PostSerializer(post, context={'request': request})
+        return Response(serializer.data)
+
+    # POST update the post (must be authenticated)
+    def post(self, request, author_id, post_id):
+        post = Post.objects.get(pk=post_id)
+        serializer = PostSerializer(post, context={'request': request})
+        view_util.model_update(post, request.data)
+        return Response(serializer.data)
+
+    # DELETE remove the post
+    def delete(self, request, author_id, post_id):
+        post = Post.objects.get(pk=post_id)
+        post.delete()
+        serializer = PostSerializer(post, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+
+    # PUT create a post with that post_id
+    def put(self, request, author_id, post_id):
+        author = Author.objects.get(pk=author_id)
+        data = request.data
+        post = view_util.create_post_with_id(author, data, post_id)
+        return Response(
+            PostSerializer(post, context={'request': request}).data,
+            status=status.HTTP_201_CREATED)
+
+
+class CommentView(APIView):
+    http_method_names = ['get', 'post']
+
+    # GET get comments of the post
+    def get(self, request, author_id, post_id):
+        author = Author.objects.get(pk=author_id)
+        post = Post.objects.get(pk=post_id)
+        comments = view_util.paginate_queryset(
+            self.request.query_params,
+            Comment.objects.order_by('-published').filter(
+                author=author, post=post)) 
+        return Response({
+            'type': "comments",
+            'comments': CommentSerializer(
+                comments, context={'request': request}, many=True).data})
+    
+    # POST if you post an object of “type”:”comment”, it will add your comment to the post
+    def post(self, request, author_id, post_id):
+        author = Author.objects.get(pk=author_id)
+        post = Post.objects.get(pk=post_id)
+        data = request.data
+        comment = Comment.objects.create(
+            author=author,
+            post=post,
+            comment=data['comment'])
+        return Response(
+            CommentSerializer(comment, context={'request': request}).data,
+            status=status.HTTP_201_CREATED)
+
+
+class PostLikesView(APIView):
+    http_method_names = ['get']
+
+    # GET a list of likes from other authors on author_id’s post post_id
+    def get(self, request, author_id, post_id):
+        post = Post.objects.get(pk=post_id)
+        return Response(
+            LikeSerializer(
+                Like.objects.filter(post=post),
+                context={'request': request}, many=True).data)
+
+
+class CommentLikesView(APIView):
+    http_method_names = ['get']
+
+    # GET a list of likes from other authors on author_id’s post post_id comment comment_id
+    def get(self, request, author_id, post_id, comment_id):
+        comment = Comment.objects.get(pk=comment_id)
+        return Response(
+            LikeSerializer(
+                Like.objects.filter(comment=comment),
+                context={'request': request}, many=True).data)
+
+
+class LikedView(APIView):
+    http_method_names = ['get']
+
+    # GET list what public things author_id liked
+    def get(self, request, author_id):
+        author = Author.objects.get(pk=author_id)
+        return Response({
+            'type': "liked",
+            'items': LikeSerializer(
+                Like.objects.filter(author=author),
+                context={'request': request},
+                many=True).data})

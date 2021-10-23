@@ -1,3 +1,5 @@
+import uuid
+
 from django.test import TestCase
 
 from . import util
@@ -13,7 +15,7 @@ class PostViewTests(TestCase):
         """
         Tests that a db with a single author and nothing else has no posts.
         """
-        response = self.client.get(f'/author/{self.author_id}/posts/')
+        response = self.client.get(f'/api/v1/author/{self.author_id}/posts/')
         self.assertEqual(response.status_code, 200)
         self.assertListEqual(util.response_to_json(response), [])
 
@@ -23,7 +25,7 @@ class PostViewTests(TestCase):
         """
         post = util.create_post(self.author, 'Placeholder')
         post_id = post.id
-        response = self.client.get(f'/author/{self.author_id}/posts/{post_id}/')
+        response = self.client.get(f'/api/v1/author/{self.author_id}/posts/{post_id}/')
         self.assertEqual(response.status_code, 200)
         d = util.response_to_json(response)
         self.assertEqual(d['type'], 'post')
@@ -41,8 +43,8 @@ class PostViewTests(TestCase):
         util.create_post(self.author, 'post1')
         util.create_post(author2, 'post2')
         util.create_post(author2, 'post3')
-        response1 = self.client.get('/author/{}/posts/'.format(self.author_id))
-        response2 = self.client.get('/author/{}/posts/'.format(author2.id))
+        response1 = self.client.get('/api/v1/author/{}/posts/'.format(self.author_id))
+        response2 = self.client.get('/api/v1/author/{}/posts/'.format(author2.id))
         self.assertEquals(len(util.response_to_json(response1)), 1)
         self.assertEquals(len(util.response_to_json(response2)), 2)
 
@@ -50,29 +52,59 @@ class PostViewTests(TestCase):
         """
         Tests POSTing a post. TODO: require authentication
         """
-        response = self.client.get('')
-        request = response.wsgi_request
-        auth = serializers.AuthorSerializer(self.author, context={'request': request}).data
         data = {
-            'author': auth,
+            'author': self.author_id,
             'content': 'Placeholder',
             'title': 'Title',
             'description': 'Description',
         }
         response = self.client.post(
-            f'/author/{self.author_id}/posts/',
+            f'/api/v1/author/{self.author_id}/posts/',
             data=data,
             format='json',
         )
         self.assertEquals(response.status_code, 201)
         response = self.client.post(
-            f'/author/{self.author_id}/posts/',
+            f'/api/v1/author/{self.author_id}/posts/',
             data=data,
             format='json',
         )
         self.assertEquals(response.status_code, 201)
-        response = self.client.get(f'/author/{self.author_id}/posts/')
+        response = self.client.get(f'/api/v1/author/{self.author_id}/posts/')
         self.assertEquals(len(util.response_to_json(response)), 2)
+
+    def test_put_with_id(self):
+        """
+        Create a post with a specified id
+        """
+        ID = uuid.uuid4()
+        data = {
+            'id': ID,
+            'author': self.author_id,
+            'content': 'Placeholder',
+            'title': 'Title',
+            'description': 'Description',
+        }
+        response = self.client.put(
+            f'/api/v1/author/{self.author_id}/posts/{ID}/',
+            data=data,
+            content_type='application/json',
+        )
+        self.assertEquals(response.status_code, 201)
+        d = util.response_to_json(response)
+        self.assertTrue(str(ID) in d['id'])
+    
+    def test_edit_post(self):
+        post = util.create_post(self.author, 'content')
+        post_id = post.id
+        data = {'content': 'new_content'}
+        response = self.client.post(
+            f'/api/v1/author/{self.author_id}/posts/{post_id}/',
+            data=data,
+            content_type='application/json',
+        )
+        d = util.response_to_json(response)
+        self.assertEqual(d['content'], 'new_content')
 
     def test_post_delete(self):
         """
@@ -80,6 +112,6 @@ class PostViewTests(TestCase):
         """
         post = util.create_post(self.author, 'Placeholder')
         post_id = post.id
-        response = self.client.delete(f'/author/{self.author_id}/posts/{post_id}/')
+        response = self.client.delete(f'/api/v1/author/{self.author_id}/posts/{post_id}/')
         self.assertEquals(response.status_code, 204)
         self.assertEquals(len(models.Post.objects.all()), 0)

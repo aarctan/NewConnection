@@ -34,3 +34,19 @@ class InboxViewTests(TestCase):
             data=json.dumps(data), content_type='application/json')
         d = util.response_to_json(response)
         self.assertEqual(len(d['items']), 1)
+    
+    def test_receive_multiple_items(self):
+        liker1 = util.create_author("jennie", "jennierubyjane")
+        liker2 = util.create_author("jisoo", "sooyaa__")
+        post = util.create_post(self.author, 'content')
+        like1 = util.create_post_like(liker1, post)
+        like2 = util.create_post_like(liker2, post)
+        data1 = serializers.LikeSerializer(like1, context={'request': self.request}).data
+        data2 = serializers.LikeSerializer(like2, context={'request': self.request}).data
+        self.client.post(f'/api/v1/author/{self.author.id}/inbox/',
+            data=json.dumps(data1), content_type='application/json')
+        self.client.post(f'/api/v1/author/{self.author.id}/inbox/',
+            data=json.dumps(data2), content_type='application/json')
+        response = self.client.get(f'/api/v1/author/{self.author.id}/inbox/')
+        d = util.response_to_json(response)
+        self.assertEqual(len(d['items']), 2)

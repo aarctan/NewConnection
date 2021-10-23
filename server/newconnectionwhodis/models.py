@@ -1,5 +1,5 @@
 # models.py
-import uuid
+import json, uuid
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -74,3 +74,13 @@ class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True, blank=True)
 
+class Inbox(models.Model):
+    type = models.CharField(max_length=4, default='inbox', editable=False)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    items = models.TextField(default='[]')
+
+    def get_items(self):
+        return json.loads(self.items)
+
+    def set_items(self, items):
+        self.items = json.dumps(items)

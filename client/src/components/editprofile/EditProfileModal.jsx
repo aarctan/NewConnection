@@ -38,7 +38,7 @@ const EditProfileModal = ({ isModalOpen, setIsModalOpen }) => {
     const userdata = authCtx.userdata;
     try {
       const putResponse = await fetch(`${userdata.id}/`, {
-        method: "PUT",
+        method: "POST",
         body: JSON.stringify({
           displayName: displayName,
           github: github,

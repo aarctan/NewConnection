@@ -45,4 +45,7 @@ urlpatterns = [
 
     path(f'{SERVICE}author/<str:author_id>/posts/<str:post_id>/comments/<str:comment_id>/likes/',
         CommentLikesView.as_view(), name='comment-likes'),
+
+    path(f'{SERVICE}author/<str:author_id>/inbox/',
+        InboxView.as_view(), name='inbox'),
 ]

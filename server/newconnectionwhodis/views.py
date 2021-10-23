@@ -200,3 +200,34 @@ class LikedView(APIView):
                 Like.objects.filter(author=author),
                 context={'request': request},
                 many=True).data})
+
+
+class InboxView(APIView):
+    http_method_names = ['get', 'post', 'delete']
+
+    # GET: if authenticated get a list of posts sent to {AUTHOR_ID}
+    def get(self, request, author_id):
+        author = Author.objects.get(pk=author_id)
+        inbox = Inbox.objects.get(author=author)
+        return Response(InboxSerializer(inbox, context={'request': request}).data)
+
+    # POST: send a post to the author
+    def post(self, request, author_id):
+        author = Author.objects.get(pk=author_id)
+        inbox = Inbox.objects.get(author=author)
+        items = inbox.get_items()
+        data = request.data
+        items.append(data)
+        inbox.set_items(items)
+        inbox.save()
+        inbox.refresh_from_db()
+        return Response(InboxSerializer(inbox, context={'request': request}).data)
+
+    # DELETE: clear the inbox
+    def delete(self, request, author_id):
+        author = Author.objects.get(pk=author_id)
+        inbox = Inbox.objects.get(author=author)
+        inbox.set_items('[]')
+        inbox.save()
+        inbox.refresh_from_db()
+        return Response(InboxSerializer(inbox, context={'request': request}).data)

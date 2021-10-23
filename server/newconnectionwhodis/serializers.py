@@ -48,7 +48,7 @@ class PostSerializer(HyperlinkedModelSerializer):
     
     def get_id_url(self, obj):
         host = self.context['request'].get_host()
-        return f'http://{host}/author/{obj.author.id}/posts/{obj.id}'
+        return f'http://{host}{SERVICE}author/{obj.author.id}/posts/{obj.id}'
     
     def get_origin_url(self, obj):
         return 'http://' + self.context['request'].get_host()

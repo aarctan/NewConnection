@@ -19,10 +19,32 @@ const style = {
 // DeletePostModal is a modal that confirms if the user wants to delete the selected post.
 // This modal is only shown to authors of the post.
 // This modal is rendered in Post.jsx
-const DeletePostModal = ({ isDeleteModalOpen, setIsDeleteModalOpen, post }) => {
+const DeletePostModal = ({
+  isDeleteModalOpen,
+  setIsDeleteModalOpen,
+  post,
+  handleRemove,
+}) => {
   const handleClose = () => setIsDeleteModalOpen(false);
 
   if (!isDeleteModalOpen) return null;
+
+  const handleDelete = async (e) => {
+    try {
+      const deletePost = await fetch(`${post.id}/`, {
+        method: "DELETE",
+      });
+      if (deletePost.ok) {
+        handleRemove(post.id);
+        setIsDeleteModalOpen(false);
+      } else {
+      }
+    } catch (error) {
+      let errorMessage = "Delete failed";
+      console.log(error.message);
+      alert(errorMessage);
+    }
+  };
 
   return (
     <>
@@ -64,6 +86,7 @@ const DeletePostModal = ({ isDeleteModalOpen, setIsDeleteModalOpen, post }) => {
                 color: "red",
                 fontWeight: "bold",
               }}
+              onClick={handleDelete}
             >
               Delete
             </Button>

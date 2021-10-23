@@ -81,8 +81,8 @@ const Post = (props) => {
             {props.title}
           </Typography>
         </Box>
-        <IconButton aria-label="settings">
-          <MoreHorizIcon onClick={() => setIsMenuOpen(true)} />
+        <IconButton aria-label="settings" onClick={() => setIsMenuOpen(true)}>
+          <MoreHorizIcon />
         </IconButton>
       </CardContent>
       {props.contentType === "text/plain" && (
@@ -206,6 +206,7 @@ const Post = (props) => {
             isDeleteModalOpen={isDeleteModalOpen}
             setIsDeleteModalOpen={setIsDeleteModalOpen}
             post={props}
+            handleRemove={props.handleRemove}
           />
         </>
       )}

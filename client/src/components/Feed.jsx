@@ -13,6 +13,12 @@ const Feed = (props) => {
     setPosts([...posts, post]);
   };
 
+  // https://www.robinwieruch.de/react-remove-item-from-list
+  const handleRemove = (id) => {
+    const newList = posts.filter((post) => post.id !== id);
+    setPosts(newList);
+  };
+
   useEffect(() => {
     for (let i = 0; i < props.recentAuthors.length; i++) {
       fetch(`${props.recentAuthors[i].id}/posts/`)
@@ -37,13 +43,15 @@ const Feed = (props) => {
             posts.map((post, idx) => (
               <Post
                 key={idx}
+                id={post.id}
                 title={post.title}
                 description={post.description}
                 author={post.author}
                 contentType={post.contentType}
                 content={post.content}
-                count={idx}
+                count={1}
                 comments={[]}
+                handleRemove={handleRemove}
               />
             ))
           ) : (

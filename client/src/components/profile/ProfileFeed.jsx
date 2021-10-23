@@ -6,6 +6,13 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 const ProfileFeed = (props) => {
   const [posts, setPosts] = useState([]);
+
+  // https://www.robinwieruch.de/react-remove-item-from-list
+  const handleRemove = (id) => {
+    const newList = posts.filter((post) => post.id !== id);
+    setPosts(newList);
+  };
+
   useEffect(() => {
     setPosts([]);
     fetch(`${API_URL}/author/${props.authorID}/posts/`)
@@ -26,6 +33,7 @@ const ProfileFeed = (props) => {
         posts.map((post, idx) => (
           <Post
             key={idx}
+            id={post.id}
             title={post.title}
             description={post.description}
             author={props.author}
@@ -33,6 +41,7 @@ const ProfileFeed = (props) => {
             content={post.content}
             count={idx}
             comments={[]}
+            handleRemove={handleRemove}
           />
         ))
       ) : (

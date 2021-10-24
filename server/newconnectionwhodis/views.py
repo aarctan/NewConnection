@@ -8,61 +8,66 @@ from . import view_util
 
 
 class UserdataViewSet(viewsets.ViewSet):
-    http_method_names = ['get']
+    http_method_names = ["get"]
 
     # GET maps user to its author and returns the authors serialized data
     def retrieve(self, request, user):
         author = Author.objects.get(user__username=user)
-        serializer = AuthorSerializer(author, context={'request': request})
+        serializer = AuthorSerializer(author, context={"request": request})
         return Response(serializer.data)
 
 
 class AuthorsView(APIView):
-    http_method_names = ['get']
+    http_method_names = ["get"]
 
     # GET: retrieve all profiles on the server paginated
     def get(self, request):
-        return Response({
-            'type': "authors",
-            'items': AuthorSerializer(
-                view_util.paginate_queryset(
-                    self.request.query_params,
-                    Author.objects.all()),
-                context={'request': request},
-                many=True).data})
+        return Response(
+            {
+                "type": "authors",
+                "items": AuthorSerializer(
+                    view_util.paginate_queryset(
+                        self.request.query_params, Author.objects.all()
+                    ),
+                    context={"request": request},
+                    many=True,
+                ).data,
+            }
+        )
 
 
 class AuthorView(APIView):
-    http_method_names = ['get', 'post']
+    http_method_names = ["get", "post"]
 
     # GET: retrieve their profile
     def get(self, request, author_id):
         author = Author.objects.get(pk=author_id)
-        serializer = AuthorSerializer(author, context={'request': request})
+        serializer = AuthorSerializer(author, context={"request": request})
         return Response(serializer.data)
 
     # POST: update profile
     def post(self, request, author_id):
         author = Author.objects.get(pk=author_id)
-        serializer = AuthorSerializer(author, context={'request': request})
+        serializer = AuthorSerializer(author, context={"request": request})
         view_util.model_update(author, request.data)
         return Response(serializer.data)
 
 
-
-
 class PostListView(APIView):
-    http_method_names = ['get', 'post']
+    http_method_names = ["get", "post"]
 
     # GET get recent posts of author (paginated)
     def get(self, request, author_id):
         author = Author.objects.get(pk=author_id)
-        return Response(PostSerializer(
-            view_util.paginate_queryset(
-                self.request.query_params,
-                Post.objects.filter(author=author)),
-            context={'request': request},
-            many=True).data)
+        return Response(
+            PostSerializer(
+                view_util.paginate_queryset(
+                    self.request.query_params, Post.objects.filter(author=author)
+                ),
+                context={"request": request},
+                many=True,
+            ).data
+        )
 
     # POST create a new post but generate a post_id
     def post(self, request, author_id):
@@ -70,23 +75,24 @@ class PostListView(APIView):
         data = request.data
         post = view_util.create_post_with_id(author, data)
         return Response(
-            PostSerializer(post, context={'request': request}).data,
-            status=status.HTTP_201_CREATED)
+            PostSerializer(post, context={"request": request}).data,
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class PostView(APIView):
-    http_method_names = ['get', 'post', 'delete', 'put']
+    http_method_names = ["get", "post", "delete", "put"]
 
     # GET get the public post
     def get(self, request, author_id, post_id):
         post = Post.objects.get(pk=post_id)
-        serializer = PostSerializer(post, context={'request': request})
+        serializer = PostSerializer(post, context={"request": request})
         return Response(serializer.data)
 
     # POST update the post (must be authenticated)
     def post(self, request, author_id, post_id):
         post = Post.objects.get(pk=post_id)
-        serializer = PostSerializer(post, context={'request': request})
+        serializer = PostSerializer(post, context={"request": request})
         view_util.model_update(post, request.data)
         return Response(serializer.data)
 
@@ -94,7 +100,7 @@ class PostView(APIView):
     def delete(self, request, author_id, post_id):
         post = Post.objects.get(pk=post_id)
         post.delete()
-        serializer = PostSerializer(post, context={'request': request})
+        serializer = PostSerializer(post, context={"request": request})
         return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
 
     # PUT create a post with that post_id
@@ -103,12 +109,13 @@ class PostView(APIView):
         data = request.data
         post = view_util.create_post_with_id(author, data, post_id)
         return Response(
-            PostSerializer(post, context={'request': request}).data,
-            status=status.HTTP_201_CREATED)
+            PostSerializer(post, context={"request": request}).data,
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class CommentView(APIView):
-    http_method_names = ['get', 'post']
+    http_method_names = ["get", "post"]
 
     # GET get comments of the post
     def get(self, request, author_id, post_id):
@@ -116,41 +123,46 @@ class CommentView(APIView):
         post = Post.objects.get(pk=post_id)
         comments = view_util.paginate_queryset(
             self.request.query_params,
-            Comment.objects.order_by('-published').filter(
-                author=author, post=post)) 
-        return Response({
-            'type': "comments",
-            'comments': CommentSerializer(
-                comments, context={'request': request}, many=True).data})
-    
+            Comment.objects.order_by("-published").filter(author=author, post=post),
+        )
+        return Response(
+            {
+                "type": "comments",
+                "comments": CommentSerializer(
+                    comments, context={"request": request}, many=True
+                ).data,
+            }
+        )
+
     # POST if you post an object of “type”:”comment”, it will add your comment to the post
     def post(self, request, author_id, post_id):
         author = Author.objects.get(pk=author_id)
         post = Post.objects.get(pk=post_id)
         data = request.data
         comment = Comment.objects.create(
-            author=author,
-            post=post,
-            comment=data['comment'])
+            author=author, post=post, comment=data["comment"]
+        )
         return Response(
-            CommentSerializer(comment, context={'request': request}).data,
-            status=status.HTTP_201_CREATED)
+            CommentSerializer(comment, context={"request": request}).data,
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class PostLikesView(APIView):
-    http_method_names = ['get']
+    http_method_names = ["get"]
 
     # GET a list of likes from other authors on author_id’s post post_id
     def get(self, request, author_id, post_id):
         post = Post.objects.get(pk=post_id)
         return Response(
             LikeSerializer(
-                Like.objects.filter(post=post),
-                context={'request': request}, many=True).data)
+                Like.objects.filter(post=post), context={"request": request}, many=True
+            ).data
+        )
 
 
 class CommentLikesView(APIView):
-    http_method_names = ['get']
+    http_method_names = ["get"]
 
     # GET a list of likes from other authors on author_id’s post post_id comment comment_id
     def get(self, request, author_id, post_id, comment_id):
@@ -158,31 +170,38 @@ class CommentLikesView(APIView):
         return Response(
             LikeSerializer(
                 Like.objects.filter(comment=comment),
-                context={'request': request}, many=True).data)
+                context={"request": request},
+                many=True,
+            ).data
+        )
 
 
 class LikedView(APIView):
-    http_method_names = ['get']
+    http_method_names = ["get"]
 
     # GET list what public things author_id liked
     def get(self, request, author_id):
         author = Author.objects.get(pk=author_id)
-        return Response({
-            'type': "liked",
-            'items': LikeSerializer(
-                Like.objects.filter(author=author),
-                context={'request': request},
-                many=True).data})
+        return Response(
+            {
+                "type": "liked",
+                "items": LikeSerializer(
+                    Like.objects.filter(author=author),
+                    context={"request": request},
+                    many=True,
+                ).data,
+            }
+        )
 
 
 class InboxView(APIView):
-    http_method_names = ['get', 'post', 'delete']
+    http_method_names = ["get", "post", "delete"]
 
     # GET: if authenticated get a list of posts sent to {AUTHOR_ID}
     def get(self, request, author_id):
         author = Author.objects.get(pk=author_id)
         inbox = Inbox.objects.get(author=author)
-        return Response(InboxSerializer(inbox, context={'request': request}).data)
+        return Response(InboxSerializer(inbox, context={"request": request}).data)
 
     # POST: send a post to the author
     def post(self, request, author_id):
@@ -194,17 +213,18 @@ class InboxView(APIView):
         inbox.set_items(items)
         inbox.save()
         inbox.refresh_from_db()
-        return Response(InboxSerializer(inbox, context={'request': request}).data)
+        return Response(InboxSerializer(inbox, context={"request": request}).data)
 
     # DELETE: clear the inbox
     def delete(self, request, author_id):
         author = Author.objects.get(pk=author_id)
         inbox = Inbox.objects.get(author=author)
-        inbox.set_items(json.loads('[]'))
+        inbox.set_items(json.loads("[]"))
         inbox.save()
         inbox.refresh_from_db()
         return Response(InboxSerializer(inbox, context={'request': request}).data)
 
+ 
 class FriendRequestView(APIView):
     http_method_names = ['post']
 

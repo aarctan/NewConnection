@@ -7,7 +7,5 @@ from ..models import Author, Inbox
 @receiver(post_save, sender=User)
 def new_user_created(sender, instance, created, **kwargs):
     if created:
-        author = Author.objects.create(
-            user=instance,
-            displayName=instance.username)
+        author = Author.objects.create(user=instance, displayName=instance.username)
         Inbox.objects.create(author=author)

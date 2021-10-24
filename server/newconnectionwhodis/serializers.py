@@ -4,7 +4,7 @@ from dj_rest_auth.registration.serializers import RegisterSerializer
 
 from .models import *
 
-SERVICE = '/api/v1/'
+SERVICE = 'api/v1/'
 
 
 # https://stackoverflow.com/a/55128035
@@ -26,12 +26,12 @@ class AuthorSerializer(HyperlinkedModelSerializer):
         fields = ('type', 'id', 'host', 'displayName', 'url', 'github', 'profileImage')
 
     def get_host_url(self, obj):
-        host = self.context['request'].get_host()
-        return f'{host}'
+        uri = self.context['request'].build_absolute_uri('/')
+        return f'{uri}'
 
     def get_id_url(self, obj):
-        host = self.context['request'].get_host()
-        return f'{host}{SERVICE}author/{obj.id}'
+        uri = self.context['request'].build_absolute_uri('/')
+        return f'{uri}{SERVICE}author/{obj.id}'
 
 
 class PostSerializer(HyperlinkedModelSerializer):
@@ -47,8 +47,8 @@ class PostSerializer(HyperlinkedModelSerializer):
             'source', 'origin')
     
     def get_id_url(self, obj):
-        host = self.context['request'].get_host()
-        return f'{host}{SERVICE}author/{obj.author.id}/posts/{obj.id}'
+        uri = self.context['request'].build_absolute_uri('/')
+        return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.id}'
     
     def get_origin_url(self, obj):
         return self.context['request'].get_host()
@@ -63,8 +63,8 @@ class CommentSerializer(HyperlinkedModelSerializer):
         fields = ('type', 'author', 'comment', 'contentType', 'published', 'id')
 
     def get_id_url(self, obj):
-        host = self.context['request'].get_host()
-        return f'{host}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.id}'
+        uri = self.context['request'].build_absolute_uri('/')
+        return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.id}'
         
         
 class LikeSerializer(HyperlinkedModelSerializer):
@@ -77,11 +77,11 @@ class LikeSerializer(HyperlinkedModelSerializer):
         fields = ('summary', 'type', 'author', 'object')
 
     def get_id_url(self, obj):
-        host = self.context['request'].get_host()
+        uri = self.context['request'].build_absolute_uri('/')
         if obj.comment:
-            return f'{host}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.comment.id}'
+            return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.comment.id}'
         elif obj.post:
-            return f'{host}/author/{obj.author.id}/posts/{obj.post.id}'
+            return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.post.id}'
 
     def get_liker(self, obj):
         if obj.comment:
@@ -99,8 +99,8 @@ class InboxSerializer(HyperlinkedModelSerializer):
         fields = ('type', 'author', 'items')
     
     def get_id_url(self, obj):
-        host = self.context['request'].get_host()
-        return f'http://{host}{SERVICE}author/{obj.author.id}'
+        uri = self.context['request'].build_absolute_uri('/')
+        return f'{uri}{SERVICE}author/{obj.author.id}'
 
     def get_items(self, obj):
         return obj.get_items()

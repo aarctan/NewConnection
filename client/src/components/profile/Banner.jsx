@@ -7,7 +7,6 @@ import {
   Container,
   Divider,
 } from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
 import EditProfileModal from "src/components/editprofile/EditProfileModal";
 
 const Banner = (props) => {

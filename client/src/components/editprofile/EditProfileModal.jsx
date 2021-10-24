@@ -1,11 +1,4 @@
-import {
-  Modal,
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Container,
-} from "@mui/material";
+import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useContext } from "react";
 import AuthContext from "src/store/auth-context";

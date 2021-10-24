@@ -13,9 +13,9 @@ class Author(models.Model):
     """
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    type = 'author'
-    host = models.URLField(editable=False)
-    url = models.URLField(editable=False)
+    type = models.TextField(default='author', editable=False)
+    host = models.TextField()
+    url = models.TextField()
     displayName = models.TextField()
     github = models.TextField()
     profileImage = models.URLField(default=BLANK_PIC_URL)
@@ -37,7 +37,7 @@ class Post(models.Model):
     For now, there is no content associated with a post.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    type = 'post'
+    type = models.TextField(default='post', editable=False)
     source = models.URLField(editable=False)
     origin = models.URLField(editable=False)
     contentType = models.TextField(default="text/plain", editable=False)
@@ -56,7 +56,7 @@ class Comment(models.Model):
     # TODO: Document this model
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    type = 'comment'
+    type = models.TextField(default='comment', editable=False)
     published = models.DateTimeField(default=timezone.now().isoformat(), editable=False)
     contentType = models.TextField(default='text/markdown', editable=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
@@ -69,13 +69,13 @@ class Like(models.Model):
     It can be identified by either a post or a comment and the author that added the like.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    type = 'Like'
+    type = models.TextField(default='Like', editable=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True, blank=True)
 
 class Inbox(models.Model):
-    type = 'inbox'
+    type = models.TextField(default='inbox', editable=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     items = models.TextField(default='[]')
 

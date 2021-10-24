@@ -12,6 +12,7 @@ import {
   Divider,
   ListItemIcon,
   Container,
+  Hidden,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import MailIcon from "@mui/icons-material/Mail";
@@ -79,7 +80,9 @@ const Header = () => {
             }}
             style={{ cursor: "pointer" }}
           />
-          <Search />
+          <Hidden smDown>
+            <Search />
+          </Hidden>
           <Box>
             <Stack alignItems="center" direction="row" spacing={1}>
               <IconButton

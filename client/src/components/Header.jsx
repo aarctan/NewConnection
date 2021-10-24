@@ -11,6 +11,8 @@ import {
   MenuItem,
   Divider,
   ListItemIcon,
+  Container,
+  Hidden,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import MailIcon from "@mui/icons-material/Mail";
@@ -18,6 +20,8 @@ import Logout from "@mui/icons-material/Logout";
 import { makeStyles } from "@mui/styles";
 import Search from "src/components/Search";
 import AuthContext from "src/store/auth-context";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 const useStyles = makeStyles({
   logo: {
@@ -32,6 +36,8 @@ const Header = () => {
   const classes = useStyles();
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
+  const theme = useTheme();
+  const small = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -47,20 +53,23 @@ const Header = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar
-        elevation={1}
-        position="fixed"
-        style={{ background: "#FFFFFF", color: "black" }}
-      >
+    <AppBar
+      elevation={1}
+      position="fixed"
+      style={{ background: "#FFFFFF", color: "black" }}
+    >
+      <Container maxWidth="lg">
         <Toolbar
           variant="dense"
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
-            mx: "15%",
           }}
+          style={
+            small
+              ? { justifyContent: "space-between" }
+              : { justifyContent: "space-around" }
+          }
         >
           <img
             src="/newconnectionlogo.png"
@@ -71,7 +80,9 @@ const Header = () => {
             }}
             style={{ cursor: "pointer" }}
           />
-          <Search />
+          <Hidden smDown>
+            <Search />
+          </Hidden>
           <Box>
             <Stack alignItems="center" direction="row" spacing={1}>
               <IconButton
@@ -145,8 +156,8 @@ const Header = () => {
             </MenuItem>
           </Menu>
         </Toolbar>
-      </AppBar>
-    </Box>
+      </Container>
+    </AppBar>
   );
 };
 

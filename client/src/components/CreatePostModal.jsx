@@ -2,6 +2,8 @@ import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useContext } from "react";
 import AuthContext from "src/store/auth-context";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 const style = {
   display: "flex",
@@ -11,8 +13,6 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "400pt",
-  height: "325pt",
   bgcolor: "background.paper",
   boxShadow: 20,
   p: 3,
@@ -29,6 +29,8 @@ export default function CreatePostModal({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [text, setText] = useState("");
+  const theme = useTheme();
+  const small = useMediaQuery(theme.breakpoints.down("sm"));
   if (!isModalOpen) return null;
 
   const handleCreate = async (e) => {
@@ -64,7 +66,14 @@ export default function CreatePostModal({
   return (
     <>
       <Modal open={isModalOpen} onClose={handleClose}>
-        <Box sx={style}>
+        <Box
+          sx={style}
+          style={
+            small
+              ? { width: "90%", height: "70%" }
+              : { width: 500, height: 450 }
+          }
+        >
           <Box>
             <Typography
               id="modal-modal-title"

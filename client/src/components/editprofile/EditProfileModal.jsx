@@ -1,8 +1,17 @@
-import { Modal, Box, Typography, TextField, Button } from "@mui/material";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Container,
+} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useContext } from "react";
 import AuthContext from "src/store/auth-context";
 import { useNavigate } from "react-router-dom";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 const style = {
   display: "flex",
@@ -12,8 +21,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "400pt",
-  height: "275pt",
+
   bgcolor: "background.paper",
   boxShadow: 20,
   p: 3,
@@ -32,6 +40,9 @@ const EditProfileModal = ({ isModalOpen, setIsModalOpen }) => {
   const [displayName, setDisplayName] = useState(userdata.displayName);
   const [github, setGithub] = useState(userdata.github);
   const [profileImage, setProfileImage] = useState(userdata.profileImage);
+  const theme = useTheme();
+  const small = useMediaQuery(theme.breakpoints.down("sm"));
+
   if (!isModalOpen) return null;
 
   const handleUpdate = async (e) => {
@@ -68,7 +79,14 @@ const EditProfileModal = ({ isModalOpen, setIsModalOpen }) => {
   return (
     <>
       <Modal open={isModalOpen} onClose={handleClose}>
-        <Box sx={style}>
+        <Box
+          sx={style}
+          style={
+            small
+              ? { width: "80%", height: "50%" }
+              : { width: 400, height: 375 }
+          }
+        >
           <Box>
             <Typography
               id="modal-modal-title"

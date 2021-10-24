@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Container } from "@mui/material";
 import Post from "src/components/Post";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -28,7 +28,7 @@ const ProfileFeed = (props) => {
   }, [props.authorID]);
 
   return (
-    <Box display="flex" flexDirection="column" mx="30%" mt="20pt">
+    <Box display="flex" flexDirection="column">
       {posts.length ? (
         posts.map((post, idx) => (
           <Post

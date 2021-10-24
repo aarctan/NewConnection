@@ -4,7 +4,7 @@ import {
   Typography,
   Avatar,
   Button,
-  IconButton,
+  Container,
   Divider,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -14,66 +14,67 @@ const Banner = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <>
-      <Box display="flex" mx="30%" mt="85px" mb="45px">
+    <Container maxWidth="sm">
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        mt="60pt"
+        mb="20pt"
+      >
         <Avatar
           alt="Avatar"
           src={props.author.profileImage}
           sx={{
             width: 135,
             height: 135,
-            marginRight: 12,
             border: 1,
+            marginBottom: "3pt",
             borderColor: "gray",
           }}
         />
-        <Box>
-          <Box display="flex" alignItems="flex-start">
-            <Typography variant="body1" fontSize="20pt">
-              {props.author.displayName}
-            </Typography>
-            {props.editBoolean && (
-              <>
-                <Button
-                  style={{
-                    color: "black",
-                    marginLeft: "20pt",
-                    marginTop: "3pt",
-                    border: "1pt solid #dbdbdb",
-                    height: "25pt",
-                  }}
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  Edit Profile
-                </Button>
-                <IconButton
-                  color="inherit"
-                  size="small"
-                  sx={{ ml: 2, marginTop: "2pt" }}
-                >
-                  <SettingsIcon />
-                </IconButton>
-              </>
-            )}
-          </Box>
-
-          <Box
-            display="flex"
-            alignItems="flex-start"
-            sx={{ marginTop: "15pt" }}
-          >
-            <Typography variant="body2" fontSize="14pt">
-              1 post
-            </Typography>
-          </Box>
-        </Box>
+        <Typography variant="body1" fontSize="20pt">
+          {props.author.displayName}
+        </Typography>
+        {props.editBoolean && (
+          <>
+            <Button
+              style={{
+                color: "black",
+                marginTop: "3pt",
+                border: "1pt solid #dbdbdb",
+                height: "25pt",
+              }}
+              onClick={() => setIsModalOpen(true)}
+            >
+              Edit Profile
+            </Button>
+          </>
+        )}
       </Box>
-      <Divider sx={{ mx: "30%" }} />
+
+      <Box
+        display="flex"
+        justifyContent="space-around"
+        alignItems="center"
+        sx={{ width: "100%" }}
+      >
+        <Typography variant="body2" fontSize="14pt">
+          1 Post
+        </Typography>
+        <Typography variant="body2" fontSize="14pt">
+          5 Followers
+        </Typography>
+        <Typography variant="body2" fontSize="14pt">
+          1 Following
+        </Typography>
+      </Box>
+      <Divider />
       <EditProfileModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
       ></EditProfileModal>
-    </>
+    </Container>
   );
 };
 

@@ -58,7 +58,7 @@ const Header = () => {
       position="fixed"
       style={{ background: "#FFFFFF", color: "black" }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <Toolbar
           variant="dense"
           sx={{

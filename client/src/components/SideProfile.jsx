@@ -23,6 +23,7 @@ const SideProfile = (props) => {
               const word = words[words.length - 1];
               navigate(`/app/author/${word}`, { state: authCtx.userdata });
             }}
+            style={{ cursor: "pointer" }}
           />
           <Typography variant="h6">{authCtx.userdata.displayName}</Typography>
         </Stack>

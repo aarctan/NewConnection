@@ -76,6 +76,7 @@ const Post = (props) => {
               const word = words[words.length - 1];
               navigate(`/app/author/${word}`, { state: props.author });
             }}
+            style={{ cursor: "pointer" }}
           />
           <Typography variant="body1" color="text.primary" fontWeight="600">
             {props.title}

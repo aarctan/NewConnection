@@ -69,6 +69,7 @@ const Header = () => {
             onClick={() => {
               navigate(`/app/dashboard`);
             }}
+            style={{ cursor: "pointer" }}
           />
           <Search />
           <Box>

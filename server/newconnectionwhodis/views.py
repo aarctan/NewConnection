@@ -1,4 +1,3 @@
-from uuid import RESERVED_FUTURE
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -232,15 +231,20 @@ class FollowerView(APIView):
 
     # DELETE: remove a follower
     def delete(self, request, author_id, follower_id):
+        pass
+        '''
         try:
             Follower.objects.get(sender=follower_id, toAuthor=author_id).delete()
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
         Response(status=status.HTTP_202_ACCEPTED)
+        '''
 
 
     # PUT: Add a follower (must be authenticated)
     def put(self, request, author_id, follower_id):
+        pass
+        '''
         #if authorized....:
             
             author = request.user.author
@@ -252,11 +256,15 @@ class FollowerView(APIView):
         #else:
             # wasnt authorized
             #eturn Response(status=status.HTTP_401_UNAUTHORIZED)
+        '''
 
     # GET check if follower
     def get(self, request, author_id, follower_id):
+        pass
+        '''
         if (Follower.objects.filter(receiver=author_id, sender = follower_id) == None):
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
             follower = Author.objects.get(id=follower_id)
             return Response(FollowerSerializer(), status=status.HTTP_200_OK)
+        '''

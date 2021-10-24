@@ -20,7 +20,7 @@ const Profile = () => {
     <>
       <Header />
       {state ? (
-        <Container maxWidth="md" sx={{ px: 0 }}>
+        <Container maxWidth="sm" sx={{ px: 0 }}>
           <Banner
             authorID={authorID}
             author={state}

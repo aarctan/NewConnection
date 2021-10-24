@@ -13,11 +13,11 @@ class Author(models.Model):
     """
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    type = models.CharField(max_length=6, default='author', editable=False)
-    host = models.URLField(max_length=32, editable=False)
-    url = models.URLField(max_length=128, editable=False)
-    displayName = models.CharField(max_length=32)
-    github = models.TextField(max_length=60)
+    type = models.CharField(max_length=512, default='author', editable=False)
+    host = models.URLField(max_length=512, editable=False)
+    url = models.URLField(max_length=512, editable=False)
+    displayName = models.CharField(max_length=512)
+    github = models.TextField(max_length=512)
     profileImage = models.URLField(default=BLANK_PIC_URL)
     def __str__(self):
         return self.displayName
@@ -37,7 +37,7 @@ class Post(models.Model):
     For now, there is no content associated with a post.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    type = models.CharField(max_length=4, default='post', editable=False)
+    type = models.CharField(max_length=512, default='post', editable=False)
     source = models.URLField(editable=False)
     origin = models.URLField(editable=False)
     contentType = models.TextField(default="text/plain", editable=False)
@@ -56,7 +56,7 @@ class Comment(models.Model):
     # TODO: Document this model
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    type = models.CharField(max_length=7, default='comment', editable=False)
+    type = models.CharField(max_length=512, default='comment', editable=False)
     published = models.DateTimeField(default=timezone.now().isoformat(), editable=False)
     contentType = models.TextField(default='text/markdown', editable=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
@@ -69,13 +69,13 @@ class Like(models.Model):
     It can be identified by either a post or a comment and the author that added the like.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    type = models.CharField(max_length=4, default='Like', editable=False)
+    type = models.CharField(max_length=512, default='Like', editable=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True, blank=True)
 
 class Inbox(models.Model):
-    type = models.CharField(max_length=4, default='inbox', editable=False)
+    type = models.CharField(max_length=512, default='inbox', editable=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     items = models.TextField(default='[]')
 

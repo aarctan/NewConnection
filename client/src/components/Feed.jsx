@@ -4,10 +4,12 @@ import SideProfile from "./SideProfile";
 import CreatePostModal from "./CreatePostModal";
 import Post from "./Post";
 import CreateNewPostContainer from "./CreateNewPostContainer";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Feed = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [postsLoading, setPostsLoading] = useState(false);
 
   const handlePostSubmit = (e, post) => {
     setPosts([...posts, post]);
@@ -20,6 +22,8 @@ const Feed = (props) => {
   };
 
   useEffect(() => {
+    setPosts([]);
+    setPostsLoading(true);
     for (let i = 0; i < props.recentAuthors.length; i++) {
       fetch(`${props.recentAuthors[i].id}/posts/`)
         .then((response) => {
@@ -29,6 +33,7 @@ const Feed = (props) => {
           for (let j = 0; j < data.length; j++) {
             setPosts((oldArray) => [...oldArray, data[j]]);
           }
+          setPostsLoading(false);
         })
         .catch((error) => console.log("Feed useEffect", error));
     }
@@ -40,7 +45,11 @@ const Feed = (props) => {
         <Grid container spacing={4}>
           <Grid item xs={12} sm={12} md={8} lg={9}>
             <CreateNewPostContainer setIsModalOpen={setIsModalOpen} />
-            {posts.length ? (
+            {postsLoading ? (
+              <Box display="flex" justifyContent="center" mt={3}>
+                <CircularProgress />
+              </Box>
+            ) : posts.length ? (
               posts.map((post, idx) => (
                 <Post
                   key={idx}

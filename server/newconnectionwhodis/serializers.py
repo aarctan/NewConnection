@@ -27,11 +27,11 @@ class AuthorSerializer(HyperlinkedModelSerializer):
 
     def get_host_url(self, obj):
         host = self.context['request'].get_host()
-        return f'http://{host}'
+        return f'{host}'
 
     def get_id_url(self, obj):
         host = self.context['request'].get_host()
-        return f'http://{host}{SERVICE}author/{obj.id}'
+        return f'{host}{SERVICE}author/{obj.id}'
 
 
 class PostSerializer(HyperlinkedModelSerializer):
@@ -48,10 +48,10 @@ class PostSerializer(HyperlinkedModelSerializer):
     
     def get_id_url(self, obj):
         host = self.context['request'].get_host()
-        return f'http://{host}{SERVICE}author/{obj.author.id}/posts/{obj.id}'
+        return f'{host}{SERVICE}author/{obj.author.id}/posts/{obj.id}'
     
     def get_origin_url(self, obj):
-        return 'http://' + self.context['request'].get_host()
+        return self.context['request'].get_host()
 
 
 class CommentSerializer(HyperlinkedModelSerializer):
@@ -64,7 +64,7 @@ class CommentSerializer(HyperlinkedModelSerializer):
 
     def get_id_url(self, obj):
         host = self.context['request'].get_host()
-        return f'http://{host}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.id}'
+        return f'{host}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.id}'
         
         
 class LikeSerializer(HyperlinkedModelSerializer):
@@ -79,9 +79,9 @@ class LikeSerializer(HyperlinkedModelSerializer):
     def get_id_url(self, obj):
         host = self.context['request'].get_host()
         if obj.comment:
-            return f'http://{host}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.comment.id}'
+            return f'{host}/author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.comment.id}'
         elif obj.post:
-            return f'http://{host}/author/{obj.author.id}/posts/{obj.post.id}'
+            return f'{host}/author/{obj.author.id}/posts/{obj.post.id}'
 
     def get_liker(self, obj):
         if obj.comment:

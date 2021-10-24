@@ -35,7 +35,7 @@ const Feed = (props) => {
   }, [props.recentAuthors]);
 
   return (
-    <Container maxWidth="lg" sx={{ px: 0 }}>
+    <Container maxWidth="md" sx={{ px: 0 }}>
       <Box display="flex" my="85px">
         <Grid container spacing={4}>
           <Grid item xs={12} sm={12} md={8} lg={9}>

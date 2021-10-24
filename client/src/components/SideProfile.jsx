@@ -27,7 +27,7 @@ const SideProfile = (props) => {
           />
           <Typography variant="h6">{authCtx.userdata.displayName}</Typography>
         </Stack>
-        <Typography>Recently joined NewConnection:</Typography>
+        <Typography>Recently joined:</Typography>
         {recentAuthors.map((author, idx) => (
           <Stack alignItems="center" direction="row" spacing={1} key={idx}>
             <Avatar

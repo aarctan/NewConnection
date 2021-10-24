@@ -2,8 +2,8 @@ from django.test import TestCase
 
 from ..models import Author, Post, Comment, Like
 
-class AuthorModelTests(TestCase):
 
+class AuthorModelTests(TestCase):
     def test_fields(self):
         """
         Verify expected output for all Author fields
@@ -14,8 +14,8 @@ class AuthorModelTests(TestCase):
         self.assertEqual(author.displayName, AUTHOR_NAME)
         self.assertEqual(author.github, AUTHOR_GITHUB)
 
-class LikeModelTests(TestCase):
 
+class LikeModelTests(TestCase):
     def test_post_like_fields(self):
         """
         Verify expected output for all Post Like fields

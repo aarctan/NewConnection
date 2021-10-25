@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
-import Post from "src/components/Post";
+import Post from "src/components/post/Post";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const API_URL = process.env.REACT_APP_API_URL;

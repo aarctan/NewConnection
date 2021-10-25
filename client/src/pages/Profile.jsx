@@ -1,4 +1,4 @@
-import Header from "src/components/Header";
+import Header from "src/components/header/Header";
 import { useParams, useLocation, Navigate } from "react-router-dom";
 import Banner from "src/components/profile/Banner";
 import ProfileFeed from "src/components/profile/ProfileFeed";

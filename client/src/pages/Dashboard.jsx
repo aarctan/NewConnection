@@ -1,16 +1,10 @@
-import Header from "src/components/Header";
-import Feed from "src/components/Feed";
+import Header from "src/components/header/Header";
+import Feed from "src/components/dashboard/Feed";
 import { useEffect, useState } from "react";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 const Dashboard = () => {
-  /*
-  const navigate = useNavigate();
-  const onLogoutHandler = () => {
-    navigate("/login", { replace: true });
-  };
-  */
   const [authors, setAuthors] = useState([]);
 
   useEffect(() => {
@@ -28,7 +22,7 @@ const Dashboard = () => {
   return (
     <>
       <Header />
-      <Feed recentAuthors={authors}/>
+      <Feed recentAuthors={authors} />
     </>
   );
 };

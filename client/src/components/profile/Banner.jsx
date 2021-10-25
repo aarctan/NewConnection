@@ -7,7 +7,7 @@ import {
   Container,
   Divider,
 } from "@mui/material";
-import EditProfileModal from "src/components/editprofile/EditProfileModal";
+import EditProfileModal from "src/components/profile/EditProfileModal";
 
 const Banner = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);

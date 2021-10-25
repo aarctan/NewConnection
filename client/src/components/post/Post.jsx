@@ -12,8 +12,8 @@ import {
   Avatar,
   Link,
 } from "@mui/material";
-import Comment from "./Comment";
-import PostModal from "./PostModal";
+import Comment from "src/components/post/Comment";
+import PostModal from "src/components/post/PostModal";
 import IconButton from "@mui/material/IconButton";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShareIcon from "@mui/icons-material/Share";
@@ -23,8 +23,8 @@ import SendIcon from "@mui/icons-material/Send";
 import { makeStyles } from "@mui/styles";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "src/store/auth-context";
-import MenuModal from "src/components/MenuModal";
-import DeletePostModal from "src/components/DeletePostModal";
+import MenuModal from "src/components/post/MenuModal";
+import DeletePostModal from "src/components/post/DeletePostModal";
 
 const useStyles = makeStyles((theme) => ({
   root: {

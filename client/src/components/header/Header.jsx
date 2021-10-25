@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import MailIcon from "@mui/icons-material/Mail";
 import Logout from "@mui/icons-material/Logout";
 import { makeStyles } from "@mui/styles";
-import Search from "src/components/Search";
+import Search from "src/components/header/Search";
 import AuthContext from "src/store/auth-context";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";

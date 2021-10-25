@@ -9,7 +9,7 @@ import {
   Divider,
   Avatar,
 } from "@mui/material";
-import Comment from "./Comment";
+import Comment from "src/components/post/Comment";
 import IconButton from "@mui/material/IconButton";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShareIcon from "@mui/icons-material/Share";

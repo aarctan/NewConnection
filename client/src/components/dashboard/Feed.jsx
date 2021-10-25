@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Box, Grid, Typography, Hidden, Container } from "@mui/material";
-import SideProfile from "./SideProfile";
-import CreatePostModal from "./CreatePostModal";
-import Post from "./Post";
-import CreateNewPostContainer from "./CreateNewPostContainer";
+import SideProfile from "src/components/dashboard/SideProfile";
+import CreatePostModal from "src/components/dashboard/CreatePostModal";
+import Post from "src/components/post/Post";
+import CreateNewPostContainer from "src/components/dashboard/CreateNewPostContainer";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const Feed = (props) => {

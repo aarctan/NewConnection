@@ -53,6 +53,60 @@ class AuthorView(APIView):
         return Response(serializer.data)
 
 
+
+class FriendRequestView(APIView):
+    http_method_names = ['post']
+
+    #POST: send another user a friend request to inbox
+    def post(self, request, author_id, receiver_id):
+        pass
+
+
+class FollowerListView(APIView):
+    http_method_names = ['get']
+
+    # GET: get a list of authors who are their followers
+    def get(self, request, author_id):
+        return Response({
+            'type': "followers",
+            'items': AuthorSerializer(
+                Author.objects.filter(sender__receiver=author_id),
+                context={'request': request},
+                many=True).data})
+
+
+class FollowerView(APIView):
+    http_method_names = ['delete', 'put', 'get']
+
+    # DELETE: remove a follower
+    def delete(self, request, author_id, follower_id):
+        try:
+            follower = Author.objects.get(id=follower_id)
+            follower.delete()
+            return Response(
+                AuthorSerializer(follower, context={"request": request}).data,
+                status=status.HTTP_202_ACCEPTED)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # PUT: Add a follower (must be authenticated)
+    def put(self, request, author_id, follower_id):
+        receiver = Author.objects.get(pk=author_id)
+        sender = Author.objects.get(pk=follower_id)
+        follow = Follower.objects.create(sender=sender, receiver=receiver)
+        follow.save()
+        follow.refresh_from_db()
+        return Response(status=status.HTTP_201_CREATED)
+
+    # GET check if follower
+    def get(self, request, author_id, follower_id):
+        if not Follower.objects.filter(receiver=author_id, sender=follower_id):
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            follower = Author.objects.get(id=follower_id)
+            return Response(AuthorSerializer(follower, context={"request": request}).data)
+
+
 class PostListView(APIView):
     http_method_names = ["get", "post"]
 
@@ -156,7 +210,7 @@ class PostLikesView(APIView):
         post = Post.objects.get(pk=post_id)
         return Response(
             LikeSerializer(
-                Like.objects.filter(post=post), context={"request": request}, many=True
+                Like.objects.filter(post=post, comment=None), context={"request": request}, many=True
             ).data
         )
 
@@ -209,11 +263,27 @@ class InboxView(APIView):
         inbox = Inbox.objects.get(author=author)
         items = inbox.get_items()
         data = request.data
+        item_type = data['type']
+        if item_type == 'Like':
+            like_obj_url = data['object']
+            post_id = like_obj_url.split('posts/')[-1].split('/')[0]
+            post_obj = Post.objects.get(pk=post_id)
+            comment_obj = None
+            if 'comments' in like_obj_url:
+                comment_id = like_obj_url.split('/')[-1]
+                comment_obj = Comment.objects.get(pk=comment_id)
+            Like.objects.create(author=author, post=post_obj, comment=comment_obj)
+        elif item_type == "Follow":
+            pass
+        elif item_type == 'post':
+            pass
         items.append(data)
         inbox.set_items(items)
         inbox.save()
         inbox.refresh_from_db()
-        return Response(InboxSerializer(inbox, context={"request": request}).data)
+        return Response(
+            InboxSerializer(inbox, context={"request": request}).data,
+            status=status.HTTP_201_CREATED)
 
     # DELETE: clear the inbox
     def delete(self, request, author_id):
@@ -223,56 +293,3 @@ class InboxView(APIView):
         inbox.save()
         inbox.refresh_from_db()
         return Response(InboxSerializer(inbox, context={'request': request}).data)
-
- 
-class FriendRequestView(APIView):
-    http_method_names = ['post']
-
-    #POST: send another user a friend request to inbox
-    def post(self, request, author_id, receiver_id):
-        pass
-
-
-class FollowerListView(APIView):
-    http_method_names = ['get']
-
-    # GET: get a list of authors who are their followers
-    def get(self, request, author_id):
-        return Response({
-            'type': "followers",
-            'items': AuthorSerializer(
-                Author.objects.filter(sender__receiver=author_id),
-                context={'request': request},
-                many=True).data})
-
-
-class FollowerView(APIView):
-    http_method_names = ['delete', 'put', 'get']
-
-    # DELETE: remove a follower
-    def delete(self, request, author_id, follower_id):
-        try:
-            follower = Author.objects.get(id=follower_id)
-            follower.delete()
-            return Response(
-                AuthorSerializer(follower, context={"request": request}).data,
-                status=status.HTTP_202_ACCEPTED)
-        except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-    # PUT: Add a follower (must be authenticated)
-    def put(self, request, author_id, follower_id):
-        receiver = Author.objects.get(pk=author_id)
-        sender = Author.objects.get(pk=follower_id)
-        follow = Follower.objects.create(sender=sender, receiver=receiver)
-        follow.save()
-        follow.refresh_from_db()
-        return Response(status=status.HTTP_201_CREATED)
-
-    # GET check if follower
-    def get(self, request, author_id, follower_id):
-        if not Follower.objects.filter(receiver=author_id, sender=follower_id):
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        else:
-            follower = Author.objects.get(id=follower_id)
-            return Response(AuthorSerializer(follower, context={"request": request}).data)

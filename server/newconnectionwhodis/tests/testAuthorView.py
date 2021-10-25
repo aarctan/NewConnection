@@ -23,7 +23,7 @@ class AuthorViewTests(TestCase):
         self.assertEqual(d["type"], "author")
         host = d["host"]
         self.assertIsNotNone(host)
-        self.assertEquals(d["url"], f"{host}/api/v1/author/{id}")
+        self.assertEquals(d["url"], f"{host}api/v1/author/{id}")
 
     def test_author_update(self):
         """

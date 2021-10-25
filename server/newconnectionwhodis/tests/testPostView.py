@@ -32,7 +32,7 @@ class PostViewTests(TestCase):
         self.assertEquals(len(d["author"]), 7)  # author has 6 fields
         host = d["author"]["host"]
         self.assertTrue("http" in host)
-        self.assertEquals(d["id"], f"{host}/author/{self.author_id}/posts/{post_id}")
+        self.assertEquals(d["id"], f"{host}api/v1/author/{self.author_id}/posts/{post_id}")
         # TODO: Test content with various content types
 
     def test_post_belongs_to_author(self):

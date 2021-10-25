@@ -34,7 +34,7 @@ class LikedViewTests(TestCase):
         host = like_in_response["author"]["host"]
         self.assertEquals(
             like_in_response["object"],
-            f"{host}/author/{self.author_id}/posts/{self.post_id}",
+            f"{host}api/v1/author/{self.author_id}/posts/{self.post_id}",
         )
 
     def test_comment_like(self):
@@ -51,7 +51,7 @@ class LikedViewTests(TestCase):
         self.assertTrue("http" in host)
         self.assertEquals(
             like_in_response["object"],
-            f"{host}/author/{self.author_id}/posts/{self.post_id}/comments/{self.comment_id}",
+            f"{host}api/v1/author/{self.author_id}/posts/{self.post_id}/comments/{self.comment_id}",
         )
 
     def test_multiple_likes(self):
@@ -83,10 +83,10 @@ class LikedViewTests(TestCase):
         self.assertTrue("http" in comment_like_host)
         self.assertEquals(
             post_like["object"],
-            f"{post_like_host}/author/{self.author_id}/posts/{self.post_id}",
+            f"{post_like_host}api/v1/author/{self.author_id}/posts/{self.post_id}",
         )
         self.assertEquals(
             comment_like["object"],
-            f"{comment_like_host}/author/{self.author_id}/posts/{self.post_id}/comments/{self.comment_id}",
+            f"{comment_like_host}api/v1/author/{self.author_id}/posts/{self.post_id}/comments/{self.comment_id}",
         )
         self.assertEquals(len(d["items"]), NUM_LIKES)

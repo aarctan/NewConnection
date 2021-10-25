@@ -251,40 +251,28 @@ class FollowerView(APIView):
 
     # DELETE: remove a follower
     def delete(self, request, author_id, follower_id):
-        pass
-        '''
         try:
-            Follower.objects.get(sender=follower_id, toAuthor=author_id).delete()
+            follower = Author.objects.get(id=follower_id)
+            follower.delete()
+            return Response(
+                AuthorSerializer(follower, context={"request": request}).data,
+                status=status.HTTP_202_ACCEPTED)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        Response(status=status.HTTP_202_ACCEPTED)
-        '''
-
 
     # PUT: Add a follower (must be authenticated)
     def put(self, request, author_id, follower_id):
-        pass
-        '''
-        #if authorized....:
-            
-            author = request.user.author
-            sender = Author.objects.get(id=follower_id)
-            follow = Follower.objects.create(sender=sender, receiver=author)
-            follow.save()
-            return Response(status=status.HTTP_201_CREATED)
-        
-        #else:
-            # wasnt authorized
-            #eturn Response(status=status.HTTP_401_UNAUTHORIZED)
-        '''
+        receiver = Author.objects.get(pk=author_id)
+        sender = Author.objects.get(pk=follower_id)
+        follow = Follower.objects.create(sender=sender, receiver=receiver)
+        follow.save()
+        follow.refresh_from_db()
+        return Response(status=status.HTTP_201_CREATED)
 
     # GET check if follower
     def get(self, request, author_id, follower_id):
-        pass
-        '''
-        if (Follower.objects.filter(receiver=author_id, sender = follower_id) == None):
+        if not Follower.objects.filter(receiver=author_id, sender=follower_id):
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
             follower = Author.objects.get(id=follower_id)
-            return Response(FollowerSerializer(), status=status.HTTP_200_OK)
-        '''
+            return Response(AuthorSerializer(follower, context={"request": request}).data)

@@ -1,12 +1,7 @@
-import { useContext } from "react";
-import { Avatar, Menu, MenuItem, Divider, ListItemIcon } from "@mui/material";
-import Logout from "@mui/icons-material/Logout";
-import AuthContext from "src/store/auth-context";
-import { useNavigate } from "react-router-dom";
+import { Menu, Typography } from "@mui/material";
 
-const ProfileMenu = (props) => {
-  const authCtx = useContext(AuthContext);
-  const navigate = useNavigate();
+// Menu container that takes in a list of inbox items from Header.jsx
+const InboxMenu = (props) => {
   return (
     <Menu
       anchorEl={props.anchorEl}
@@ -16,10 +11,11 @@ const ProfileMenu = (props) => {
       PaperProps={{
         elevation: 0,
         sx: {
-          width: 150,
+          width: 400,
+          height: 360,
           overflow: "visible",
           filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-          mt: 1,
+          mt: 0.5,
           "& .MuiAvatar-root": {
             width: 32,
             height: 32,
@@ -43,24 +39,9 @@ const ProfileMenu = (props) => {
       transformOrigin={{ horizontal: "right", vertical: "top" }}
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
-      <MenuItem
-        onClick={() => {
-          const words = authCtx.userdata.id.split("/");
-          const word = words[words.length - 1];
-          navigate(`/app/author/${word}`, { state: authCtx.userdata });
-        }}
-      >
-        <Avatar /> Profile
-      </MenuItem>
-      <Divider />
-      <MenuItem onClick={props.handleLogout}>
-        <ListItemIcon>
-          <Logout fontSize="small" />
-        </ListItemIcon>
-        Logout
-      </MenuItem>
+      <Typography>{props.inbox}</Typography>
     </Menu>
   );
 };
 
-export default ProfileMenu;
+export default InboxMenu;

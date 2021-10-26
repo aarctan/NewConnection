@@ -8,10 +8,12 @@ import {
   Divider,
 } from "@mui/material";
 import EditProfileModal from "src/components/profile/EditProfileModal";
+import CheckIcon from "@mui/icons-material/Check";
 
+// This component is on the user profile page and consists of their profile picture, display name, editprofile/follow button as well as
+// post, follower and following counts
 const Banner = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
     <Container maxWidth="sm">
       <Box
@@ -35,11 +37,13 @@ const Banner = (props) => {
         <Typography variant="body1" fontSize="20pt">
           {props.author.displayName}
         </Typography>
-        {props.editBoolean && (
-          <>
+        {/* Condiontially render an edit profile button or follow settings */}
+        {props.isUser ? (
+          <Box>
             <Button
               style={{
                 color: "black",
+                backgroundColor: "white",
                 marginTop: "3pt",
                 border: "1pt solid #dbdbdb",
                 height: "25pt",
@@ -48,12 +52,47 @@ const Banner = (props) => {
             >
               Edit Profile
             </Button>
-          </>
+          </Box>
+        ) : (
+          <Box>
+            {props.following ? (
+              <Button
+                style={{
+                  color: "black",
+                  backgroundColor: "white",
+                  marginTop: "3pt",
+                  height: "25pt",
+                  border: "1pt solid #dbdbdb",
+                  width: "80pt",
+                }}
+                elevation={5}
+                endIcon={<CheckIcon />}
+                onClick={() => props.setFollowing(false)}
+              >
+                Following
+              </Button>
+            ) : (
+              <Button
+                style={{
+                  color: "black",
+                  backgroundColor: "white",
+                  marginTop: "3pt",
+                  height: "25pt",
+                  border: "1pt solid #dbdbdb",
+                  width: "70pt",
+                }}
+                onClick={() => props.setFollowing(true)}
+              >
+                Follow
+              </Button>
+            )}
+          </Box>
         )}
       </Box>
 
       <Box
         display="flex"
+        marginLeft="15pt"
         justifyContent="space-around"
         alignItems="center"
         sx={{ width: "100%" }}

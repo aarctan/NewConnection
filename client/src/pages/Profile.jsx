@@ -2,7 +2,7 @@ import Header from "src/components/header/Header";
 import { useParams, useLocation, Navigate } from "react-router-dom";
 import Banner from "src/components/profile/Banner";
 import ProfileFeed from "src/components/profile/ProfileFeed";
-import { useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import AuthContext from "src/store/auth-context";
 import { Container } from "@mui/material";
 
@@ -10,11 +10,30 @@ const Profile = () => {
   let { authorID } = useParams();
   const { state } = useLocation();
   const authCtx = useContext(AuthContext);
+  const [following, setFollowing] = useState(false);
+  const [isUser, setIsUser] = useState(false);
 
-  let editBoolean = false;
-  if (state.id === authCtx.userdata.id) {
-    editBoolean = true;
-  }
+  // Checks if the if from the url matches the logged in user id
+  // if it doesnt, we need to check if the logged in user is following the user id from the URL
+  useEffect(() => {
+    async function fetchFollower() {
+      const words = state.id.split("/");
+      const followerid = words[words.length - 1];
+      const response = await fetch(
+        `${authCtx.userdata.id}/followers/${followerid}/`
+      );
+      if (response.ok) {
+        setFollowing(true);
+      } else {
+        setFollowing(false);
+      }
+    }
+    if (state.id === authCtx.userdata.id) {
+      setIsUser(true);
+    } else {
+      fetchFollower();
+    }
+  }, [state.id, authCtx.userdata.id]);
 
   return (
     <>
@@ -24,7 +43,9 @@ const Profile = () => {
           <Banner
             authorID={authorID}
             author={state}
-            editBoolean={editBoolean}
+            isUser={isUser}
+            following={following}
+            setFollowing={setFollowing}
           />
           <ProfileFeed authorID={authorID} author={state} />
         </Container>

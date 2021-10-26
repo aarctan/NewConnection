@@ -62,17 +62,3 @@ class FollowerViewTests(TestCase):
         response = self.client.get(f"/api/v1/author/{self.receiver.id}/followers/")
         d = util.response_to_json(response)
         self.assertEquals(len(d['items']), 1)
-
-    def test_add_follower(self):
-        """
-        Test that a follower can be added with the PUT method by author id
-        """
-        response = self.client.put(f'/api/v1/author/{self.receiver.id}/followers/{self.follower1.id}/')
-        self.assertEqual(response.status_code, 201)
-        response = self.client.get(f"/api/v1/author/{self.receiver.id}/followers/")
-        d = util.response_to_json(response)
-        self.assertEquals(len(d['items']), 1)
-        expected = serializers.AuthorSerializer(
-            self.follower1, context={"request": self.request}
-        ).data
-        self.assertTrue(util.validate_reponse_with_serializer(expected, d['items'][0]))

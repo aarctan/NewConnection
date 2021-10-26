@@ -26,16 +26,18 @@ class Author(models.Model):
         return self.displayName
 
 
+class FollowReq(models.Model):
+    requestor = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="requestor")
+    requestee = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="requestee")
+
+
 class Follower(models.Model):
     """
     This model represents a sending author following a receiving author.
     If the receiving author also follows the sending author, we consider it a friendship.
     """
-
     sender = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="sender")
-    receiver = models.ForeignKey(
-        Author, on_delete=models.CASCADE, related_name="receiver"
-    )
+    receiver = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="receiver")
 
 
 # TODO: Visibility settings for posts?

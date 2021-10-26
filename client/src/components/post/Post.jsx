@@ -40,8 +40,39 @@ const Post = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [comment, setComment] = useState("");
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
+  console.log(props.comments);
+
+  const onSendComment = async (e) => {
+    console.log(props.id);
+    try {
+      const userdata_url = authCtx.userdata.id.split("/");
+      const author_id = userdata_url[userdata_url.length - 1];
+      const post_url = props.id.split("/");
+      const post_id = post_url[post_url.length - 1];
+      const postResponse = await fetch(`${props.id}/comments/`, {
+        method: "POST",
+        body: JSON.stringify({
+          author: author_id,
+          github: post_id,
+          comment: comment,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (postResponse.ok) {
+        const postData = await postResponse.json();
+      } else {
+      }
+    } catch (error) {
+      let errorMessage = "Profile update failed";
+      console.log(error.message);
+      alert(errorMessage);
+    }
+  };
 
   // Determine if this is the post of the author who is logged in
   let isAuthor = false;
@@ -183,10 +214,13 @@ const Post = (props) => {
           sx={{ ml: 1, flex: 1 }}
           placeholder="Comment..."
           inputProps={{ "aria-label": "comment" }}
+          onChange={(e) => {
+            setComment(e.target.value);
+          }}
         />
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-        <IconButton color="primary" sx={{ p: "10px" }} aria-label="send">
-          <SendIcon />
+        <IconButton color="primary" sx={{ p: "10px" }} aria-label="send" onClick={onSendComment}>
+          <SendIcon  />
         </IconButton>
       </Paper>
       {/* Opens the post in a modal to view all comments */}

@@ -21,6 +21,18 @@ const Feed = (props) => {
     setPosts(newList);
   };
 
+  const getPostComments = (post_id) => {
+    return fetch(`${post_id}/comments/`)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        return data.comments;
+      });
+  };
+
   useEffect(() => {
     setPosts([]);
     setPostsLoading(true);
@@ -50,20 +62,22 @@ const Feed = (props) => {
                 <CircularProgress />
               </Box>
             ) : posts.length ? (
-              posts.map((post, idx) => (
-                <Post
-                  key={idx}
-                  id={post.id}
-                  title={post.title}
-                  description={post.description}
-                  author={post.author}
-                  contentType={post.contentType}
-                  content={post.content}
-                  count={1}
-                  comments={[]}
-                  handleRemove={handleRemove}
-                />
-              ))
+              posts.map((post, idx) => {
+                return (
+                  <Post
+                    key={idx}
+                    id={post.id}
+                    title={post.title}
+                    description={post.description}
+                    author={post.author}
+                    contentType={post.contentType}
+                    content={post.content}
+                    count={1}
+                    comments={[]}
+                    handleRemove={handleRemove}
+                  />
+                );
+              })
             ) : (
               <Typography
                 variant="h6"
@@ -76,12 +90,10 @@ const Feed = (props) => {
           </Grid>
           <Hidden mdDown>
             <Grid
-              display="flex"
+              display={{ xs: "none", sm: "none", md: "flex" }}
               alignItems="flex-start"
               justifyContent="center"
               item
-              xs={0}
-              sm={0}
               md={4}
               lg={3}
               sx={{ marginTop: 1 }}

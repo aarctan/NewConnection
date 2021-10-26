@@ -13,7 +13,6 @@ const Dashboard = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data.items);
         setAuthors(data.items);
       })
       .catch((error) => console.log("Dashboard useEffect", error));

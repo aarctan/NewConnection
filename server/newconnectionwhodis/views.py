@@ -93,9 +93,12 @@ class FollowerView(APIView):
     def put(self, request, author_id, follower_id):
         receiver = Author.objects.get(pk=author_id)
         sender = Author.objects.get(pk=follower_id)
+        req = FollowReq.objects.get(requestor=sender, requestee=receiver)
+        if not req:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        req.delete()
         follow = Follower.objects.create(sender=sender, receiver=receiver)
         follow.save()
-        follow.refresh_from_db()
         return Response(status=status.HTTP_201_CREATED)
 
     # GET check if follower
@@ -274,13 +277,16 @@ class InboxView(APIView):
                 comment_obj = Comment.objects.get(pk=comment_id)
             Like.objects.create(author=author, post=post_obj, comment=comment_obj)
         elif item_type == "Follow":
-            pass
+            actor_id = data['actor']['id'].split('/')[-1]
+            object_id = data['object']['id'].split('/')[-1]
+            sender = Author.objects.get(pk=actor_id)
+            receiver = Author.objects.get(pk=object_id)
+            FollowReq.objects.create(requestor=sender, requestee=receiver)
         elif item_type == 'post':
             pass
         items.append(data)
         inbox.set_items(items)
         inbox.save()
-        inbox.refresh_from_db()
         return Response(
             InboxSerializer(inbox, context={"request": request}).data,
             status=status.HTTP_201_CREATED)
@@ -291,5 +297,4 @@ class InboxView(APIView):
         inbox = Inbox.objects.get(author=author)
         inbox.set_items(json.loads("[]"))
         inbox.save()
-        inbox.refresh_from_db()
         return Response(InboxSerializer(inbox, context={'request': request}).data)

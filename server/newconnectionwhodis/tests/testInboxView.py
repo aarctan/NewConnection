@@ -72,9 +72,28 @@ class InboxViewTests(TestCase):
         response = self.client.get(f"/api/v1/author/{self.author.id}/posts/{post.id}/comments/{comment.id}/likes/")
         d = util.response_to_json(response)
         self.assertEquals(len(d), 1)
-    
 
-'''
+    def test_follow_request(self):
+        follower = util.create_author("jennie", "jennierubyjane")
+        data = {
+            "summary": "test",
+            "type": "Follow",
+            "actor": serializers.AuthorSerializer(
+                follower, context={"request": self.request}).data,
+            "object": serializers.AuthorSerializer(
+                self.author, context={"request": self.request}).data,
+        }
+        response = self.client.post(
+            f"/api/v1/author/{self.author.id}/inbox/",
+            data=json.dumps(data),
+            content_type="application/json",
+        )
+        response = self.client.get(f"/api/v1/author/{self.author.id}/inbox/")
+        d = util.response_to_json(response)
+        self.assertEquals(len(d['items']), 1)
+        self.assertEquals(len(models.FollowReq.objects.all()), 1)
+    
+    '''
     def test_receive_multiple_items(self):
         """
         Test multiple entries in the inbox
@@ -103,6 +122,7 @@ class InboxViewTests(TestCase):
         response = self.client.get(f"/api/v1/author/{self.author.id}/inbox/")
         d = util.response_to_json(response)
         self.assertEqual(len(d["items"]), 2)
+    '''
 
     def test_clear_inbox(self):
         """
@@ -120,4 +140,3 @@ class InboxViewTests(TestCase):
         response = self.client.delete(f"/api/v1/author/{self.author.id}/inbox/")
         d = util.response_to_json(response)
         self.assertEqual(d["items"], [])
-'''

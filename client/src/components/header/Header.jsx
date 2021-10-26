@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useCallback } from "react";
 import {
   AppBar,
   Box,
@@ -18,6 +18,7 @@ import ProfileMenu from "src/components/header/ProfileMenu";
 import AuthContext from "src/store/auth-context";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import InboxMenu from "./InboxMenu";
 
 const useStyles = makeStyles({
   logo: {
@@ -30,26 +31,51 @@ const useStyles = makeStyles({
 // This component contains a logo, a search input and navigation icons
 const Header = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  // ProfileMenu
+  const handleProfileClick = (event) => {
+    setAnchorProfileEl(event.currentTarget);
   };
-
-  // Props for ProfileMenu
-  const [anchorEl, setAnchorEl] = useState(null);
-  const profileMenuOpen = Boolean(anchorEl);
-  const handleClose = () => {
-    setAnchorEl(null);
+  const [anchorProfileEl, setAnchorProfileEl] = useState(null);
+  const profileMenuOpen = Boolean(anchorProfileEl);
+  const handleProfileClose = () => {
+    setAnchorProfileEl(null);
   };
   const onLogoutHandler = () => {
     authCtx.logout();
     navigate("/login", { replace: true });
   };
 
-  const navigate = useNavigate();
+  // InboxMenu
+  const handleInboxClick = (event) => {
+    fetchInbox();
+    setAnchorInboxEl(event.currentTarget);
+  };
+  const [anchorInboxEl, setAnchorInboxEl] = useState(null);
+  const inboxMenuOpen = Boolean(anchorInboxEl);
+  const handleInboxClose = () => {
+    setAnchorInboxEl(null);
+  };
+  const [inbox, setInbox] = useState([]);
+
+  // fetch the users inbox
+  const fetchInbox = useCallback(async () => {
+    const response = await fetch(`${authCtx.userdata.id}/inbox/`);
+    if (response.ok) {
+      const inboxData = await response.json();
+      setInbox(inboxData["items"]);
+    } else {
+      console.log("Header useEffect failed - fetching inbox");
+    }
+  }, [authCtx.userdata.id]);
+
+  useEffect(() => {
+    fetchInbox();
+  }, [fetchInbox]);
 
   return (
     <AppBar
@@ -85,15 +111,21 @@ const Header = () => {
           <Box>
             <Stack alignItems="center" direction="row" spacing={1}>
               <IconButton
-                size="large"
+                onClick={handleInboxClick}
+                size="medium"
                 aria-label="show 4 new mails"
                 color="inherit"
+                sx={{ ml: 2 }}
               >
                 <Badge badgeContent={4} color="error">
                   <MailIcon />
                 </Badge>
               </IconButton>
-              <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
+              <IconButton
+                onClick={handleProfileClick}
+                size="small"
+                sx={{ ml: 2 }}
+              >
                 <Avatar
                   alt="Avatar"
                   src={authCtx.userdata.profileImage}
@@ -103,10 +135,16 @@ const Header = () => {
             </Stack>
           </Box>
           <ProfileMenu
-            anchorEl={anchorEl}
-            profileMenuOpen={profileMenuOpen}
-            handleClose={handleClose}
+            anchorEl={anchorProfileEl}
+            menuOpen={profileMenuOpen}
+            handleClose={handleProfileClose}
             handleLogout={onLogoutHandler}
+          />
+          <InboxMenu
+            anchorEl={anchorInboxEl}
+            menuOpen={inboxMenuOpen}
+            handleClose={handleInboxClose}
+            inbox={inbox}
           />
         </Toolbar>
       </Container>

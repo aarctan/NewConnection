@@ -7,18 +7,14 @@ import {
   Badge,
   Avatar,
   Stack,
-  Menu,
-  MenuItem,
-  Divider,
-  ListItemIcon,
   Container,
   Hidden,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import MailIcon from "@mui/icons-material/Mail";
-import Logout from "@mui/icons-material/Logout";
 import { makeStyles } from "@mui/styles";
 import Search from "src/components/header/Search";
+import ProfileMenu from "src/components/header/ProfileMenu";
 import AuthContext from "src/store/auth-context";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
@@ -35,15 +31,16 @@ const useStyles = makeStyles({
 const Header = () => {
   const classes = useStyles();
   const authCtx = useContext(AuthContext);
-  const navigate = useNavigate();
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  // Props for ProfileMenu
+  const [anchorEl, setAnchorEl] = useState(null);
+  const profileMenuOpen = Boolean(anchorEl);
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -51,6 +48,8 @@ const Header = () => {
     authCtx.logout();
     navigate("/login", { replace: true });
   };
+
+  const navigate = useNavigate();
 
   return (
     <AppBar
@@ -103,58 +102,12 @@ const Header = () => {
               </IconButton>
             </Stack>
           </Box>
-          <Menu
+          <ProfileMenu
             anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            onClick={handleClose}
-            PaperProps={{
-              elevation: 0,
-              sx: {
-                width: 150,
-                overflow: "visible",
-                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                mt: 1.5,
-                "& .MuiAvatar-root": {
-                  width: 32,
-                  height: 32,
-                  ml: -0.5,
-                  mr: 1,
-                },
-                "&:before": {
-                  content: '""',
-                  display: "block",
-                  position: "absolute",
-                  top: 0,
-                  right: 14,
-                  width: 10,
-                  height: 10,
-                  bgcolor: "background.paper",
-                  transform: "translateY(-50%) rotate(45deg)",
-                  zIndex: 0,
-                },
-              },
-            }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-          >
-            <MenuItem
-              onClick={() => {
-                const words = authCtx.userdata.id.split("/");
-                const word = words[words.length - 1];
-                navigate(`/app/author/${word}`, { state: authCtx.userdata });
-              }}
-            >
-              <Avatar /> Profile
-            </MenuItem>
-            <Divider />
-            <MenuItem onClick={onLogoutHandler}>
-              <ListItemIcon>
-                <Logout fontSize="small" />
-              </ListItemIcon>
-              Logout
-            </MenuItem>
-          </Menu>
+            profileMenuOpen={profileMenuOpen}
+            handleClose={handleClose}
+            handleLogout={onLogoutHandler}
+          />
         </Toolbar>
       </Container>
     </AppBar>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, forwardRef } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import {
@@ -9,32 +9,69 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import GitHub from "@mui/icons-material/GitHub";
-import InputAdornment from "@mui/material/InputAdornment";
+import Snackbar from "@mui/material/Snackbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import MuiAlert from "@mui/material/Alert";
 
 const API_URL = process.env.REACT_APP_API_URL;
+
+const Alert = forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const Register = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
-  const [displayName, setDisplayName] = useState("");
   const [password, setPassword] = useState("");
-  const [github, setGithub] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [usernameError, setUsernameError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [openFailureAlert, setOpenFailureAlert] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const handleUsernameBlur = () => {
+    if (username === "") {
+      setUsernameError(true);
+    } else {
+      setUsernameError(false);
+    }
+  };
+
+  const handlePasswordBlur = () => {
+    if (password === "") {
+      setPasswordError(true);
+    } else {
+      setPasswordError(false);
+    }
+  };
+
+  const handleConfirmPasswordBlur = () => {
+    if (confirmPassword === "") {
+      setConfirmPasswordError(true);
+    } else {
+      setConfirmPasswordError(false);
+    }
+  };
+
+  const handleCloseAlert = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenFailureAlert(false);
+  };
+
   const handleRegistration = async (e) => {
-    console.log(
-      `username: ${username}\ndisplayName: ${displayName}\npassword: ${password}\ngithub: ${github}\n`
-    );
     try {
       const response = await fetch(`${API_URL}/dj-rest-auth/registration/`, {
         method: "POST",
         body: JSON.stringify({
           username: username,
           password1: password,
-          password2: password,
+          password2: confirmPassword,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -43,7 +80,24 @@ const Register = () => {
       if (response.ok) {
         navigate("/login", { replace: true });
       } else {
-        console.log("Error logging in");
+        response.json().then((res) => {
+          let message = "";
+          for (const p in res) {
+            message =
+              message +
+              `${
+                p === "username"
+                  ? "Username"
+                  : p === "password1"
+                  ? "Password"
+                  : p === "password2"
+                  ? "Confirm Password"
+                  : p
+              }: ${res[p]}\n`;
+          }
+          setSnackbarMessage(message);
+          setOpenFailureAlert(true);
+        });
       }
     } catch (error) {
       let errorMessage = "Authentication failed!";
@@ -100,20 +154,16 @@ const Register = () => {
               label="Username"
               margin="dense"
               variant="outlined"
+              error={usernameError}
               onChange={(e) => {
                 setUsername(e.target.value);
               }}
-            />
-            <TextField
-              id="displayName"
-              fullWidth
-              label="Display Name"
-              margin="dense"
-              variant="outlined"
-              onChange={(e) => {
-                setDisplayName(e.target.value);
+              onFocus={(e) => {
+                setUsernameError(false);
               }}
+              onBlur={(e) => handleUsernameBlur()}
             />
+
             <TextField
               id="password"
               fullWidth
@@ -121,28 +171,33 @@ const Register = () => {
               margin="dense"
               type="password"
               variant="outlined"
+              error={passwordError}
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
+              onFocus={(e) => {
+                setPasswordError(false);
+              }}
+              onBlur={(e) => handlePasswordBlur()}
             />
+
             <TextField
-              id="gtihub"
+              id="confirmPassword"
               fullWidth
-              label="Github (optional)"
+              label="Confirm Password"
               margin="dense"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <GitHub />
-                  </InputAdornment>
-                ),
-              }}
-              defaultValue="https://github.com/"
+              type="password"
               variant="outlined"
+              error={confirmPasswordError}
               onChange={(e) => {
-                setGithub(e.target.value);
+                setConfirmPassword(e.target.value);
               }}
+              onFocus={(e) => {
+                setConfirmPasswordError(false);
+              }}
+              onBlur={(e) => handleConfirmPasswordBlur()}
             />
+
             <Box sx={{ py: 2 }}>
               <Button
                 color="primary"
@@ -171,6 +226,20 @@ const Register = () => {
           </Box>
         </Container>
       </Box>
+      <Snackbar
+        open={openFailureAlert}
+        autoHideDuration={4000}
+        onClose={handleCloseAlert}
+        style={{ whiteSpace: "pre-wrap" }}
+      >
+        <Alert
+          onClose={handleCloseAlert}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, forwardRef } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import {
@@ -13,8 +13,14 @@ import { useContext } from "react";
 import AuthContext from "src/store/auth-context";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 const API_URL = process.env.REACT_APP_API_URL;
+
+const Alert = forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const Login = () => {
   const authCtx = useContext(AuthContext);
@@ -23,6 +29,32 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
+  const [openFailureAlert, setOpenFailureAlert] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+
+  const handleUsernameBlur = () => {
+    if (username === "") {
+      setUsernameError(true);
+    } else {
+      setUsernameError(false);
+    }
+  };
+
+  const handlePasswordBlur = () => {
+    if (password === "") {
+      setPasswordError(true);
+    } else {
+      setPasswordError(false);
+    }
+  };
+
+  const handleCloseAlert = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenFailureAlert(false);
+  };
 
   const handleLogin = async (e) => {
     try {
@@ -47,11 +79,13 @@ const Login = () => {
         console.log(userData);
         navigate("/app/dashboard", { replace: true });
       } else {
+        setOpenFailureAlert(true);
       }
     } catch (error) {
       let errorMessage = "Authentication failed!";
       console.log(error.message);
       alert(errorMessage);
+      setOpenFailureAlert(true);
     }
   };
 
@@ -105,9 +139,14 @@ const Login = () => {
               name="username"
               type="username"
               variant="outlined"
+              error={usernameError}
               onChange={(e) => {
                 setUsername(e.target.value);
               }}
+              onFocus={(e) => {
+                setUsernameError(false);
+              }}
+              onBlur={(e) => handleUsernameBlur()}
             />
             <TextField
               fullWidth
@@ -116,9 +155,14 @@ const Login = () => {
               name="password"
               type="password"
               variant="outlined"
+              error={passwordError}
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
+              onFocus={(e) => {
+                setPasswordError(false);
+              }}
+              onBlur={(e) => handlePasswordBlur()}
             />
             <Box sx={{ py: 2 }}>
               <Button
@@ -149,6 +193,19 @@ const Login = () => {
           </Box>
         </Container>
       </Box>
+      <Snackbar
+        open={openFailureAlert}
+        autoHideDuration={3000}
+        onClose={handleCloseAlert}
+      >
+        <Alert
+          onClose={handleCloseAlert}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          Authentication failed!
+        </Alert>
+      </Snackbar>
     </>
   );
 };

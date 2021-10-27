@@ -26,6 +26,8 @@ import AuthContext from "src/store/auth-context";
 import MenuModal from "src/components/post/MenuModal";
 import DeletePostModal from "src/components/post/DeletePostModal";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: "#fafafa",
@@ -52,23 +54,25 @@ const Post = (props) => {
       const author_id = userdata_url[userdata_url.length - 1];
       const post_url = props.id.split("/");
       const post_id = post_url[post_url.length - 1];
-      const postResponse = await fetch(`${props.id}/comments/`, {
-        method: "POST",
-        body: JSON.stringify({
-          author: author_id,
-          github: post_id,
-          comment: comment,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const postResponse = await fetch(
+        `${API_URL}/author/${author_id}/posts/${post_id}/comments/`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            author: authCtx.userdata,
+            comment: comment,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (postResponse.ok) {
         const postData = await postResponse.json();
       } else {
       }
     } catch (error) {
-      let errorMessage = "Profile update failed";
+      let errorMessage = "Send Comment failed";
       console.log(error.message);
       alert(errorMessage);
     }
@@ -219,8 +223,13 @@ const Post = (props) => {
           }}
         />
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-        <IconButton color="primary" sx={{ p: "10px" }} aria-label="send" onClick={onSendComment}>
-          <SendIcon  />
+        <IconButton
+          color="primary"
+          sx={{ p: "10px" }}
+          aria-label="send"
+          onClick={onSendComment}
+        >
+          <SendIcon />
         </IconButton>
       </Paper>
       {/* Opens the post in a modal to view all comments */}

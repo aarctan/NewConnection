@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -43,12 +43,11 @@ const Post = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
-  console.log(props.comments);
 
   const onSendComment = async (e) => {
-    console.log(props.id);
     try {
       const userdata_url = authCtx.userdata.id.split("/");
       const author_id = userdata_url[userdata_url.length - 1];
@@ -68,7 +67,8 @@ const Post = (props) => {
         }
       );
       if (postResponse.ok) {
-        const postData = await postResponse.json();
+        const comment = await postResponse.json();
+        setComments([comment, ...comments]);
       } else {
       }
     } catch (error) {
@@ -77,6 +77,22 @@ const Post = (props) => {
       alert(errorMessage);
     }
   };
+
+  // Get comments for the post
+  const fetchComments = useCallback(async () => {
+    const response = await fetch(`${props.id}/comments/`);
+    if (response.ok) {
+      const commentData = await response.json();
+      setComments(commentData["comments"]);
+    } else {
+      console.log("Post useEffect failed - fetching comments");
+    }
+  }, [props.id]);
+
+  useEffect(() => {
+    setComments([]);
+    fetchComments();
+  }, [fetchComments]);
 
   // Determine if this is the post of the author who is logged in
   let isAuthor = false;
@@ -103,7 +119,7 @@ const Post = (props) => {
           }}
         >
           <Avatar
-            alt="Chad"
+            alt="author"
             src={props.author.profileImage}
             sx={{ width: 38, height: 38, marginRight: 2 }}
             onClick={() => {
@@ -191,16 +207,17 @@ const Post = (props) => {
           fontWeight="600"
           underline="hover"
           onClick={() => setIsModalOpen(true)}
+          sx={{ marginTop: 0.5 }}
         >
           View all comments
         </Link>
       </CardContent>
       {/* Comments */}
-      <CardContent className={classes.root} sx={{ py: 1 }}>
-        {props.comments.map((comment, idx) => (
+      <CardContent className={classes.root} sx={{ py: 0.5 }}>
+        {comments.slice(0, 2).map((comment, idx) => (
           <Comment
             key={idx}
-            user={comment.author.displayName}
+            author={comment.author}
             comment={comment.comment}
           />
         ))}

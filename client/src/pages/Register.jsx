@@ -129,7 +129,6 @@ const Register = () => {
                   ? { maxWidth: 300, marginBottom: 20 }
                   : { maxWidth: 400, marginBottom: 10 }
               }
-              justifyContent="center"
               display="flex"
             />
           </Box>

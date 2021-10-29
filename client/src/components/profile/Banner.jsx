@@ -18,23 +18,20 @@ const Banner = (props) => {
   const authCtx = useContext(AuthContext);
 
   const sendFollowToInbox = async (e) => {
+    let body = {
+      type: "Follow",
+      summary: `${authCtx.userdata.displayName} wants to follow you`,
+      actor: authCtx.userdata,
+      object: props.author,
+    };
     try {
-      const response = await fetch(`${props.author.id}/inbox/`, {
+      await fetch(`${props.author.id}/inbox/`, {
         method: "POST",
-        body: JSON.stringify({
-          type: "Follow",
-          summary: `${authCtx.userdata.displayName} wants to follow you`,
-          actor: authCtx.userdata,
-          object: props.author,
-        }),
+        body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
         },
       });
-      if (response.ok) {
-        props.setFollowing(true);
-      } else {
-      }
     } catch (error) {
       let errorMessage = "Send Follow To Inbox failed";
       console.log(error.message);

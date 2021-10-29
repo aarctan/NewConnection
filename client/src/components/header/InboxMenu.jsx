@@ -1,7 +1,8 @@
-import { Menu, Typography } from "@mui/material";
+import { Menu } from "@mui/material";
 
 // Menu container that takes in a list of inbox items from Header.jsx
 const InboxMenu = (props) => {
+  console.log(props.inbox);
   return (
     <Menu
       anchorEl={props.anchorEl}
@@ -39,7 +40,6 @@ const InboxMenu = (props) => {
       transformOrigin={{ horizontal: "right", vertical: "top" }}
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
-      <Typography>{props.inbox}</Typography>
     </Menu>
   );
 };

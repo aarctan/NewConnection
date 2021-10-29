@@ -62,3 +62,13 @@ class FollowerViewTests(TestCase):
         response = self.client.get(f"/api/v1/author/{self.receiver.id}/followers/")
         d = util.response_to_json(response)
         self.assertEquals(len(d['items']), 1)
+
+    def test_unique_follower(self):
+        """
+        Test that a follower can only be a follower once and not be repeated
+        """
+        util.add_follower(self.follower1, self.receiver)
+        util.add_follower(self.follower2, self.receiver)
+        
+
+        

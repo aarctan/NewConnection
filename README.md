@@ -125,6 +125,14 @@ Author:https://stackoverflow.com/users/11852581/tommy-neeld<br>
 Link:https://stackoverflow.com/a/59669317<br>
 Source:https://stackoverflow.com/questions/48049247/how-to-set-is-active-false-in-django-usercreationform/59669317#59669317<br>
 
+
+Django Unique Contraints<br>
+Author: https://stackoverflow.com/users/675577/dialex<br>
+Link: https://stackoverflow.com/a/2881071<br>
+Source: https://stackoverflow.com/questions/2881043/django-create-a-unique-database-constraint-for-2-or-more-fields-together<br>
+
+
+
 Layout Sourcing:<br>
 
 MainLayout - Client side based off of devias-io/material-kit-react<br>

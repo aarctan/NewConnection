@@ -27,8 +27,12 @@ class Author(models.Model):
 
 
 class FollowReq(models.Model):
-    requestor = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="requestor")
-    requestee = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="requestee")
+    requestor = models.ForeignKey(
+        Author, on_delete=models.CASCADE, related_name="requestor"
+    )
+    requestee = models.ForeignKey(
+        Author, on_delete=models.CASCADE, related_name="requestee"
+    )
 
 
 class Follower(models.Model):
@@ -36,8 +40,18 @@ class Follower(models.Model):
     This model represents a sending author following a receiving author.
     If the receiving author also follows the sending author, we consider it a friendship.
     """
+
     sender = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="sender")
-    receiver = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="receiver")
+    receiver = models.ForeignKey(
+        Author, on_delete=models.CASCADE, related_name="receiver"
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["sender", "receiver"], name="userFollowedUnique"
+            )
+        ]
 
 
 # TODO: Visibility settings for posts?
@@ -84,7 +98,9 @@ class Like(models.Model):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    context = models.TextField(default="https://www.w3.org/ns/activitystreams", editable=False)
+    context = models.TextField(
+        default="https://www.w3.org/ns/activitystreams", editable=False
+    )
     type = models.TextField(default="Like", editable=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

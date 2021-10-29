@@ -13,6 +13,7 @@ urlpatterns = [
         include("dj_rest_auth.registration.urls"),
     ),
     path(f"{SERVICE}dj-rest-auth/", include("dj_rest_auth.urls")),
+    path(f"{SERVICE}accounts/", include('allauth.urls')),
     path(
         f"{SERVICE}userdata/<str:user>/", UserdataViewSet.as_view({"get": "retrieve"})
     ),

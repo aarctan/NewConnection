@@ -2,6 +2,16 @@
 
 Group project for cmput404 Fall 2021
 
+## API / Webservice
+
+Our Webservice is deployed on heroku:<br>
+`https://newconnection-server.herokuapp.com/api/v1/`
+
+Here is an example GET request:<br>
+`https://newconnection-server.herokuapp.com/api/v1/author/{AUTHOR_ID}/posts/`
+
+All URLs match the specification outlined [here](https://github.com/abramhindle/CMPUT404-project-socialdistribution/blob/master/project.org)<br>
+
 ## Getting started
 
 To get started with the server, create a virtual environment if it does not exist<br>

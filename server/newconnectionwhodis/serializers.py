@@ -83,7 +83,7 @@ class LikeSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = Like
-        fields = ('summary', 'type', 'author', 'object')
+        fields = ('context', 'summary', 'type', 'author', 'object')
 
     def get_id_url(self, obj):
         uri = self.context['request'].build_absolute_uri('/')

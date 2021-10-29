@@ -21,18 +21,6 @@ const Feed = (props) => {
     setPosts(newList);
   };
 
-  const getPostComments = (post_id) => {
-    return fetch(`${post_id}/comments/`)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        return data.comments;
-      });
-  };
-
   useEffect(() => {
     setPosts([]);
     setPostsLoading(true);

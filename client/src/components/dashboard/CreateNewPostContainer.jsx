@@ -30,13 +30,12 @@ const CreateNewPostContainer = (props) => {
         <Avatar
           alt="Avatar"
           src={authCtx.userdata.profileImage}
-          sx={{ width: 56, height: 56, marginRight: 1.5 }}
+          sx={{ width: 56, height: 56, marginRight: 1.5, cursor: "pointer" }}
           onClick={() => {
             const words = authCtx.userdata.id.split("/");
             const word = words[words.length - 1];
             navigate(`/app/author/${word}`, { state: authCtx.userdata });
           }}
-          style={{ cursor: "pointer" }}
         />
         <Box
           sx={{

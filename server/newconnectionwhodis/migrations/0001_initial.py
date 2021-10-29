@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('type', models.TextField(default='comment', editable=False)),
-                ('published', models.DateTimeField(default='2021-10-29T01:11:43.241834+00:00', editable=False)),
+                ('published', models.DateTimeField(auto_now_add=True)),
                 ('contentType', models.TextField(default='text/markdown', editable=False)),
                 ('comment', models.TextField()),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='newconnectionwhodis.author')),
@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                 ('source', models.URLField(editable=False)),
                 ('origin', models.URLField(editable=False)),
                 ('contentType', models.TextField(default='text/plain', editable=False)),
-                ('published', models.DateTimeField(default='2021-10-29T01:11:43.241485+00:00', editable=False)),
+                ('published', models.DateTimeField(default='2021-10-28T00:55:57.079143+00:00', editable=False)),
                 ('visibility', models.TextField(default='PUBLIC')),
                 ('title', models.TextField()),
                 ('description', models.TextField()),

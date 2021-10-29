@@ -84,6 +84,7 @@ class Like(models.Model):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    context = models.TextField(default="https://www.w3.org/ns/activitystreams", editable=False)
     type = models.TextField(default="Like", editable=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

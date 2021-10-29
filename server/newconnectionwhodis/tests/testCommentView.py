@@ -43,9 +43,9 @@ class CommentViewTests(TestCase):
         comments = d['comments']
         self.assertEquals(len(comments), SIZE)
         for i in range(SIZE):
-            self.assertEquals(comments[i]["comment"], f"Comment_{(PAGE - 1) * SIZE + i}")
+            self.assertEquals(comments[i]["comment"], f"Comment_{(NUM_COMMENTS - (PAGE - 1) * SIZE - i) - 1}")
 
-    def test_comment_push(self):    
+    def test_comment_push(self):
         data = {
             'author': self.author_id,
             'post': self.post_id,

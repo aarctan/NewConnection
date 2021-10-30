@@ -28,6 +28,7 @@ const Profile = () => {
           })
           .then((data) => {
             setFollowing((data === "true") ? true : false);
+            console.log(data);
           })
           .catch((error) => setFollowing(false));
       } catch (error) {

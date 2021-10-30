@@ -34,6 +34,9 @@ class FollowReq(models.Model):
         Author, on_delete=models.CASCADE, related_name="requestee"
     )
 
+    def __str__(self):
+        return f'{self.requestor} wants to follow {self.requestee}'
+
 
 class Follower(models.Model):
     """

@@ -33,6 +33,26 @@ const InboxItem = (props) => {
     fetchInbox();
   }, [fetchInbox]);
 
+
+//   http://127.0.0.1:8000/api/v1/author/ae3d60c9-a7bf-4707-ade1-b48357e79f05/followers/00b131f8-851f-4a0f-b25f-267f5afdcec8/
+  
+  const acceptFriendReq = async (e) => {
+    const actor_url = item.actor.id.split("/");
+    const actor_id = actor_url[actor_url.length - 1];
+    const putResponse = await fetch(
+      `${item.object.id}/followers/${actor_id}/`,
+      {
+        method: "PUT",  
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      }
+    );
+    if (putResponse.ok) {
+      console.log("accepted");
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -86,6 +106,7 @@ const InboxItem = (props) => {
             justifyContent: "center",
             alignItems: "center",
           }}
+          onClick={acceptFriendReq}
         >
           Accept
         </Button>

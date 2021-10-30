@@ -93,10 +93,12 @@ class FollowerView(APIView):
     def put(self, request, author_id, follower_id):
         receiver = Author.objects.get(pk=author_id)
         sender = Author.objects.get(pk=follower_id)
+
+        print(FollowReq.objects.all())
         req = FollowReq.objects.get(requestor=sender, requestee=receiver)
         if not req:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        req.delete()
+        #req.delete()
         follow = Follower.objects.create(sender=sender, receiver=receiver)
         follow.save()
         return Response(status=status.HTTP_201_CREATED)

@@ -1,7 +1,10 @@
+from django.http.request import RAISE_ERROR
 from django.test import TestCase
 
 from . import util
 from .. import serializers
+
+from sqlite3 import IntegrityError
 
 
 class FollowerViewTests(TestCase):
@@ -11,6 +14,7 @@ class FollowerViewTests(TestCase):
         self.receiver = util.create_author("Muhammad", "Exanut")
         self.follower1 = util.create_author("Dylan", "dylandeco")
         self.follower2 = util.create_author("jennie", "jennierubyjane")
+        self.follower3 = util.create_author("Carter", "tetelows")
 
     def test_get_followers(self):
         """
@@ -67,8 +71,8 @@ class FollowerViewTests(TestCase):
         """
         Test that a follower can only be a follower once and not be repeated
         """
-        util.add_follower(self.follower1, self.receiver)
-        util.add_follower(self.follower2, self.receiver)
-        
+        util.add_follower(self.follower3, self.receiver)
 
-        
+        with self.assertRaises(IntegrityError) as context:
+            util.add_follower(self.follower3, self.receiver)
+        self.assertContains('UNIQUE constraint failed:' in str(context.exception))

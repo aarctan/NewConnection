@@ -41,7 +41,9 @@ class Follower(models.Model):
     If the receiving author also follows the sending author, we consider it a friendship.
     """
 
-    sender = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="sender")
+    sender = models.ForeignKey(
+        Author, on_delete=models.CASCADE, related_name="sender"
+        )
     receiver = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="receiver"
     )

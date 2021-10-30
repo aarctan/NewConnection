@@ -4,7 +4,7 @@ from django.test import TestCase
 from . import util
 from .. import serializers
 
-from sqlite3 import IntegrityError
+from django.db.utils import IntegrityError
 
 
 class FollowerViewTests(TestCase):
@@ -73,6 +73,6 @@ class FollowerViewTests(TestCase):
         """
         util.add_follower(self.follower3, self.receiver)
 
-        with self.assertRaises(IntegrityError) as context:
+        with self.assertRaises(IntegrityError) as raised:
             util.add_follower(self.follower3, self.receiver)
-        self.assertContains('UNIQUE constraint failed:' in str(context.exception))
+        self.assertEqual(IntegrityError, type(raised.exception))

@@ -1,4 +1,3 @@
-from django.http.request import RAISE_ERROR
 from django.test import TestCase
 
 from . import util

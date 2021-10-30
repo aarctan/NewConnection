@@ -2,6 +2,10 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+
 from .serializers import *
 from .models import *
 from . import view_util
@@ -155,6 +159,9 @@ class PostView(APIView):
         return Response(serializer.data)
 
     # POST update the post (must be authenticated)
+    # @api_view(['POST'])
+    # @authentication_classes([TokenAuthentication])
+    # @permission_classes([IsAuthenticated])
     def post(self, request, author_id, post_id):
         post = Post.objects.get(pk=post_id)
         serializer = PostSerializer(post, context={"request": request})

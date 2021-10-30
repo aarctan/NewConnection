@@ -66,6 +66,7 @@ const Banner = (props) => {
         {props.isUser ? (
           <Box>
             <Button
+            variant="contained"
               style={{
                 color: "black",
                 backgroundColor: "white",

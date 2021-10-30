@@ -104,10 +104,12 @@ class FollowerView(APIView):
     # GET check if follower
     def get(self, request, author_id, follower_id):
         if not Follower.objects.filter(receiver=author_id, sender=follower_id):
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            #return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response("false")
         else:
             follower = Author.objects.get(id=follower_id)
-            return Response(AuthorSerializer(follower, context={"request": request}).data)
+            #return Response(AuthorSerializer(follower, context={"request": request}).data)
+            return Response("true")
 
 
 class PostListView(APIView):
@@ -267,6 +269,8 @@ class InboxView(APIView):
         items = inbox.get_items()
         data = request.data
         item_type = data['type']
+
+        save_inbox = True
         if item_type == 'Like':
             like_obj_url = data['object']
             post_id = like_obj_url.split('posts/')[-1].split('/')[0]
@@ -279,14 +283,21 @@ class InboxView(APIView):
         elif item_type == "Follow":
             actor_id = data['actor']['id'].split('/')[-1]
             object_id = data['object']['id'].split('/')[-1]
-            sender = Author.objects.get(pk=actor_id)
             receiver = Author.objects.get(pk=object_id)
-            FollowReq.objects.create(requestor=sender, requestee=receiver)
+            sender = Author.objects.get(pk=actor_id)
+            try:
+                FollowReq.objects.get(requestor=sender, requestee=receiver)
+                save_inbox = False
+            except:
+                FollowReq.objects.create(requestor=sender, requestee=receiver)
+            print(FollowReq.objects.all())
         elif item_type == 'post':
             pass
-        items.append(data)
-        inbox.set_items(items)
-        inbox.save()
+    
+        if save_inbox:
+            items.append(data)
+            inbox.set_items(items)
+            inbox.save()
         return Response(
             InboxSerializer(inbox, context={"request": request}).data,
             status=status.HTTP_201_CREATED)

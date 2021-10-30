@@ -41,7 +41,9 @@ class FollowerViewTests(TestCase):
         Test that a follower can be returned from <author_id>/followers/<follower_id>
         """
         util.add_follower(self.follower1, self.receiver)
-        response = self.client.get(f"/api/v1/author/{self.receiver.id}/followers/{self.follower1.id}/")
+        response = self.client.get(
+            f"/api/v1/author/{self.receiver.id}/followers/{self.follower1.id}/"
+        )
         d = util.response_to_json(response)
         expected = serializers.AuthorSerializer(
             self.follower1, context={"request": self.request}
@@ -52,7 +54,9 @@ class FollowerViewTests(TestCase):
         """
         Test that an author that is not following another author does not get returned as a follower
         """
-        response = self.client.get(f"/api/v1/author/{self.receiver.id}/followers/{self.follower1.id}/")
+        response = self.client.get(
+            f"/api/v1/author/{self.receiver.id}/followers/{self.follower1.id}/"
+        )
         self.assertEqual(response.status_code, 404)
 
     def test_delete_follower(self):
@@ -61,11 +65,13 @@ class FollowerViewTests(TestCase):
         """
         util.add_follower(self.follower1, self.receiver)
         util.add_follower(self.follower2, self.receiver)
-        response = self.client.delete(f'/api/v1/author/{self.receiver.id}/followers/{self.follower1.id}/')
+        response = self.client.delete(
+            f"/api/v1/author/{self.receiver.id}/followers/{self.follower1.id}/"
+        )
         self.assertEqual(response.status_code, 202)
         response = self.client.get(f"/api/v1/author/{self.receiver.id}/followers/")
         d = util.response_to_json(response)
-        self.assertEquals(len(d['items']), 1)
+        self.assertEquals(len(d["items"]), 1)
 
     def test_unique_follower(self):
         """

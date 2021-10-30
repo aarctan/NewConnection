@@ -128,9 +128,6 @@ const Banner = (props) => {
         <Typography variant="body2" fontSize="14pt">
           5 Followers
         </Typography>
-        <Typography variant="body2" fontSize="14pt">
-          1 Following
-        </Typography>
       </Box>
       <Divider />
       <EditProfileModal

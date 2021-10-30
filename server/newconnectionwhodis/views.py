@@ -105,11 +105,15 @@ class FollowerView(APIView):
 
     # GET check if follower
     def get(self, request, author_id, follower_id):
-        if not Follower.objects.filter(receiver=author_id, sender=follower_id):
+        receiver = Author.objects.get(pk=follower_id)
+        sender = Author.objects.get(pk=author_id)
+
+        print(Follower.objects.all())
+        if not Follower.objects.filter(receiver=receiver, sender=sender):
             #return Response(status=status.HTTP_404_NOT_FOUND)
             return Response("false")
         else:
-            follower = Author.objects.get(id=follower_id)
+            #follower = Author.objects.get(id=follower_id)
             #return Response(AuthorSerializer(follower, context={"request": request}).data)
             return Response("true")
 

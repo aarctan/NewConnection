@@ -57,6 +57,9 @@ class Follower(models.Model):
                 fields=["sender", "receiver"], name="userFollowedUnique"
             )
         ]
+    
+    def __str__(self):
+        return f'{self.sender} follows {self.receiver}'
 
 
 # TODO: Visibility settings for posts?

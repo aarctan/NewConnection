@@ -5,6 +5,7 @@ import InboxItem from "./InboxItem";
 const InboxMenu = (props) => {
   const num_items = props.inbox.length;
   console.log(num_items);
+
   return (
     <Menu
       anchorEl={props.anchorEl}

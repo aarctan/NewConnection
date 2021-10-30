@@ -39,6 +39,18 @@ const Banner = (props) => {
     }
   };
 
+  const stopFollowing = async (e) => {
+    try {
+      await fetch(`${authCtx.userdata.id}/followers/${props.authorID}/`, {
+        method: "DELETE",
+      });
+    } catch (error) {
+      let errorMessage = "stop following failed";
+      console.log(error.message);
+      alert(errorMessage);
+    }
+  };
+
   return (
     <Container maxWidth="sm">
       <Box
@@ -93,6 +105,7 @@ const Banner = (props) => {
                 }}
                 elevation={5}
                 endIcon={<CheckIcon />}
+                onClick={stopFollowing}
               >
                 Following
               </Button>

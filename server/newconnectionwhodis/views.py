@@ -80,12 +80,12 @@ class FollowerView(APIView):
 
     # DELETE: remove a follower
     def delete(self, request, author_id, follower_id):
+        print(Follower.objects.all())
+        receiver = Author.objects.get(pk=follower_id)
+        sender = Author.objects.get(pk=author_id)
         try:
-            follower = Author.objects.get(id=follower_id)
-            follower.delete()
-            return Response(
-                AuthorSerializer(follower, context={"request": request}).data,
-                status=status.HTTP_202_ACCEPTED)
+            Follower.objects.get(receiver=receiver, sender=sender).delete()
+            return Response(status=status.HTTP_202_ACCEPTED)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 

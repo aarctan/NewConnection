@@ -1,7 +1,11 @@
-import { Menu, Typography } from "@mui/material";
+import { Menu, MenuItem } from "@mui/material";
+import InboxItem from "./InboxItem";
 
 // Menu container that takes in a list of inbox items from Header.jsx
 const InboxMenu = (props) => {
+  const num_items = props.inbox.length;
+  console.log(num_items);
+
   return (
     <Menu
       anchorEl={props.anchorEl}
@@ -9,10 +13,12 @@ const InboxMenu = (props) => {
       onClose={props.handleClose}
       onClick={props.handleClose}
       PaperProps={{
-        elevation: 0,
+        elevation: 1,
         sx: {
           width: 400,
-          height: 360,
+          minHeight: 60,
+          maxHeight: 300,
+          height: num_items * 60,
           overflow: "visible",
           filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
           mt: 0.5,
@@ -39,7 +45,14 @@ const InboxMenu = (props) => {
       transformOrigin={{ horizontal: "right", vertical: "top" }}
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
-      <Typography>{props.inbox}</Typography>
+      {props.inbox.map((item, idx) => {
+        return (
+          <MenuItem sx={{mb: 0}}  key={idx}>
+            {" "}
+            <InboxItem item={item}> </InboxItem>
+          </MenuItem>
+        );
+      })}
     </Menu>
   );
 };

@@ -36,6 +36,8 @@ const Header = () => {
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const [inbox, setInbox] = useState([]);
+
   // ProfileMenu
   const handleProfileClick = (event) => {
     setAnchorProfileEl(event.currentTarget);
@@ -60,7 +62,6 @@ const Header = () => {
   const handleInboxClose = () => {
     setAnchorInboxEl(null);
   };
-  const [inbox, setInbox] = useState([]);
 
   // fetch the users inbox
   const fetchInbox = useCallback(async () => {
@@ -68,6 +69,7 @@ const Header = () => {
     if (response.ok) {
       const inboxData = await response.json();
       setInbox(inboxData["items"]);
+      console.log(inboxData["items"]);
     } else {
       console.log("Header useEffect failed - fetching inbox");
     }

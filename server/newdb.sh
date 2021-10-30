@@ -7,5 +7,6 @@ python manage.py makemigrations;python manage.py migrate
 # https://stackoverflow.com/a/42812446
 ./manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('admin', '', 'admin')"
 ./manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('Exanut', '', 'admin')"
+./manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('jisoo', '', 'admin')"
 python manage.py test
 python manage.py runserver

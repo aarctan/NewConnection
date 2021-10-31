@@ -92,7 +92,13 @@ const PostModal = ({ isModalOpen, setIsModalOpen, post }) => {
                   <Avatar
                     alt="Chad"
                     src={post.profileImage}
-                    sx={{ width: 32, height: 32, mx: 1 }}
+                    sx={{
+                      width: 32,
+                      height: 32,
+                      mx: 1,
+                      border: 1,
+                      borderColor: "gray",
+                    }}
                   />
                   <Typography
                     variant="body2"

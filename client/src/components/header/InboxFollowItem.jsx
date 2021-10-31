@@ -1,9 +1,4 @@
-import {
-  Box,
-  Button,
-  Typography,
-  Avatar,
-} from "@mui/material";
+import { Box, Button, Typography, Avatar } from "@mui/material";
 
 import { useState, useEffect, useCallback } from "react";
 
@@ -71,7 +66,14 @@ const InboxFollowItem = (props) => {
         <Avatar
           alt="Avatar"
           src={followerPic}
-          sx={{ width: 17, height: 17, marginRight: 1, cursor: "pointer" }}
+          sx={{
+            width: 17,
+            height: 17,
+            marginRight: 1,
+            cursor: "pointer",
+            border: 1,
+            borderColor: "gray",
+          }}
           onClick={() => {
             const words = item.actor.id.split("/");
             const word = words[words.length - 1];
@@ -91,7 +93,6 @@ const InboxFollowItem = (props) => {
         }}
       >
         <Button
-        
           disabled={false}
           variant="contained"
           style={{

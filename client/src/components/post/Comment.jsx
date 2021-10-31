@@ -30,7 +30,14 @@ const Comment = (props) => {
         <Avatar
           alt="Avatar"
           src={props.author.profileImage}
-          sx={{ width: 17, height: 17, marginRight: 1, cursor: "pointer" }}
+          sx={{
+            width: 17,
+            height: 17,
+            marginRight: 1,
+            cursor: "pointer",
+            border: 1,
+            borderColor: "gray",
+          }}
           onClick={() => {
             const words = props.author.id.split("/");
             const word = words[words.length - 1];

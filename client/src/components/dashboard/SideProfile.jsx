@@ -17,7 +17,7 @@ const SideProfile = (props) => {
           <Avatar
             alt="Avatar"
             src={authCtx.userdata.profileImage}
-            sx={{ width: 56, height: 56 }}
+            sx={{ width: 56, height: 56, border: 1, borderColor: "gray" }}
             onClick={() => {
               const words = authCtx.userdata.id.split("/");
               const word = words[words.length - 1];
@@ -33,7 +33,7 @@ const SideProfile = (props) => {
             <Avatar
               alt="Avatar"
               src={author.profileImage}
-              sx={{ width: 20, height: 20 }}
+              sx={{ width: 20, height: 20, border: 1, borderColor: "gray" }}
             />
             <Link
               component="button"

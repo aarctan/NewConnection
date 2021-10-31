@@ -142,7 +142,7 @@ const Post = (props) => {
 
   const openLikesModal = () => {
     setIsLikesModalOpen(true);
-  }
+  };
 
   useEffect(() => {
     setComments([]);
@@ -177,7 +177,13 @@ const Post = (props) => {
           <Avatar
             alt="author"
             src={props.author.profileImage}
-            sx={{ width: 38, height: 38, marginRight: 2 }}
+            sx={{
+              width: 38,
+              height: 38,
+              marginRight: 2,
+              border: 1,
+              borderColor: "gray",
+            }}
             onClick={() => {
               const words = props.author.id.split("/");
               const word = words[words.length - 1];
@@ -233,17 +239,17 @@ const Post = (props) => {
         sx={{ py: "0px", paddingBottom: 0 }}
         className={classes.root}
       >
-        <Link component="button" underline="hover" onClick={openLikesModal} >
-        <Typography
-          variant="body2"
-          color="text.primary"
-          fontWeight="600"
-          sx={{ paddingBottom: 0.5 }}
-        >
-          {likes.length} {likes.length === 1 ? "like" : "likes"}
-        </Typography>
+        <Link component="button" underline="hover" onClick={openLikesModal}>
+          <Typography
+            variant="body2"
+            color="text.primary"
+            fontWeight="600"
+            sx={{ paddingBottom: 0.5 }}
+          >
+            {likes.length} {likes.length === 1 ? "like" : "likes"}
+          </Typography>
         </Link>
-        
+
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <Link
             component="button"
@@ -314,10 +320,10 @@ const Post = (props) => {
       </Paper>
       {/* Opens the likes in a modal to view all likes */}
       <LikesModal
-          isModalOpen={isLikesModalOpen}
-          setIsModalOpen={setIsLikesModalOpen}
-          likes={likes}
-        ></LikesModal>
+        isModalOpen={isLikesModalOpen}
+        setIsModalOpen={setIsLikesModalOpen}
+        likes={likes}
+      ></LikesModal>
       {/* Opens the post in a modal to view all comments */}
       <PostModal
         isModalOpen={isModalOpen}

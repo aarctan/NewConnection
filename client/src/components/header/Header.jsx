@@ -130,7 +130,7 @@ const Header = () => {
                 <Avatar
                   alt="Avatar"
                   src={authCtx.userdata.profileImage}
-                  sx={{ width: 28, height: 28 }}
+                  sx={{ width: 28, height: 28, border: 1, borderColor: "gray" }}
                 />
               </IconButton>
             </Stack>

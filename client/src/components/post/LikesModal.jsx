@@ -48,7 +48,7 @@ export default function LikesModal({ isModalOpen, setIsModalOpen, likes }) {
                 <Avatar
                   alt="Avatar"
                   src={like.author.profileImage}
-                  sx={{ width: 38, height: 38 }}
+                  sx={{ width: 38, height: 38, border: 1, borderColor: "gray" }}
                 />
                 <Link component="button" variant="h6" underline="hover">
                   {like.author.displayName}

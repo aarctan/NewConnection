@@ -37,7 +37,14 @@ const CreateNewPostContainer = (props) => {
         <Avatar
           alt="Avatar"
           src={authCtx.userdata.profileImage}
-          sx={{ width: 56, height: 56, marginRight: 1.5, cursor: "pointer" }}
+          sx={{
+            width: 56,
+            height: 56,
+            marginRight: 1.5,
+            cursor: "pointer",
+            border: 1,
+            borderColor: "gray",
+          }}
           onClick={() => {
             const words = authCtx.userdata.id.split("/");
             const word = words[words.length - 1];

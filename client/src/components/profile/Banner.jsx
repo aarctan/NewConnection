@@ -79,8 +79,8 @@ const Banner = (props) => {
             width: 135,
             height: 135,
             border: 1,
-            marginBottom: "3pt",
             borderColor: "gray",
+            marginBottom: "3pt",
           }}
         />
         <Typography variant="body1" fontSize="20pt">

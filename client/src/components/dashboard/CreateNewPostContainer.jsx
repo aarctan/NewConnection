@@ -69,7 +69,7 @@ const CreateNewPostContainer = (props) => {
               marginBottom: 1.3,
             }}
             fullWidth
-            onClick={() => props.setIsModalOpen(true)}
+            onClick={() => props.setIsTextModalOpen(true)}
           >
             <Typography>Write a text post</Typography>
           </Button>
@@ -82,6 +82,7 @@ const CreateNewPostContainer = (props) => {
               backgroundColor: "#eeeeee",
             }}
             fullWidth
+            onClick={() => props.setIsImageModalOpen(true)}
           >
             <Typography>Upload an image</Typography>
           </Button>

@@ -19,16 +19,16 @@ const style = {
   borderRadius: "8px",
 };
 
-export default function CreatePostModal({
+const CreateImagePostModal = ({
   isModalOpen,
   setIsModalOpen,
   handlePostSubmit,
-}) {
+}) => {
   const handleClose = () => setIsModalOpen(false);
   const authCtx = useContext(AuthContext);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [text, setText] = useState("");
+  const [imageURL, setImageURL] = useState("");
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
   if (!isModalOpen) return null;
@@ -44,7 +44,7 @@ export default function CreatePostModal({
           title: title,
           description: description,
           contentType: "text/plain",
-          content: text,
+          content: imageURL,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -102,13 +102,11 @@ export default function CreatePostModal({
               }}
             />
             <TextField
-              label={`What's happening, ${authCtx.userdata.displayName} ?`}
-              multiline
-              rows={5}
+              label={`Image URL`}
               fullWidth
               margin="dense"
               onChange={(e) => {
-                setText(e.target.value);
+                setImageURL(e.target.value);
               }}
             />
           </Box>
@@ -130,4 +128,6 @@ export default function CreatePostModal({
       </Modal>
     </>
   );
-}
+};
+
+export default CreateImagePostModal;

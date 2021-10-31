@@ -199,12 +199,24 @@ const Post = (props) => {
           <MoreHorizIcon />
         </IconButton>
       </CardContent>
-      {props.contentType === "text/plain" && (
-        <CardContent className={classes.root}>
-          <Typography variant="body1" color="text.primary">
-            {props.content}
-          </Typography>
+      {props.contentType === "text/plain" &&
+      props.content.slice(0, 4) === "http" ? (
+        <CardContent className={classes.root} sx={{ padding: 0 }}>
+          <CardMedia
+            component="img"
+            height="500"
+            image={props.content}
+            alt="selfie"
+          />
         </CardContent>
+      ) : (
+        props.contentType === "text/plain" && (
+          <CardContent className={classes.root}>
+            <Typography variant="body1" color="text.primary">
+              {props.content}
+            </Typography>
+          </CardContent>
+        )
       )}
       {props.contentType === "image/png;base64" && (
         <CardContent className={classes.root} sx={{ padding: 0 }}>

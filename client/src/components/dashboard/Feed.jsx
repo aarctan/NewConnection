@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { Box, Grid, Typography, Hidden, Container } from "@mui/material";
 import SideProfile from "src/components/dashboard/SideProfile";
-import CreatePostModal from "src/components/dashboard/CreatePostModal";
+import CreateTextPostModal from "src/components/dashboard/CreateTextPostModal";
+import CreateImagePostModal from "src/components/dashboard/CreateImagePostModal";
 import Post from "src/components/post/Post";
 import CreateNewPostContainer from "src/components/dashboard/CreateNewPostContainer";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const Feed = (props) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTextModalOpen, setIsTextModalOpen] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+
   const [posts, setPosts] = useState([]);
   const [postsLoading, setPostsLoading] = useState(false);
 
@@ -44,7 +47,10 @@ const Feed = (props) => {
       <Box display="flex" my="85px">
         <Grid container spacing={4}>
           <Grid item xs={12} sm={12} md={8} lg={9}>
-            <CreateNewPostContainer setIsModalOpen={setIsModalOpen} />
+            <CreateNewPostContainer
+              setIsTextModalOpen={setIsTextModalOpen}
+              setIsImageModalOpen={setIsImageModalOpen}
+            />
             {postsLoading ? (
               <Box display="flex" justifyContent="center" mt={3}>
                 <CircularProgress />
@@ -90,11 +96,16 @@ const Feed = (props) => {
             </Grid>
           </Hidden>
         </Grid>
-        <CreatePostModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
+        <CreateTextPostModal
+          isModalOpen={isTextModalOpen}
+          setIsModalOpen={setIsTextModalOpen}
           handlePostSubmit={handlePostSubmit}
-        ></CreatePostModal>
+        ></CreateTextPostModal>
+        <CreateImagePostModal
+          isModalOpen={isImageModalOpen}
+          setIsModalOpen={setIsImageModalOpen}
+          handlePostSubmit={handlePostSubmit}
+        ></CreateImagePostModal>
       </Box>
     </Container>
   );

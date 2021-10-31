@@ -1,6 +1,9 @@
-# cmput404-group-project
+# NewConnection
+### CMPUT 404 Fall 2021
 
-Group project for cmput404 Fall 2021
+![NewConnection sample dashboard](https://i.imgur.com/pCs8bKc.png)
+
+
 
 ## API / Webservice
 

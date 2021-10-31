@@ -26,14 +26,16 @@ const Banner = (props) => {
       object: props.author,
     };
     try {
-      await fetch(`${props.author.id}/inbox/`, {
+      const postResponse = await fetch(`${props.author.id}/inbox/`, {
         method: "POST",
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
         },
       });
-      setFollowBtnText("Requested");
+      if (postResponse.ok) {
+        setFollowBtnText("Requested");
+      }
     } catch (error) {
       let errorMessage = "Send Follow To Inbox failed";
       console.log(error.message);
@@ -42,14 +44,18 @@ const Banner = (props) => {
   };
 
   const stopFollowing = async (e) => {
-    console.log(props);
     try {
       const words = authCtx.userdata.id.split("/");
       const id = words[words.length - 1];
-      await fetch(`${props.author.id}/followers/${id}/`, {
-        method: "DELETE",
-      });
-      props.setFollowing(false);
+      const deleteResponse = await fetch(
+        `${props.author.id}/followers/${id}/`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (deleteResponse.ok) {
+        props.setFollowing(false);
+      }
     } catch (error) {
       let errorMessage = "stop following failed";
       console.log(error.message);

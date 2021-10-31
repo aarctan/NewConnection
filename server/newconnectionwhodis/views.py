@@ -280,6 +280,8 @@ class InboxView(APIView):
 
         save_inbox = True
         if item_type == 'Like':
+            actor_id = data['actor']['id'].split('/')[-1]
+            liker = Author.objects.get(pk=actor_id)
             like_obj_url = data['object']
             post_id = like_obj_url.split('posts/')[-1].split('/')[0]
             post_obj = Post.objects.get(pk=post_id)
@@ -287,7 +289,7 @@ class InboxView(APIView):
             if 'comments' in like_obj_url:
                 comment_id = like_obj_url.split('/')[-1]
                 comment_obj = Comment.objects.get(pk=comment_id)
-            Like.objects.create(author=author, post=post_obj, comment=comment_obj)
+            Like.objects.create(author=liker, post=post_obj, comment=comment_obj)
         elif item_type == "Follow":
             actor_id = data['actor']['id'].split('/')[-1]
             object_id = data['object']['id'].split('/')[-1]

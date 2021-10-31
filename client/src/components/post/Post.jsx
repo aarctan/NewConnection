@@ -15,7 +15,8 @@ import {
 import Comment from "src/components/post/Comment";
 import PostModal from "src/components/post/PostModal";
 import IconButton from "@mui/material/IconButton";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import LikeButtonIcon from "@mui/icons-material/FavoriteBorder";
+import LikedIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -42,8 +43,10 @@ const Post = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [comment, setComment] = useState("");
+  const [likedPost, setLikedPost] = useState(false);
+  const [likes, setLikes] = useState([]);
   const [comments, setComments] = useState([]);
+  const [comment, setComment] = useState("");
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
 
@@ -78,6 +81,34 @@ const Post = (props) => {
     }
   };
 
+  const onLikePost = async (e) => {
+    if (likedPost) {
+      return;
+    }
+    try {
+      const postResponse = await fetch(`${props.author.id}/inbox/`, {
+        method: "POST",
+        body: JSON.stringify({
+          type: "Like",
+          summary: `${authCtx.userdata.displayName} likes your post`,
+          actor: authCtx.userdata,
+          object: props.id,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (postResponse.ok) {
+        setLikedPost(true);
+        fetchLikes();
+      }
+    } catch (error) {
+      let errorMessage = "Send Like To Inbox failed";
+      console.log(error.message);
+      alert(errorMessage);
+    }
+  };
+
   // Get comments for the post
   const fetchComments = useCallback(async () => {
     const response = await fetch(`${props.id}/comments/`);
@@ -89,10 +120,29 @@ const Post = (props) => {
     }
   }, [props.id]);
 
+  const fetchLikes = useCallback(async () => {
+    const response = await fetch(`${props.id}/likes/`);
+    if (response.ok) {
+      const likeData = await response.json();
+      console.log(likeData);
+      setLikes(likeData);
+      // see if the user liked this post
+      for (let i = 0; i < likeData.length; i++) {
+        if (likeData[i].author.id === authCtx.userdata.id) {
+          setLikedPost(true);
+          break;
+        }
+      }
+    } else {
+      console.log("Post useEffect failed - fetching comments");
+    }
+  }, [props.id, authCtx.userdata.id]);
+
   useEffect(() => {
     setComments([]);
     fetchComments();
-  }, [fetchComments]);
+    fetchLikes();
+  }, [fetchComments, fetchLikes]);
 
   // Determine if this is the post of the author who is logged in
   let isAuthor = false;
@@ -101,7 +151,7 @@ const Post = (props) => {
   }
 
   return (
-    <Card sx={{ my: "25px" }}>
+    <Card elevation={3} sx={{ my: "25px" }}>
       <CardContent
         sx={{
           display: "flex",
@@ -159,8 +209,12 @@ const Post = (props) => {
         disableSpacing
         sx={{ paddingBottom: "5px" }}
       >
-        <IconButton aria-label="add to favorites">
-          <FavoriteBorderIcon />
+        <IconButton aria-label="like" onClick={onLikePost}>
+          {likedPost ? (
+            <LikedIcon style={{ fill: "#ED4857" }} />
+          ) : (
+            <LikeButtonIcon />
+          )}
         </IconButton>
         <IconButton aria-label="comment">
           <ChatBubbleOutlineIcon />
@@ -179,7 +233,7 @@ const Post = (props) => {
           fontWeight="600"
           sx={{ paddingBottom: 0.5 }}
         >
-          8,032 likes
+          {likes.length} {likes.length === 1 ? "like" : "likes"}
         </Typography>
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <Link

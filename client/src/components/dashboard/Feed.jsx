@@ -61,7 +61,7 @@ const Feed = (props) => {
                     contentType={post.contentType}
                     content={post.content}
                     count={1}
-                    comments={[]}
+                    likes={[]}
                     handleRemove={handleRemove}
                   />
                 );

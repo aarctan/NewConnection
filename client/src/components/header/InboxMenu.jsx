@@ -4,8 +4,6 @@ import InboxItem from "./InboxItem";
 // Menu container that takes in a list of inbox items from Header.jsx
 const InboxMenu = (props) => {
   const num_items = props.inbox.length;
-  console.log(num_items);
-
   return (
     <Menu
       anchorEl={props.anchorEl}
@@ -47,7 +45,7 @@ const InboxMenu = (props) => {
     >
       {props.inbox.map((item, idx) => {
         return (
-          <MenuItem sx={{mb: 0}}  key={idx}>
+          <MenuItem sx={{ mb: 0 }} key={idx}>
             {" "}
             <InboxItem item={item}> </InboxItem>
           </MenuItem>

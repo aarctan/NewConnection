@@ -1,17 +1,22 @@
 import { Box, Button, Typography, Avatar } from "@mui/material";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 
 import { useNavigate } from "react-router-dom";
+
+import AuthContext from "src/store/auth-context";
 
 const InboxFollowItem = (props) => {
   const item = props.item;
   const navigate = useNavigate();
+  const authCtx = useContext(AuthContext);
 
   const [followerPic, setFollowerPic] = useState("");
   const [followerName, setFollowerName] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
-  const fetchInbox = useCallback(async () => {
+  // Gets info about the author sending the inbox item
+  const fetchActor = useCallback(async () => {
     const response = await fetch(`${item.actor.id}/`);
     if (response.ok) {
       const data = await response.json();
@@ -23,9 +28,31 @@ const InboxFollowItem = (props) => {
   }, [item.actor.id]);
 
   useEffect(() => {
-    fetchInbox();
-  }, [fetchInbox]);
+    fetchActor();
+  }, [fetchActor]);
 
+  // Determines if author sending the follow request is a follower already, if so, make the button disabled and 'Accepted'
+  useEffect(() => {
+    const fetchIsFollower = async () => {
+      try {
+        const words = item.actor.id.split("/");
+        const actorID = words[words.length - 1];
+        const response = await fetch(
+          `${authCtx.userdata.id}/followers/${actorID}/`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setButtonDisabled(data === "true" ? true : false);
+        }
+      } catch (error) {
+        setButtonDisabled(false);
+      }
+    };
+    fetchIsFollower();
+  }, [authCtx.userdata.id, item.actor.id]);
+
+  // Called when the user clicks the 'Accept' button
+  // Adds the author to the users followers
   const acceptFriendReq = async (e) => {
     const actor_url = item.actor.id.split("/");
     const actor_id = actor_url[actor_url.length - 1];
@@ -39,7 +66,7 @@ const InboxFollowItem = (props) => {
       }
     );
     if (putResponse.ok) {
-      // disable accept button
+      setButtonDisabled(true);
     }
   };
 
@@ -85,30 +112,21 @@ const InboxFollowItem = (props) => {
         </Typography>
       </Box>
 
-      <Box
-        sx={{
-          flexDirection: "column",
+      <Button
+        disabled={buttonDisabled}
+        variant="contained"
+        style={{
+          color: "black",
+          border: "1pt solid #dbdbdb",
+          height: "25pt",
+          float: "right",
           justifyContent: "center",
           alignItems: "center",
         }}
+        onClick={acceptFriendReq}
       >
-        <Button
-          disabled={false}
-          variant="contained"
-          style={{
-            color: "black",
-            marginTop: "3pt",
-            border: "1pt solid #dbdbdb",
-            height: "25pt",
-            float: "right",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          onClick={acceptFriendReq}
-        >
-          <Typography variant="body2">Accept</Typography>
-        </Button>
-      </Box>
+        {buttonDisabled ? "Accepted" : "Accept"}
+      </Button>
     </Box>
   );
 };

@@ -12,7 +12,7 @@ const Comment = (props) => {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: "#fafafa",
+
         py: 0,
       }}
     >
@@ -23,7 +23,7 @@ const Comment = (props) => {
           flexDirection: "row",
           justifyContent: "flex-start",
           alignItems: "flex-start",
-          backgroundColor: "#fafafa",
+
           py: 0.2,
         }}
       >

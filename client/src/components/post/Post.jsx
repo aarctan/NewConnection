@@ -329,6 +329,7 @@ const Post = (props) => {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         post={props}
+        comments={comments}
       />
       {/* If the author is a user, open these modals */}
       {isAuthor && (

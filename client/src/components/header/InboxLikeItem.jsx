@@ -1,15 +1,11 @@
-import {
-  Box,
-  Button,
-  Typography,
-  Avatar,
-} from "@mui/material";
+import { Box, Typography, Avatar } from "@mui/material";
 
 import { useState, useEffect, useCallback } from "react";
 
 import { useNavigate } from "react-router-dom";
 
-const InboxItem = (props) => {
+const InboxLikeItem = (props) => {
+  console.log(props.item);
   const item = props.item;
   const navigate = useNavigate();
 
@@ -23,30 +19,13 @@ const InboxItem = (props) => {
       setFollowerPic(data["profileImage"]);
       setFollowerName(data["displayName"]);
     } else {
-      console.log("InboxItem useEffect failed - fetching inbox");
+      console.log("InboxLikeItem useEffect failed - fetching inbox");
     }
   }, [item.actor.id]);
 
   useEffect(() => {
     fetchInbox();
   }, [fetchInbox]);
-
-  const acceptFriendReq = async (e) => {
-    const actor_url = item.actor.id.split("/");
-    const actor_id = actor_url[actor_url.length - 1];
-    const putResponse = await fetch(
-      `${item.object.id}/followers/${actor_id}/`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    if (putResponse.ok) {
-      // disable accept button
-    }
-  };
 
   return (
     <Box
@@ -79,37 +58,11 @@ const InboxItem = (props) => {
           }}
         />
         <Typography variant="body2">
-          <b>{followerName}</b> wants to follow you
+          <b>{followerName}</b> liked your post
         </Typography>
-      </Box>
-
-      <Box
-        sx={{
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Button
-        
-          disabled={false}
-          variant="contained"
-          style={{
-            color: "black",
-            marginTop: "3pt",
-            border: "1pt solid #dbdbdb",
-            height: "25pt",
-            float: "right",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          onClick={acceptFriendReq}
-        >
-          <Typography variant="body2">Accept</Typography>
-        </Button>
       </Box>
     </Box>
   );
 };
 
-export default InboxItem;
+export default InboxLikeItem;

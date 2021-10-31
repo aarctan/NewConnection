@@ -1,5 +1,6 @@
 import { Menu, MenuItem } from "@mui/material";
-import InboxItem from "./InboxItem";
+import InboxFollowItem from "./InboxFollowItem";
+import InboxLikeItem from "./InboxLikeItem";
 
 // Menu container that takes in a list of inbox items from Header.jsx
 const InboxMenu = (props) => {
@@ -44,10 +45,12 @@ const InboxMenu = (props) => {
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
       {props.inbox.map((item, idx) => {
+        console.log(item);
         return (
           <MenuItem sx={{ mb: 0 }} key={idx}>
             {" "}
-            <InboxItem item={item}> </InboxItem>
+            {item.type === "Follow" && <InboxFollowItem item={item}> </InboxFollowItem>}
+            {item.type === "Like" && <InboxLikeItem item={item}> </InboxLikeItem>}
           </MenuItem>
         );
       })}

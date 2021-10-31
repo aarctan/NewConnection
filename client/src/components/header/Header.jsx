@@ -146,6 +146,7 @@ const Header = () => {
             menuOpen={inboxMenuOpen}
             handleClose={handleInboxClose}
             inbox={inbox}
+            setInbox={setInbox}
           />
         </Toolbar>
       </Container>

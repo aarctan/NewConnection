@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "src/store/auth-context";
 import MenuModal from "src/components/post/MenuModal";
 import DeletePostModal from "src/components/post/DeletePostModal";
+import LikesModal from "./LikesModal";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -43,6 +44,7 @@ const Post = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isLikesModalOpen, setIsLikesModalOpen] = useState(false);
   const [likedPost, setLikedPost] = useState(false);
   const [likes, setLikes] = useState([]);
   const [comments, setComments] = useState([]);
@@ -138,6 +140,10 @@ const Post = (props) => {
     }
   }, [props.id, authCtx.userdata.id]);
 
+  const openLikesModal = () => {
+    setIsLikesModalOpen(true);
+  }
+
   useEffect(() => {
     setComments([]);
     fetchComments();
@@ -227,6 +233,7 @@ const Post = (props) => {
         sx={{ py: "0px", paddingBottom: 0 }}
         className={classes.root}
       >
+        <Link component="button" underline="hover" onClick={openLikesModal} >
         <Typography
           variant="body2"
           color="text.primary"
@@ -235,6 +242,8 @@ const Post = (props) => {
         >
           {likes.length} {likes.length === 1 ? "like" : "likes"}
         </Typography>
+        </Link>
+        
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <Link
             component="button"
@@ -303,6 +312,12 @@ const Post = (props) => {
           <SendIcon />
         </IconButton>
       </Paper>
+      {/* Opens the likes in a modal to view all likes */}
+      <LikesModal
+          isModalOpen={isLikesModalOpen}
+          setIsModalOpen={setIsLikesModalOpen}
+          likes={likes}
+        ></LikesModal>
       {/* Opens the post in a modal to view all comments */}
       <PostModal
         isModalOpen={isModalOpen}

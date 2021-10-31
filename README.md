@@ -134,7 +134,10 @@ Author: https://stackoverflow.com/users/675577/dialex<br>
 Link: https://stackoverflow.com/a/2881071<br>
 Source: https://stackoverflow.com/questions/2881043/django-create-a-unique-database-constraint-for-2-or-more-fields-together<br>
 
-
+Upload File in React<br>
+Author: https://stackoverflow.com/users/8035475/ankit-kumar-rajpoot<br>
+Link: https://stackoverflow.com/a/64767180<br>
+Source: https://stackoverflow.com/questions/36580196/reactjs-base64-file-upload<br>
 
 Layout Sourcing:<br>
 

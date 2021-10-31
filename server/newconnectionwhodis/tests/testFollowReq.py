@@ -32,6 +32,8 @@ class FollowReqViewTests(TestCase):
         self.assertEquals(len(models.Follower.objects.all()), 0)
         # accept the friend request
         self.client.put(f'/api/v1/author/{self.author.id}/followers/{follower.id}/')
+        print(models.FollowReq.objects.all())
+        print(models.Follower.objects.all())
         self.assertEquals(len(models.FollowReq.objects.all()), 0)
         self.assertEquals(len(models.Follower.objects.all()), 1)
 

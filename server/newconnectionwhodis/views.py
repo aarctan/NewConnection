@@ -84,9 +84,8 @@ class FollowerView(APIView):
 
     # DELETE: remove a follower
     def delete(self, request, author_id, follower_id):
-        print(Follower.objects.all())
-        receiver = Author.objects.get(pk=follower_id)
-        sender = Author.objects.get(pk=author_id)
+        receiver = Author.objects.get(pk=author_id)
+        sender = Author.objects.get(pk=follower_id)
         try:
             Follower.objects.get(receiver=receiver, sender=sender).delete()
             return Response(status=status.HTTP_202_ACCEPTED)
@@ -97,22 +96,18 @@ class FollowerView(APIView):
     def put(self, request, author_id, follower_id):
         receiver = Author.objects.get(pk=author_id)
         sender = Author.objects.get(pk=follower_id)
-
-        print(FollowReq.objects.all())
         req = FollowReq.objects.get(requestor=sender, requestee=receiver)
         if not req:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        #req.delete()
+        req.delete()
         follow = Follower.objects.create(sender=sender, receiver=receiver)
         follow.save()
         return Response(status=status.HTTP_201_CREATED)
 
     # GET check if follower
     def get(self, request, author_id, follower_id):
-        receiver = Author.objects.get(pk=follower_id)
-        sender = Author.objects.get(pk=author_id)
-
-        print(Follower.objects.all())
+        receiver = Author.objects.get(pk=author_id)
+        sender = Author.objects.get(pk=follower_id)
         if not Follower.objects.filter(receiver=receiver, sender=sender):
             #return Response(status=status.HTTP_404_NOT_FOUND)
             return Response("false")
@@ -303,7 +298,6 @@ class InboxView(APIView):
                 save_inbox = False
             except:
                 FollowReq.objects.create(requestor=sender, requestee=receiver)
-            print(FollowReq.objects.all())
         elif item_type == 'post':
             pass
     

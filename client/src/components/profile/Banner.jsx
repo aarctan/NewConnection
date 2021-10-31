@@ -15,6 +15,7 @@ import AuthContext from "src/store/auth-context";
 // post, follower and following counts
 const Banner = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [followBtnText, setFollowBtnText] = useState("Follow");
   const authCtx = useContext(AuthContext);
 
   const sendFollowToInbox = async (e) => {
@@ -32,6 +33,7 @@ const Banner = (props) => {
           "Content-Type": "application/json",
         },
       });
+      setFollowBtnText("Requested");
     } catch (error) {
       let errorMessage = "Send Follow To Inbox failed";
       console.log(error.message);
@@ -40,10 +42,14 @@ const Banner = (props) => {
   };
 
   const stopFollowing = async (e) => {
+    console.log(props);
     try {
-      await fetch(`${authCtx.userdata.id}/followers/${props.authorID}/`, {
+      const words = authCtx.userdata.id.split("/");
+      const id = words[words.length - 1];
+      await fetch(`${props.author.id}/followers/${id}/`, {
         method: "DELETE",
       });
+      props.setFollowing(false);
     } catch (error) {
       let errorMessage = "stop following failed";
       console.log(error.message);
@@ -78,7 +84,7 @@ const Banner = (props) => {
         {props.isUser ? (
           <Box>
             <Button
-            variant="contained"
+              variant="contained"
               style={{
                 color: "black",
                 backgroundColor: "white",
@@ -95,6 +101,7 @@ const Banner = (props) => {
           <Box>
             {props.following ? (
               <Button
+                variant="contained"
                 style={{
                   color: "black",
                   backgroundColor: "white",
@@ -111,6 +118,7 @@ const Banner = (props) => {
               </Button>
             ) : (
               <Button
+                variant="contained"
                 style={{
                   color: "black",
                   backgroundColor: "white",
@@ -121,7 +129,7 @@ const Banner = (props) => {
                 }}
                 onClick={sendFollowToInbox}
               >
-                Follow
+                {followBtnText}
               </Button>
             )}
           </Box>

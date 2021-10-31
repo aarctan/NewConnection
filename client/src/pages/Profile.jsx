@@ -18,10 +18,10 @@ const Profile = () => {
   useEffect(() => {
     async function fetchFollower() {
       try {
-        const words = state.id.split("/");
-        const followerid = words[words.length - 1];
+        const words = authCtx.userdata.id.split("/");
+        const authctxid = words[words.length - 1];
         await fetch(
-          `${authCtx.userdata.id}/followers/${followerid}/`
+          `${state.id}/followers/${authctxid}/`
         )
           .then((response) => {
             return response.json();

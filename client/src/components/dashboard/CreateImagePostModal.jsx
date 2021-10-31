@@ -1,4 +1,5 @@
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useContext } from "react";
 import AuthContext from "src/store/auth-context";
@@ -8,7 +9,7 @@ import { useTheme } from "@mui/material/styles";
 const style = {
   display: "flex",
   flexDirection: "column",
-  justifyContent: "space-around",
+  justifyContent: "space-between",
   position: "absolute",
   top: "50%",
   left: "50%",
@@ -18,6 +19,10 @@ const style = {
   p: 3,
   borderRadius: "8px",
 };
+
+const Input = styled("input")({
+  display: "none",
+});
 
 const CreateImagePostModal = ({
   isModalOpen,
@@ -63,6 +68,24 @@ const CreateImagePostModal = ({
     }
   };
 
+  const handleFileRead = async (event) => {
+    const file = event.target.files[0];
+    const base64 = await convertBase64(file);
+  };
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
   return (
     <>
       <Modal open={isModalOpen} onClose={handleClose}>
@@ -84,7 +107,7 @@ const CreateImagePostModal = ({
               Create a new post
             </Typography>
           </Box>
-          <Box display="flex" flexDirection="column">
+          <Box display="flex" flexDirection="column" alignItems="center">
             <TextField
               label="Title"
               fullWidth
@@ -109,15 +132,43 @@ const CreateImagePostModal = ({
                 setImageURL(e.target.value);
               }}
             />
+            <Typography id="or" variant="h6" align="center" sx={{ py: 1 }}>
+              -OR-
+            </Typography>
+            <label htmlFor="contained-button-file">
+              <Input
+                accept="image/*"
+                id="contained-button-file"
+                multiple
+                type="file"
+                onChange={handleFileRead}
+              />
+              <Button
+                variant="contained"
+                component="span"
+                style={{
+                  color: "black",
+                  border: "1pt solid #dbdbdb",
+                  height: "25pt",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                Upload Image
+              </Button>
+            </label>
           </Box>
           <Box display="flex" justifyContent="flex-end">
             <Button
               endIcon={<SendIcon />}
               onClick={handleCreate}
+              variant="contained"
               style={{
-                backgroundColor: "#0095f6",
-                color: "white",
-                display: "flex",
+                color: "black",
+                border: "1pt solid #dbdbdb",
+                height: "25pt",
+                justifyContent: "center",
+                alignItems: "center",
                 width: "80pt",
               }}
             >

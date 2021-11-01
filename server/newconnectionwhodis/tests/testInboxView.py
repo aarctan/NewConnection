@@ -1,6 +1,7 @@
 import json
 
 from django.test import TestCase
+from rest_framework.test import APIClient
 
 from . import util
 from .. import models, serializers
@@ -10,7 +11,9 @@ class InboxViewTests(TestCase):
     def setUp(self):
         response = self.client.get("")
         self.request = response.wsgi_request
+        self.client = APIClient()
         self.author = util.create_author("Muhammad", "Exanut")
+        self.client.force_authenticate(self.author.user)
 
     def test_get_empty_inbox(self):
         """
@@ -47,6 +50,29 @@ class InboxViewTests(TestCase):
         response = self.client.get(f"/api/v1/author/{self.author.id}/posts/{post.id}/likes/")
         d = util.response_to_json(response)
         self.assertEquals(len(d), 1)
+
+    def test_post_like_unauth(self):
+        """
+        Test posting an unauthenticated post like to the inbox.
+        """
+        self.client.force_authenticate(None)
+        liker = util.create_author("jennie", "jennierubyjane")
+        post = util.create_post(self.author, "content")
+        data = {
+            "summary": f"{liker.displayName} Likes your post",
+            "type": "Like",
+            "author:": serializers.AuthorSerializer(
+                self.author, context={"request": self.request}).data,
+            "object": serializers.PostSerializer(
+                post, context={"request": self.request}).data['id'],
+        }
+        response = self.client.post(
+            f"/api/v1/author/{self.author.id}/inbox/",
+            data=json.dumps(data),
+            content_type="application/json",
+        )
+        response = self.client.get(f"/api/v1/author/{self.author.id}/inbox/")
+        self.assertEquals(response.status_code, 401)
     
     def test_comment_like(self):
         liker = util.create_author("jennie", "jennierubyjane")
@@ -73,7 +99,34 @@ class InboxViewTests(TestCase):
         d = util.response_to_json(response)
         self.assertEquals(len(d), 1)
 
+    def test_comment_like_unauth(self):
+        """
+        Test posting an unauthenticated commemnt like to the inbox.
+        """
+        self.client.force_authenticate(None)
+        liker = util.create_author("jennie", "jennierubyjane")
+        post = util.create_post(self.author, "content")
+        comment = util.create_comment(self.author, post, "comment")
+        data = {
+            "summary": f"{liker.displayName} Likes your comment",
+            "type": "Like",
+            "author:": serializers.AuthorSerializer(
+                self.author, context={"request": self.request}).data,
+            "object": serializers.CommentSerializer(
+                comment, context={"request": self.request}).data['id'],
+        }
+        response = self.client.post(
+            f"/api/v1/author/{self.author.id}/inbox/",
+            data=json.dumps(data),
+            content_type="application/json",
+        )
+        response = self.client.get(f"/api/v1/author/{self.author.id}/inbox/")
+        self.assertEquals(response.status_code, 401)
+
     def test_follow_request(self):
+        """
+        Test posting a follow request to the inbox.
+        """
         follower = util.create_author("jennie", "jennierubyjane")
         data = {
             "summary": "test",
@@ -92,6 +145,28 @@ class InboxViewTests(TestCase):
         d = util.response_to_json(response)
         self.assertEquals(len(d['items']), 1)
         self.assertEquals(len(models.FollowReq.objects.all()), 1)
+
+    def test_follow_request_unauth(self):
+        """
+        Test posting an unauthenticated follow request to the inbox.
+        """
+        self.client.force_authenticate(None)
+        follower = util.create_author("jennie", "jennierubyjane")
+        data = {
+            "summary": "test",
+            "type": "Follow",
+            "actor": serializers.AuthorSerializer(
+                follower, context={"request": self.request}).data,
+            "object": serializers.AuthorSerializer(
+                self.author, context={"request": self.request}).data,
+        }
+        response = self.client.post(
+            f"/api/v1/author/{self.author.id}/inbox/",
+            data=json.dumps(data),
+            content_type="application/json",
+        )
+        response = self.client.get(f"/api/v1/author/{self.author.id}/inbox/")
+        self.assertEquals(response.status_code, 401)
     
     '''
     def test_receive_multiple_items(self):

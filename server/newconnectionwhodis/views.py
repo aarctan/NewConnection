@@ -3,8 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 from .serializers import *
 from .models import *
@@ -14,7 +13,7 @@ from . import view_util
 class UserdataViewSet(viewsets.ViewSet):
     http_method_names = ["get"]
 
-    # GET maps user to its author and returns the authors serialized data
+    # GET: maps user to its author and returns the authors serialized data
     def retrieve(self, request, user):
         author = Author.objects.get(user__username=user)
         serializer = AuthorSerializer(author, context={"request": request})
@@ -41,6 +40,8 @@ class AuthorsView(APIView):
 
 
 class AuthorView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     http_method_names = ["get", "post"]
 
     # GET: retrieve their profile
@@ -80,6 +81,8 @@ class FollowerListView(APIView):
 
 
 class FollowerView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     http_method_names = ['delete', 'put', 'get']
 
     # DELETE: remove a follower
@@ -104,7 +107,7 @@ class FollowerView(APIView):
         follow.save()
         return Response(status=status.HTTP_201_CREATED)
 
-    # GET check if follower
+    # GET: check if follower
     def get(self, request, author_id, follower_id):
         receiver = Author.objects.get(pk=author_id)
         sender = Author.objects.get(pk=follower_id)
@@ -120,7 +123,7 @@ class FollowerView(APIView):
 class PostListView(APIView):
     http_method_names = ["get", "post"]
 
-    # GET get recent posts of author (paginated)
+    # GET: get recent posts of author (paginated)
     def get(self, request, author_id):
         author = Author.objects.get(pk=author_id)
         return Response(
@@ -133,7 +136,7 @@ class PostListView(APIView):
             ).data
         )
 
-    # POST create a new post but generate a post_id
+    # POST: create a new post but generate a post_id
     def post(self, request, author_id):
         author = Author.objects.get(pk=author_id)
         data = request.data
@@ -145,32 +148,31 @@ class PostListView(APIView):
 
 
 class PostView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     http_method_names = ["get", "post", "delete", "put"]
 
-    # GET get the public post
+    # GET: get the public post
     def get(self, request, author_id, post_id):
         post = Post.objects.get(pk=post_id)
         serializer = PostSerializer(post, context={"request": request})
         return Response(serializer.data)
 
-    # POST update the post (must be authenticated)
-    # @api_view(['POST'])
-    # @authentication_classes([TokenAuthentication])
-    # @permission_classes([IsAuthenticated])
+    # POST: update the post (must be authenticated)
     def post(self, request, author_id, post_id):
         post = Post.objects.get(pk=post_id)
         serializer = PostSerializer(post, context={"request": request})
         view_util.model_update(post, request.data)
         return Response(serializer.data)
 
-    # DELETE remove the post
+    # DELETE: remove the post
     def delete(self, request, author_id, post_id):
         post = Post.objects.get(pk=post_id)
         post.delete()
         serializer = PostSerializer(post, context={"request": request})
         return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
 
-    # PUT create a post with that post_id
+    # PUT: create a post with that post_id
     def put(self, request, author_id, post_id):
         author = Author.objects.get(pk=author_id)
         data = request.data
@@ -184,7 +186,7 @@ class PostView(APIView):
 class CommentView(APIView):
     http_method_names = ["get", "post"]
 
-    # GET get comments of the post
+    # GET: get comments of the post
     def get(self, request, author_id, post_id):
         author = Author.objects.get(pk=author_id)
         post = Post.objects.get(pk=post_id)
@@ -246,7 +248,7 @@ class CommentLikesView(APIView):
 class LikedView(APIView):
     http_method_names = ["get"]
 
-    # GET list what public things author_id liked
+    # GET: list what public things author_id liked
     def get(self, request, author_id):
         author = Author.objects.get(pk=author_id)
         return Response(
@@ -262,6 +264,8 @@ class LikedView(APIView):
 
 
 class InboxView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     http_method_names = ["get", "post", "delete"]
 
     # GET: if authenticated get a list of posts sent to {AUTHOR_ID}

@@ -1,4 +1,11 @@
-import { Modal, Box, Typography, TextField, Button } from "@mui/material";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Avatar,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useContext } from "react";
@@ -34,6 +41,7 @@ const CreateImagePostModal = ({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [imageURL, setImageURL] = useState("");
+  const [imgPreview, setImgPreview] = useState(""); // image url or base64 encoded image
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
   if (!isModalOpen) return null;
@@ -71,6 +79,7 @@ const CreateImagePostModal = ({
   const handleFileRead = async (event) => {
     const file = event.target.files[0];
     const base64 = await convertBase64(file);
+    setImgPreview(base64);
   };
 
   const convertBase64 = (file) => {
@@ -94,7 +103,7 @@ const CreateImagePostModal = ({
           style={
             small
               ? { width: "90%", height: "70%" }
-              : { width: 500, height: 450 }
+              : { width: 500, height: imgPreview ? "550px" : "400px" }
           }
         >
           <Box>
@@ -124,41 +133,71 @@ const CreateImagePostModal = ({
                 setDescription(e.target.value);
               }}
             />
-            <TextField
-              label={`Image URL`}
-              fullWidth
-              margin="dense"
-              onChange={(e) => {
-                setImageURL(e.target.value);
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="space-between"
+              width="100%"
+            >
+              <TextField
+                label={`Image URL`}
+                margin="dense"
+                sx={{
+                  width: "60%"
+                }}
+                onChange={(e) => {
+                  setImageURL(e.target.value);
+                  setImgPreview(e.target.value);
+                }}
+              />
+              <Typography id="or" variant="h6" align="center" sx={{ py: 1 }}>
+                or
+              </Typography>
+              <label htmlFor="contained-button-file">
+                <Input
+                  disabled={imageURL}
+                  accept="image/*"
+                  id="contained-button-file"
+                  multiple
+                  type="file"
+                  style={{
+                    width: "40%"
+                  }}
+                  onChange={handleFileRead}
+                />
+                <Button
+                  disabled={imageURL}
+                  variant="contained"
+                  component="span"
+                  sx={{
+                    width: "40%"
+                  }}
+                  style={{
+                    color: "black",
+                    border: "1pt solid #dbdbdb",
+                    width: "100%",
+                    height: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+
+                  }}
+                >
+                  Upload Image
+                </Button>
+              </label>
+            </Box>
+            <img
+              src={imgPreview}
+              style={{
+                maxHeight: 200,
+                border: 0,
+                borderRadius: "5px",
+                borderColor: "gray",
               }}
             />
-            <Typography id="or" variant="h6" align="center" sx={{ py: 1 }}>
-              -OR-
-            </Typography>
-            <label htmlFor="contained-button-file">
-              <Input
-                accept="image/*"
-                id="contained-button-file"
-                multiple
-                type="file"
-                onChange={handleFileRead}
-              />
-              <Button
-                variant="contained"
-                component="span"
-                style={{
-                  color: "black",
-                  border: "1pt solid #dbdbdb",
-                  height: "25pt",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                Upload Image
-              </Button>
-            </label>
           </Box>
-          <Box display="flex" justifyContent="flex-end">
+          <Box display="flex" justifyContent="center">
             <Button
               endIcon={<SendIcon />}
               onClick={handleCreate}

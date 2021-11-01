@@ -74,6 +74,7 @@ const Post = (props) => {
       if (postResponse.ok) {
         const comment = await postResponse.json();
         setComments([comment, ...comments]);
+        setComment("");
       } else {
       }
     } catch (error) {
@@ -202,12 +203,18 @@ const Post = (props) => {
       {props.contentType === "text/plain" &&
       props.content.slice(0, 4) === "http" ? (
         <CardContent className={classes.root} sx={{ padding: 0 }}>
-          <CardMedia
-            component="img"
-            height="500"
-            image={props.content}
-            alt="selfie"
-          />
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <CardMedia
+              component="img"
+              style={{
+                maxHeight: 500,
+                maxWidth: "100%",
+                width: "auto",
+              }}
+              image={props.content}
+              alt="selfie"
+            />
+          </div>
         </CardContent>
       ) : (
         props.contentType === "text/plain" && (
@@ -313,10 +320,12 @@ const Post = (props) => {
         }}
       >
         <InputBase
+          value={comment}
           sx={{ ml: 1, flex: 1 }}
           placeholder="Comment..."
           inputProps={{ "aria-label": "comment" }}
           onChange={(e) => {
+            e.preventDefault();
             setComment(e.target.value);
           }}
         />

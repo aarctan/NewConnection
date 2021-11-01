@@ -30,8 +30,8 @@ const InboxDelete = ({ setInbox }) => {
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
-        backgroundColor: "red",
-        color: "white",
+        backgroundColor: "#eeeeee",
+        color: "black",
         alignItems: "center",
         py: 0,
       }}

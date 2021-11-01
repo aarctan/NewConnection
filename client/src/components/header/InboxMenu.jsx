@@ -1,27 +1,27 @@
-import { Menu, MenuItem } from "@mui/material";
-import InboxItem from "./InboxItem";
+import { Menu, MenuItem, Typography } from "@mui/material";
+import InboxFollowItem from "./InboxFollowItem";
+import InboxLikeItem from "./InboxLikeItem";
+import InboxDelete from "./InboxDelete";
 
 // Menu container that takes in a list of inbox items from Header.jsx
 const InboxMenu = (props) => {
   const num_items = props.inbox.length;
-  console.log(num_items);
-
   return (
     <Menu
       anchorEl={props.anchorEl}
       open={props.menuOpen}
       onClose={props.handleClose}
-      onClick={props.handleClose}
       PaperProps={{
         elevation: 1,
         sx: {
           width: 400,
-          minHeight: 60,
-          maxHeight: 300,
-          height: num_items * 60,
-          overflow: "visible",
+          maxHeight: 5 * 55,
           filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
           mt: 0.5,
+          "& .MuiList-root": {
+            paddingTop: 0,
+            paddingBottom: 0,
+          },
           "& .MuiAvatar-root": {
             width: 32,
             height: 32,
@@ -46,13 +46,36 @@ const InboxMenu = (props) => {
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
       {props.inbox.map((item, idx) => {
+        console.log(item);
         return (
-          <MenuItem sx={{mb: 0}}  key={idx}>
-            {" "}
-            <InboxItem item={item}> </InboxItem>
+          <MenuItem key={idx} sx={{ height: 55 }}>
+            {item.type === "Follow" && (
+              <InboxFollowItem item={item}> </InboxFollowItem>
+            )}
+            {item.type === "Like" && (
+              <InboxLikeItem item={item}> </InboxLikeItem>
+            )}
           </MenuItem>
         );
       })}
+      {num_items > 0 && (
+        <MenuItem sx={{ height: 40, padding: 0 }}>
+          <InboxDelete setInbox={props.setInbox} />
+        </MenuItem>
+      )}
+      {num_items === 0 && (
+        <Typography
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            variant: "body2",
+            height: 55,
+          }}
+        >
+          No inbox items!
+        </Typography>
+      )}
     </Menu>
   );
 };

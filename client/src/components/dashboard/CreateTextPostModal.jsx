@@ -19,11 +19,11 @@ const style = {
   borderRadius: "8px",
 };
 
-export default function CreatePostModal({
+const CreateTextPostModal = ({
   isModalOpen,
   setIsModalOpen,
   handlePostSubmit,
-}) {
+}) => {
   const handleClose = () => setIsModalOpen(false);
   const authCtx = useContext(AuthContext);
   const [title, setTitle] = useState("");
@@ -130,4 +130,6 @@ export default function CreatePostModal({
       </Modal>
     </>
   );
-}
+};
+
+export default CreateTextPostModal;

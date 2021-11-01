@@ -50,7 +50,13 @@ const ProfileMenu = (props) => {
           navigate(`/app/author/${word}`, { state: authCtx.userdata });
         }}
       >
-        <Avatar /> Profile
+        <Avatar alt="Avatar"
+          src={authCtx.userdata.profileImage}
+          sx={{
+            cursor: "pointer",
+            border: 1,
+            borderColor: "gray",
+          }} /> Profile
       </MenuItem>
       <Divider />
       <MenuItem onClick={props.handleLogout}>

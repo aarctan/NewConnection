@@ -16,25 +16,19 @@ const Profile = () => {
   // Checks if the if from the url matches the logged in user id
   // if it doesnt, we need to check if the logged in user is following the user id from the URL
   useEffect(() => {
-    async function fetchFollower() {
+    const fetchFollower = async () => {
       try {
         const words = authCtx.userdata.id.split("/");
         const authctxid = words[words.length - 1];
-        await fetch(
-          `${state.id}/followers/${authctxid}/`
-        )
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
-            setFollowing((data === "true") ? true : false);
-            console.log(data);
-          })
-          .catch((error) => setFollowing(false));
+        const response = await fetch(`${state.id}/followers/${authctxid}/`);
+        if (response.ok) {
+          const data = await response.json();
+          setFollowing(data === "true" ? true : false);
+        }
       } catch (error) {
         setFollowing(false);
       }
-    }
+    };
     if (state.id === authCtx.userdata.id) {
       setIsUser(true);
     } else {

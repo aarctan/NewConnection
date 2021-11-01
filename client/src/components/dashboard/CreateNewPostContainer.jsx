@@ -1,5 +1,12 @@
 import { useContext } from "react";
-import { Avatar, Card, CardContent, Box, Button } from "@mui/material";
+import {
+  Avatar,
+  Card,
+  CardContent,
+  Box,
+  Button,
+  Typography,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import AuthContext from "src/store/auth-context";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +29,7 @@ const CreateNewPostContainer = (props) => {
   const navigate = useNavigate();
 
   return (
-    <Card sx={{ paddingBottom: 0, backgroundColor: "EDECEC" }}>
+    <Card elevation={3} sx={{ paddingBottom: 0, backgroundColor: "EDECEC" }}>
       <CardContent
         className={classes.cardContent}
         sx={{ display: "flex", alignItems: "center" }}
@@ -30,7 +37,14 @@ const CreateNewPostContainer = (props) => {
         <Avatar
           alt="Avatar"
           src={authCtx.userdata.profileImage}
-          sx={{ width: 56, height: 56, marginRight: 1.5, cursor: "pointer" }}
+          sx={{
+            width: 56,
+            height: 56,
+            marginRight: 1.5,
+            cursor: "pointer",
+            border: 1,
+            borderColor: "gray",
+          }}
           onClick={() => {
             const words = authCtx.userdata.id.split("/");
             const word = words[words.length - 1];
@@ -46,28 +60,31 @@ const CreateNewPostContainer = (props) => {
           }}
         >
           <Button
-            variant="outlined"
+            variant="contained"
+            color="secondary"
             sx={{
               borderRadius: "15px",
               justifyContent: "center",
-              backgroundColor: "#eaeaea",
+              backgroundColor: "#eeeeee",
               marginBottom: 1.3,
             }}
             fullWidth
-            onClick={() => props.setIsModalOpen(true)}
+            onClick={() => props.setIsTextModalOpen(true)}
           >
-            Write a text post
+            <Typography>Write a text post</Typography>
           </Button>
           <Button
-            variant="outlined"
+            variant="contained"
+            color="secondary"
             sx={{
               borderRadius: "15px",
               justifyContent: "center",
-              backgroundColor: "#eaeaea",
+              backgroundColor: "#eeeeee",
             }}
             fullWidth
+            onClick={() => props.setIsImageModalOpen(true)}
           >
-            Upload an image
+            <Typography>Upload an image</Typography>
           </Button>
         </Box>
       </CardContent>

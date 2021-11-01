@@ -15,7 +15,8 @@ import {
 import Comment from "src/components/post/Comment";
 import PostModal from "src/components/post/PostModal";
 import IconButton from "@mui/material/IconButton";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import LikeButtonIcon from "@mui/icons-material/FavoriteBorder";
+import LikedIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -25,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "src/store/auth-context";
 import MenuModal from "src/components/post/MenuModal";
 import DeletePostModal from "src/components/post/DeletePostModal";
+import LikesModal from "./LikesModal";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -42,8 +44,11 @@ const Post = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [comment, setComment] = useState("");
+  const [isLikesModalOpen, setIsLikesModalOpen] = useState(false);
+  const [likedPost, setLikedPost] = useState(false);
+  const [likes, setLikes] = useState([]);
   const [comments, setComments] = useState([]);
+  const [comment, setComment] = useState("");
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
 
@@ -69,10 +74,39 @@ const Post = (props) => {
       if (postResponse.ok) {
         const comment = await postResponse.json();
         setComments([comment, ...comments]);
+        setComment("");
       } else {
       }
     } catch (error) {
       let errorMessage = "Send Comment failed";
+      console.log(error.message);
+      alert(errorMessage);
+    }
+  };
+
+  const onLikePost = async (e) => {
+    if (likedPost) {
+      return;
+    }
+    try {
+      const postResponse = await fetch(`${props.author.id}/inbox/`, {
+        method: "POST",
+        body: JSON.stringify({
+          type: "Like",
+          summary: `${authCtx.userdata.displayName} likes your post`,
+          actor: authCtx.userdata,
+          object: props.id,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (postResponse.ok) {
+        setLikedPost(true);
+        fetchLikes();
+      }
+    } catch (error) {
+      let errorMessage = "Send Like To Inbox failed";
       console.log(error.message);
       alert(errorMessage);
     }
@@ -89,10 +123,32 @@ const Post = (props) => {
     }
   }, [props.id]);
 
+  const fetchLikes = useCallback(async () => {
+    const response = await fetch(`${props.id}/likes/`);
+    if (response.ok) {
+      const likeData = await response.json();
+      setLikes(likeData);
+      // see if the user liked this post
+      for (let i = 0; i < likeData.length; i++) {
+        if (likeData[i].author.id === authCtx.userdata.id) {
+          setLikedPost(true);
+          break;
+        }
+      }
+    } else {
+      console.log("Post useEffect failed - fetching comments");
+    }
+  }, [props.id, authCtx.userdata.id]);
+
+  const openLikesModal = () => {
+    setIsLikesModalOpen(true);
+  };
+
   useEffect(() => {
     setComments([]);
     fetchComments();
-  }, [fetchComments]);
+    fetchLikes();
+  }, [fetchComments, fetchLikes]);
 
   // Determine if this is the post of the author who is logged in
   let isAuthor = false;
@@ -100,8 +156,9 @@ const Post = (props) => {
     isAuthor = true;
   }
 
+  console.log(props.content);
   return (
-    <Card sx={{ my: "25px" }}>
+    <Card elevation={3} sx={{ my: "25px" }}>
       <CardContent
         sx={{
           display: "flex",
@@ -121,7 +178,13 @@ const Post = (props) => {
           <Avatar
             alt="author"
             src={props.author.profileImage}
-            sx={{ width: 38, height: 38, marginRight: 2 }}
+            sx={{
+              width: 38,
+              height: 38,
+              marginRight: 2,
+              border: 1,
+              borderColor: "gray",
+            }}
             onClick={() => {
               const words = props.author.id.split("/");
               const word = words[words.length - 1];
@@ -137,12 +200,30 @@ const Post = (props) => {
           <MoreHorizIcon />
         </IconButton>
       </CardContent>
-      {props.contentType === "text/plain" && (
-        <CardContent className={classes.root}>
-          <Typography variant="body1" color="text.primary">
-            {props.content}
-          </Typography>
+      {props.contentType === "text/plain" &&
+      props.content.slice(0, 4) === "http" ? (
+        <CardContent className={classes.root} sx={{ padding: 0 }}>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <CardMedia
+              component="img"
+              style={{
+                maxHeight: 500,
+                maxWidth: "100%",
+                width: "auto",
+              }}
+              image={props.content}
+              alt="selfie"
+            />
+          </div>
         </CardContent>
+      ) : (
+        props.contentType === "text/plain" && (
+          <CardContent className={classes.root}>
+            <Typography variant="body1" color="text.primary">
+              {props.content}
+            </Typography>
+          </CardContent>
+        )
       )}
       {props.contentType === "image/png;base64" && (
         <CardContent className={classes.root} sx={{ padding: 0 }}>
@@ -159,8 +240,12 @@ const Post = (props) => {
         disableSpacing
         sx={{ paddingBottom: "5px" }}
       >
-        <IconButton aria-label="add to favorites">
-          <FavoriteBorderIcon />
+        <IconButton aria-label="like" onClick={onLikePost}>
+          {likedPost ? (
+            <LikedIcon style={{ fill: "#ED4857" }} />
+          ) : (
+            <LikeButtonIcon />
+          )}
         </IconButton>
         <IconButton aria-label="comment">
           <ChatBubbleOutlineIcon />
@@ -173,14 +258,17 @@ const Post = (props) => {
         sx={{ py: "0px", paddingBottom: 0 }}
         className={classes.root}
       >
-        <Typography
-          variant="body2"
-          color="text.primary"
-          fontWeight="600"
-          sx={{ paddingBottom: 0.5 }}
-        >
-          8,032 likes
-        </Typography>
+        <Link component="button" underline="hover" onClick={openLikesModal}>
+          <Typography
+            variant="body2"
+            color="text.primary"
+            fontWeight="600"
+            sx={{ paddingBottom: 0.5 }}
+          >
+            {likes.length} {likes.length === 1 ? "like" : "likes"}
+          </Typography>
+        </Link>
+
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <Link
             component="button"
@@ -232,10 +320,12 @@ const Post = (props) => {
         }}
       >
         <InputBase
+          value={comment}
           sx={{ ml: 1, flex: 1 }}
           placeholder="Comment..."
           inputProps={{ "aria-label": "comment" }}
           onChange={(e) => {
+            e.preventDefault();
             setComment(e.target.value);
           }}
         />
@@ -249,11 +339,18 @@ const Post = (props) => {
           <SendIcon />
         </IconButton>
       </Paper>
+      {/* Opens the likes in a modal to view all likes */}
+      <LikesModal
+        isModalOpen={isLikesModalOpen}
+        setIsModalOpen={setIsLikesModalOpen}
+        likes={likes}
+      ></LikesModal>
       {/* Opens the post in a modal to view all comments */}
       <PostModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         post={props}
+        comments={comments}
       />
       {/* If the author is a user, open these modals */}
       {isAuthor && (

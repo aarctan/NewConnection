@@ -11,7 +11,7 @@ import {
   Hidden,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import MailIcon from "@mui/icons-material/Mail";
+import MailIcon from "@mui/icons-material/MailOutline";
 import { makeStyles } from "@mui/styles";
 import Search from "src/components/header/Search";
 import ProfileMenu from "src/components/header/ProfileMenu";
@@ -53,11 +53,11 @@ const Header = () => {
   };
 
   // InboxMenu
+  const [anchorInboxEl, setAnchorInboxEl] = useState(null);
   const handleInboxClick = (event) => {
     fetchInbox();
     setAnchorInboxEl(event.currentTarget);
   };
-  const [anchorInboxEl, setAnchorInboxEl] = useState(null);
   const inboxMenuOpen = Boolean(anchorInboxEl);
   const handleInboxClose = () => {
     setAnchorInboxEl(null);
@@ -69,7 +69,6 @@ const Header = () => {
     if (response.ok) {
       const inboxData = await response.json();
       setInbox(inboxData["items"]);
-      console.log(inboxData["items"]);
     } else {
       console.log("Header useEffect failed - fetching inbox");
     }
@@ -115,11 +114,11 @@ const Header = () => {
               <IconButton
                 onClick={handleInboxClick}
                 size="medium"
-                aria-label="show 4 new mails"
+                aria-label="show new mail"
                 color="inherit"
                 sx={{ ml: 2 }}
               >
-                <Badge badgeContent={4} color="error">
+                <Badge badgeContent={inbox.length} color="error">
                   <MailIcon />
                 </Badge>
               </IconButton>
@@ -131,7 +130,7 @@ const Header = () => {
                 <Avatar
                   alt="Avatar"
                   src={authCtx.userdata.profileImage}
-                  sx={{ width: 28, height: 28 }}
+                  sx={{ width: 28, height: 28, border: 1, borderColor: "gray" }}
                 />
               </IconButton>
             </Stack>
@@ -147,6 +146,7 @@ const Header = () => {
             menuOpen={inboxMenuOpen}
             handleClose={handleInboxClose}
             inbox={inbox}
+            setInbox={setInbox}
           />
         </Toolbar>
       </Container>

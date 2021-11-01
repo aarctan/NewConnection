@@ -33,7 +33,7 @@ class InboxViewTests(TestCase):
         data = {
             "summary": f"{liker.displayName} Likes your post",
             "type": "Like",
-            "author:": serializers.AuthorSerializer(
+            "actor": serializers.AuthorSerializer(
                 self.author, context={"request": self.request}).data,
             "object": serializers.PostSerializer(
                 post, context={"request": self.request}).data['id'],
@@ -81,7 +81,7 @@ class InboxViewTests(TestCase):
         data = {
             "summary": f"{liker.displayName} Likes your comment",
             "type": "Like",
-            "author:": serializers.AuthorSerializer(
+            "actor": serializers.AuthorSerializer(
                 self.author, context={"request": self.request}).data,
             "object": serializers.CommentSerializer(
                 comment, context={"request": self.request}).data['id'],
@@ -205,9 +205,15 @@ class InboxViewTests(TestCase):
         """
         liker = util.create_author("jennie", "jennierubyjane")
         post = util.create_post(self.author, "content")
-        like = util.create_post_like(liker, post)
-        data = serializers.LikeSerializer(like, context={"request": self.request}).data
-        self.client.post(
+        data = {
+            "summary": f"{liker.displayName} Likes your post",
+            "type": "Like",
+            "actor": serializers.AuthorSerializer(
+                self.author, context={"request": self.request}).data,
+            "object": serializers.PostSerializer(
+                post, context={"request": self.request}).data['id'],
+        }
+        response = self.client.post(
             f"/api/v1/author/{self.author.id}/inbox/",
             data=json.dumps(data),
             content_type="application/json",

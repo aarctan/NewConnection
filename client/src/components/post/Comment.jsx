@@ -12,7 +12,7 @@ const Comment = (props) => {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: "#fafafa",
+
         py: 0,
       }}
     >
@@ -23,14 +23,21 @@ const Comment = (props) => {
           flexDirection: "row",
           justifyContent: "flex-start",
           alignItems: "flex-start",
-          backgroundColor: "#fafafa",
+
           py: 0.2,
         }}
       >
         <Avatar
           alt="Avatar"
           src={props.author.profileImage}
-          sx={{ width: 17, height: 17, marginRight: 1, cursor: "pointer" }}
+          sx={{
+            width: 17,
+            height: 17,
+            marginRight: 1,
+            cursor: "pointer",
+            border: 1,
+            borderColor: "gray",
+          }}
           onClick={() => {
             const words = props.author.id.split("/");
             const word = words[words.length - 1];

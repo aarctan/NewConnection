@@ -32,7 +32,7 @@ const style = {
 
 // This is a modal that contains a post and is primarily used for viewing all comments of a post
 // This modal is rendered in Post.jsx
-const PostModal = ({ isModalOpen, setIsModalOpen, post }) => {
+const PostModal = ({ isModalOpen, setIsModalOpen, post, comments }) => {
   if (!isModalOpen) return null;
   const handleClose = () => setIsModalOpen(false);
   return (
@@ -46,7 +46,6 @@ const PostModal = ({ isModalOpen, setIsModalOpen, post }) => {
         <Box sx={{ ...style, display: "flex" }}>
           {/* Left box to hold image/text */}
           <Box
-            component="img"
             sx={{
               height: 600,
               width: 480,
@@ -91,15 +90,21 @@ const PostModal = ({ isModalOpen, setIsModalOpen, post }) => {
                 >
                   <Avatar
                     alt="Chad"
-                    src={post.profileImage}
-                    sx={{ width: 32, height: 32, mx: 1 }}
+                    src={post.author.profileImage}
+                    sx={{
+                      width: 32,
+                      height: 32,
+                      mx: 1,
+                      border: 1,
+                      borderColor: "gray",
+                    }}
                   />
                   <Typography
                     variant="body2"
                     color="text.primary"
                     fontWeight="600"
                   >
-                    {post.displayName}
+                    {post.author.displayName}
                   </Typography>
                 </Box>
                 <IconButton aria-label="settings">
@@ -107,12 +112,9 @@ const PostModal = ({ isModalOpen, setIsModalOpen, post }) => {
                 </IconButton>
               </Box>
               <Divider />
-              <CardContent sx={{ py: 1, backgroundColor: "#ffffff" }}>
-                {post.comments.map((comment) => (
-                  <Comment
-                    user={comment.author.displayName}
-                    comment={comment.comment}
-                  />
+              <CardContent sx={{ py: 1 }}>
+                {comments.map((comment) => (
+                  <Comment author={comment.author} comment={comment.comment} />
                 ))}
               </CardContent>
             </Box>

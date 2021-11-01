@@ -31,6 +31,7 @@ const Banner = (props) => {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Token ${authCtx.token}`,
         },
       });
       if (postResponse.ok) {

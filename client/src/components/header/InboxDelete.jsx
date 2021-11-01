@@ -12,6 +12,7 @@ const InboxDelete = ({ setInbox }) => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Token ${authCtx.token}`,
         },
       });
       if (response.ok) {

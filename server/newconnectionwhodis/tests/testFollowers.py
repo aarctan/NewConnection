@@ -1,4 +1,5 @@
 from django.test import TestCase
+from rest_framework.test import APIClient
 
 from . import util
 from .. import serializers
@@ -10,10 +11,12 @@ class FollowerViewTests(TestCase):
     def setUp(self):
         response = self.client.get("")
         self.request = response.wsgi_request
+        self.client = APIClient()
         self.receiver = util.create_author("Muhammad", "Exanut")
         self.follower1 = util.create_author("Dylan", "dylandeco")
         self.follower2 = util.create_author("jennie", "jennierubyjane")
         self.follower3 = util.create_author("Carter", "tetelows")
+        self.client.force_authenticate(self.receiver.user)
 
     def test_get_followers(self):
         """

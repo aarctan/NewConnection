@@ -1,6 +1,7 @@
 import uuid
 
 from django.test import TestCase
+from rest_framework.test import APIClient
 
 from . import util
 from .. import serializers, models
@@ -8,7 +9,9 @@ from .. import serializers, models
 
 class PostViewTests(TestCase):
     def setUp(self):
+        self.client = APIClient()
         self.author = util.create_author("Muhammad", "Exanut")
+        self.client.force_authenticate(self.author.user)
         self.author_id = self.author.id
 
     def test_no_posts(self):
@@ -50,7 +53,7 @@ class PostViewTests(TestCase):
 
     def test_post_post(self):
         """
-        Tests POSTing a post. TODO: require authentication
+        Tests POSTing a post.
         """
         data = {
             "author": self.author_id,
@@ -88,7 +91,7 @@ class PostViewTests(TestCase):
         response = self.client.put(
             f"/api/v1/author/{self.author_id}/posts/{ID}/",
             data=data,
-            content_type="application/json",
+            format="json",
         )
         self.assertEquals(response.status_code, 201)
         d = util.response_to_json(response)
@@ -101,10 +104,22 @@ class PostViewTests(TestCase):
         response = self.client.post(
             f"/api/v1/author/{self.author_id}/posts/{post_id}/",
             data=data,
-            content_type="application/json",
+            format="json",
         )
         d = util.response_to_json(response)
         self.assertEqual(d["content"], "new_content")
+
+    def test_edit_post_unauth(self):
+        self.client.force_authenticate(None)
+        post = util.create_post(self.author, "content")
+        post_id = post.id
+        data = {"content": "new_content"}
+        response = self.client.post(
+            f"/api/v1/author/{self.author_id}/posts/{post_id}/",
+            data=data,
+            format="json",
+        )
+        self.assertEqual(response.status_code, 401)
 
     def test_post_delete(self):
         """

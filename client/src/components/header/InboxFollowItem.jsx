@@ -62,6 +62,7 @@ const InboxFollowItem = (props) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Token ${authCtx.token}`,
         },
       }
     );

@@ -60,6 +60,7 @@ const CreateImagePostModal = ({
         }),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Token ${authCtx.token}`,
         },
       });
       if (postResponse.ok) {

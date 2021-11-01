@@ -65,14 +65,16 @@ const Header = () => {
 
   // fetch the users inbox
   const fetchInbox = useCallback(async () => {
-    const response = await fetch(`${authCtx.userdata.id}/inbox/`);
+    const response = await fetch(`${authCtx.userdata.id}/inbox/`, {
+      headers: { Authorization: `Token ${authCtx.token}` },
+    });
     if (response.ok) {
       const inboxData = await response.json();
       setInbox(inboxData["items"]);
     } else {
       console.log("Header useEffect failed - fetching inbox");
     }
-  }, [authCtx.userdata.id]);
+  }, [authCtx]);
 
   useEffect(() => {
     fetchInbox();

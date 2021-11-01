@@ -50,6 +50,7 @@ const EditProfileModal = ({ isModalOpen, setIsModalOpen }) => {
         }),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Token ${authCtx.token}`,
         },
       });
       if (putResponse.ok) {

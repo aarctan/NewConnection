@@ -68,6 +68,7 @@ const Post = (props) => {
           }),
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Token ${authCtx.token}`,
           },
         }
       );
@@ -99,6 +100,7 @@ const Post = (props) => {
         }),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Token ${authCtx.token}`,
         },
       });
       if (postResponse.ok) {

@@ -127,7 +127,6 @@ const Post = (props) => {
     const response = await fetch(`${props.id}/likes/`);
     if (response.ok) {
       const likeData = await response.json();
-      console.log(likeData);
       setLikes(likeData);
       // see if the user liked this post
       for (let i = 0; i < likeData.length; i++) {
@@ -157,6 +156,7 @@ const Post = (props) => {
     isAuthor = true;
   }
 
+  console.log(props.content);
   return (
     <Card elevation={3} sx={{ my: "25px" }}>
       <CardContent

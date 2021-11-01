@@ -43,6 +43,7 @@ def create_post_with_id(author, data, id=None):
         id=id,
         author=author,
         content=data['content'],
+        contentType=data['contentType'],
         title=data['title'],
         description=data['description'])
     return post

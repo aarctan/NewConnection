@@ -1,11 +1,4 @@
-import {
-  Modal,
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Avatar,
-} from "@mui/material";
+import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useContext } from "react";
@@ -36,19 +29,25 @@ const CreateImagePostModal = ({
   setIsModalOpen,
   handlePostSubmit,
 }) => {
-  const handleClose = () => setIsModalOpen(false);
+  const handleClose = () => {
+    setIsModalOpen(false);
+    setContentType("text/plain");
+    setImgPreview("");
+    setImgURL("");
+  };
   const authCtx = useContext(AuthContext);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [imageURL, setImageURL] = useState("");
+  const [imgURL, setImgURL] = useState("");
+  const [contentType, setContentType] = useState("text/plain");
   const [imgPreview, setImgPreview] = useState(""); // image url or base64 encoded image
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
   if (!isModalOpen) return null;
 
+  // https://stackoverflow.com/a/29672957
   const handleCreate = async (e) => {
     const userdata = authCtx.userdata;
-    console.log(userdata);
     try {
       const postResponse = await fetch(`${userdata.id}/posts/`, {
         method: "POST",
@@ -56,8 +55,8 @@ const CreateImagePostModal = ({
           author: userdata,
           title: title,
           description: description,
-          contentType: "text/plain",
-          content: imageURL,
+          contentType: contentType,
+          content: imgURL,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -67,6 +66,9 @@ const CreateImagePostModal = ({
         const postData = await postResponse.json();
         handlePostSubmit(e, postData);
         setIsModalOpen(false);
+        setContentType("text/plain");
+        setImgPreview("");
+        setImgURL("");
       } else {
       }
     } catch (error) {
@@ -80,9 +82,11 @@ const CreateImagePostModal = ({
     const file = event.target.files[0];
     const base64 = await convertBase64(file);
     setImgPreview(base64);
+    setImgURL(base64);
   };
 
   const convertBase64 = (file) => {
+    setContentType(`${file.type};base64`);
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
       fileReader.readAsDataURL(file);
@@ -144,11 +148,12 @@ const CreateImagePostModal = ({
                 label={`Image URL`}
                 margin="dense"
                 sx={{
-                  width: "60%"
+                  width: "60%",
                 }}
                 onChange={(e) => {
-                  setImageURL(e.target.value);
+                  setImgURL(e.target.value);
                   setImgPreview(e.target.value);
+                  setContentType("text/plain");
                 }}
               />
               <Typography id="or" variant="h6" align="center" sx={{ py: 1 }}>
@@ -156,22 +161,22 @@ const CreateImagePostModal = ({
               </Typography>
               <label htmlFor="contained-button-file">
                 <Input
-                  disabled={imageURL}
+                  disabled={imgURL !== ""}
                   accept="image/*"
                   id="contained-button-file"
                   multiple
                   type="file"
                   style={{
-                    width: "40%"
+                    width: "40%",
                   }}
                   onChange={handleFileRead}
                 />
                 <Button
-                  disabled={imageURL}
+                  disabled={imgURL !== ""}
                   variant="contained"
                   component="span"
                   sx={{
-                    width: "40%"
+                    width: "40%",
                   }}
                   style={{
                     color: "black",
@@ -180,7 +185,6 @@ const CreateImagePostModal = ({
                     height: "100%",
                     justifyContent: "center",
                     alignItems: "center",
-
                   }}
                 >
                   Upload Image
@@ -188,6 +192,7 @@ const CreateImagePostModal = ({
               </label>
             </Box>
             <img
+              alt=""
               src={imgPreview}
               style={{
                 maxHeight: 200,

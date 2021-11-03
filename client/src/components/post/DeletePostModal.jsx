@@ -1,4 +1,6 @@
 import { Modal, Box, Divider, Button, Typography } from "@mui/material";
+import { useContext } from "react";
+import AuthContext from "src/store/auth-context";
 
 const style = {
   display: "flex",
@@ -25,14 +27,19 @@ const DeletePostModal = ({
   post,
   handleRemove,
 }) => {
+  const authCtx = useContext(AuthContext);
   const handleClose = () => setIsDeleteModalOpen(false);
 
   if (!isDeleteModalOpen) return null;
+
 
   const handleDelete = async (e) => {
     try {
       const deletePost = await fetch(`${post.id}/`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Token ${authCtx.token}`,
+        },
       });
       if (deletePost.ok) {
         handleRemove(post.id);

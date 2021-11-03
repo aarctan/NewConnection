@@ -52,6 +52,9 @@ const Banner = (props) => {
         `${props.author.id}/followers/${id}/`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Token ${authCtx.token}`,
+          },
         }
       );
       if (deleteResponse.ok) {

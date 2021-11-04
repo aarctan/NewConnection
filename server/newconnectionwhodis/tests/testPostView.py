@@ -58,6 +58,7 @@ class PostViewTests(TestCase):
         data = {
             "author": self.author_id,
             "content": "Placeholder",
+            "contentType": "text/plain",
             "title": "Title",
             "description": "Description",
         }
@@ -85,6 +86,7 @@ class PostViewTests(TestCase):
             "id": ID,
             "author": self.author_id,
             "content": "Placeholder",
+            "contentType": "text/plain",
             "title": "Title",
             "description": "Description",
         }

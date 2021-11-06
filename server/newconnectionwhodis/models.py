@@ -73,7 +73,7 @@ class Post(models.Model):
     type = models.TextField(default="post", editable=False)
     source = models.URLField(editable=False)
     origin = models.URLField(editable=False)
-    published = models.DateTimeField(default=timezone.now().isoformat(), editable=False)
+    published = models.DateTimeField(auto_now_add=True)
     contentType = models.TextField()
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     visibility = models.TextField(default="PUBLIC")

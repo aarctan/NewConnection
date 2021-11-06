@@ -1,19 +1,11 @@
 import { useState, useContext } from "react";
-import {
-  Box,
-  Button,
-  Chip,
-  Modal,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import SendIcon from "@mui/icons-material/Send";
 import AuthContext from "src/store/auth-context";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import DeleteIcon from "@mui/icons-material/Delete";
-import PostVisibility from "./PostVisibility";
+import PostTags from "./createpost/PostTags";
+import PostVisibility from "./createpost/PostVisibility";
 
 const style = {
   display: "flex",
@@ -39,7 +31,6 @@ const CreateTextPostModal = ({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [text, setText] = useState("");
-  const [currentTag, setCurrentTag] = useState("");
   const [tags, setTags] = useState([]);
   const [visibility, setVisibility] = useState("Public");
   const theme = useTheme();
@@ -127,40 +118,7 @@ const CreateTextPostModal = ({
             />
           </Box>
           <Box display="flex" flexDirection="row">
-            <TextField
-              label={"Add a tag"}
-              value={currentTag}
-              variant="standard"
-              margin="dense"
-              onChange={(e) => {
-                setCurrentTag(e.target.value);
-              }}
-              sx={{ width: "20%" }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  if (!tags.includes(currentTag)) {
-                    setTags((prevTags) => [...prevTags, currentTag]);
-                  }
-                  setCurrentTag("");
-                }
-              }}
-            />
-            <Stack direction="row" spacing={1}>
-              <Stack alignItems="center" direction="row" spacing={1}>
-                {tags.map((tag, idx) => {
-                  return (
-                    <Chip
-                      sx={{ width: "fit-content" }}
-                      key={idx}
-                      variant="outlined"
-                      label={`${tag}`}
-                      deleteIcon={<DeleteIcon />}
-                      onDelete={() => {}}
-                    />
-                  );
-                })}
-              </Stack>
-            </Stack>
+            <PostTags tags={tags} setTags={setTags} />
           </Box>
           <PostVisibility
             visibility={visibility}

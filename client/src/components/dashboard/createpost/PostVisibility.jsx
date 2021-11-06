@@ -89,7 +89,6 @@ const PostVisibility = (props) => {
               </Button>
               <Divider />
               <Button
-                fullWidth
                 startIcon={<FriendsIcon />}
                 endIcon={props.visibility === "Friends" && <CheckIcon />}
                 onClick={() => {
@@ -105,7 +104,7 @@ const PostVisibility = (props) => {
                   Friends
                 </Typography>
               </Button>
-              <Divider fullWidth />
+              <Divider />
               <Button
                 startIcon={<UnlistedIcon />}
                 endIcon={props.visibility === "Unlisted" && <CheckIcon />}

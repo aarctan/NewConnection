@@ -55,7 +55,7 @@ const Feed = (props) => {
               <Box display="flex" justifyContent="center" mt={3}>
                 <CircularProgress />
               </Box>
-            ) : (posts.length > 0 && console.log(posts)) ? (
+            ) : posts.length ? (
               posts.sort(function (p1, p2) {
                 const d1 = new Date(p1.published);
                 const d2 = new Date(p2.published);

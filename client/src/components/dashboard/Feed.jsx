@@ -35,6 +35,7 @@ const Feed = (props) => {
         .then((data) => {
           for (let j = 0; j < data.length; j++) {
             setPosts((oldArray) => [...oldArray, data[j]]);
+            console.log(data[j]);
           }
           setPostsLoading(false);
         })
@@ -55,11 +56,11 @@ const Feed = (props) => {
               <Box display="flex" justifyContent="center" mt={3}>
                 <CircularProgress />
               </Box>
-            ) : (posts.length > 0 && console.log(posts)) ? (
+            ) : posts.length ? (
               posts.sort(function (p1, p2) {
                 const d1 = new Date(p1.published);
                 const d2 = new Date(p2.published);
-                return d2 - d1;
+                return d1 - d2;
               }).map((post, idx) => {
                 return (
                   <Post

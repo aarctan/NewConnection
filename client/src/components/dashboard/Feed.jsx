@@ -60,7 +60,7 @@ const Feed = (props) => {
               posts.sort(function (p1, p2) {
                 const d1 = new Date(p1.published);
                 const d2 = new Date(p2.published);
-                return d1 - d2;
+                return d2 - d1;
               }).map((post, idx) => {
                 return (
                   <Post

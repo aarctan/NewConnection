@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 const InboxLikeItem = (props) => {
+  console.log(props.item);
   const item = props.item;
   const navigate = useNavigate();
 

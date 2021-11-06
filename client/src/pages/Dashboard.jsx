@@ -13,11 +13,6 @@ const Dashboard = () => {
         return response.json();
       })
       .then((data) => {
-        data.items.sort(function(a1,a2) {
-          const d1 = new Date(a1.created);
-          const d2 = new Date(a2.created);
-          return d2 - d1;
-        });
         setAuthors(data.items);
       })
       .catch((error) => console.log("Dashboard useEffect", error));
@@ -26,7 +21,7 @@ const Dashboard = () => {
   return (
     <>
       <Header />
-      <Feed recentAuthors={authors.slice(0, 5)} />
+      <Feed recentAuthors={authors} />
     </>
   );
 };

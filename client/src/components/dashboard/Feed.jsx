@@ -36,10 +36,10 @@ const Feed = (props) => {
           for (let j = 0; j < data.length; j++) {
             setPosts((oldArray) => [...oldArray, data[j]]);
           }
+          setPostsLoading(false);
         })
         .catch((error) => console.log("Feed useEffect", error));
     }
-    setPostsLoading(false);
   }, [props.recentAuthors]);
 
   return (
@@ -56,28 +56,22 @@ const Feed = (props) => {
                 <CircularProgress />
               </Box>
             ) : posts.length ? (
-              posts
-                .sort(function (p1, p2) {
-                  const d1 = new Date(p1.published);
-                  const d2 = new Date(p2.published);
-                  return d2 - d1;
-                })
-                .map((post, idx) => {
-                  return (
-                    <Post
-                      key={idx}
-                      id={post.id}
-                      title={post.title}
-                      description={post.description}
-                      author={post.author}
-                      contentType={post.contentType}
-                      content={post.content}
-                      count={1}
-                      likes={[]}
-                      handleRemove={handleRemove}
-                    />
-                  );
-                })
+              posts.map((post, idx) => {
+                return (
+                  <Post
+                    key={idx}
+                    id={post.id}
+                    title={post.title}
+                    description={post.description}
+                    author={post.author}
+                    contentType={post.contentType}
+                    content={post.content}
+                    count={1}
+                    likes={[]}
+                    handleRemove={handleRemove}
+                  />
+                );
+              })
             ) : (
               <Typography
                 variant="h6"

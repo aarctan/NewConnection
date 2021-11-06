@@ -158,6 +158,7 @@ const Post = (props) => {
     isAuthor = true;
   }
 
+  console.log(props.content);
   return (
     <Card elevation={3} sx={{ my: "25px" }}>
       <CardContent

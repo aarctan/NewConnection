@@ -13,6 +13,7 @@ import SendIcon from "@mui/icons-material/Send";
 import AuthContext from "src/store/auth-context";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import DeleteIcon from "@mui/icons-material/Delete";
+import PostVisibility from "./PostVisibility";
 
 const style = {
   display: "flex",
@@ -40,6 +41,7 @@ const CreateTextPostModal = ({
   const [text, setText] = useState("");
   const [currentTag, setCurrentTag] = useState("");
   const [tags, setTags] = useState([]);
+  const [visibility, setVisibility] = useState("Public");
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
   if (!isModalOpen) return null;
@@ -83,7 +85,7 @@ const CreateTextPostModal = ({
           style={
             small
               ? { width: "90%", height: "70%" }
-              : { width: 500, height: 450 }
+              : { width: 500, height: 500 }
           }
         >
           <Box>
@@ -160,6 +162,10 @@ const CreateTextPostModal = ({
               </Stack>
             </Stack>
           </Box>
+          <PostVisibility
+            visibility={visibility}
+            setVisibility={setVisibility}
+          />
           <Box display="flex" justifyContent="flex-end">
             <Button
               variant="contained"

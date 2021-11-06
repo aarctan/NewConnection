@@ -1,9 +1,18 @@
-import { Modal, Box, Typography, TextField, Button } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
 import { useState, useContext } from "react";
+import {
+  Box,
+  Button,
+  Chip,
+  Modal,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import SendIcon from "@mui/icons-material/Send";
 import AuthContext from "src/store/auth-context";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const style = {
   display: "flex",
@@ -29,6 +38,8 @@ const CreateTextPostModal = ({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [text, setText] = useState("");
+  const [currentTag, setCurrentTag] = useState("");
+  const [tags, setTags] = useState([]);
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
   if (!isModalOpen) return null;
@@ -113,15 +124,53 @@ const CreateTextPostModal = ({
               }}
             />
           </Box>
+          <Box display="flex" flexDirection="row">
+            <TextField
+              label={"Add a tag"}
+              value={currentTag}
+              variant="standard"
+              margin="dense"
+              onChange={(e) => {
+                setCurrentTag(e.target.value);
+              }}
+              sx={{ width: "20%" }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  if (!tags.includes(currentTag)) {
+                    setTags((prevTags) => [...prevTags, currentTag]);
+                  }
+                  setCurrentTag("");
+                }
+              }}
+            />
+            <Stack direction="row" spacing={1}>
+              <Stack alignItems="center" direction="row" spacing={1}>
+                {tags.map((tag, idx) => {
+                  return (
+                    <Chip
+                      sx={{ width: "fit-content" }}
+                      key={idx}
+                      variant="outlined"
+                      label={`${tag}`}
+                      deleteIcon={<DeleteIcon />}
+                      onDelete={() => {}}
+                    />
+                  );
+                })}
+              </Stack>
+            </Stack>
+          </Box>
           <Box display="flex" justifyContent="flex-end">
             <Button
+              variant="contained"
               endIcon={<SendIcon />}
               onClick={handleCreate}
               style={{
-                backgroundColor: "#0095f6",
-                color: "white",
-                display: "flex",
-                width: "80pt",
+                color: "black",
+                backgroundColor: "white",
+                marginTop: "3pt",
+                border: "1pt solid #dbdbdb",
+                height: "25pt",
               }}
             >
               Post

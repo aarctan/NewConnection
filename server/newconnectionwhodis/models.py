@@ -73,7 +73,7 @@ class Post(models.Model):
     type = models.TextField(default="post", editable=False)
     source = models.URLField(editable=False)
     origin = models.URLField(editable=False)
-    published = models.DateTimeField(default=timezone.now().isoformat(), editable=False)
+    published = models.DateTimeField(default=timezone.now)
     contentType = models.TextField()
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     visibility = models.TextField(default="PUBLIC")
@@ -92,7 +92,7 @@ class Comment(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.TextField(default="comment", editable=False)
-    published = models.DateTimeField(auto_now_add=True)
+    published = models.DateTimeField(default=timezone.now)
     contentType = models.TextField(default="text/markdown", editable=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

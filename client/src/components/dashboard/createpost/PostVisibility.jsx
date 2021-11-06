@@ -17,9 +17,10 @@ const PostVisibility = (props) => {
   const open = Boolean(anchorEl);
 
   return (
-    <>
+    <Box sx={{ display: "flex" }}>
       <Button
         variant="contained"
+        fullWidth
         startIcon={
           (props.visibility === "Public" && <PublicIcon />) ||
           (props.visibility === "Friends" && <FriendsIcon />) ||
@@ -28,8 +29,8 @@ const PostVisibility = (props) => {
         onClick={(e) => {
           setAnchorEl(e.currentTarget);
         }}
+        sx={{ width: "80pt" }}
         style={{
-          width: "20%",
           color: "black",
           backgroundColor: "white",
           marginTop: "3pt",
@@ -52,7 +53,7 @@ const PostVisibility = (props) => {
       >
         <Box display="flex" flexDirection="column" sx={{ p: 1 }}>
           <Typography
-            id="likes-modal-title"
+            id="visibility-popover"
             variant="body2"
             align="center"
             sx={{ padding: 1 }}
@@ -125,7 +126,7 @@ const PostVisibility = (props) => {
           </Box>
         </Box>
       </Popover>
-    </>
+    </Box>
   );
 };
 

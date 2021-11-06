@@ -73,11 +73,7 @@ const CreateTextPostModal = ({
       <Modal open={isModalOpen} onClose={handleClose}>
         <Box
           sx={style}
-          style={
-            small
-              ? { width: "90%", height: "70%" }
-              : { width: 500, height: 500 }
-          }
+          style={small ? { width: "90%", height: "70%" } : { width: 500 }}
         >
           <Box>
             <Typography

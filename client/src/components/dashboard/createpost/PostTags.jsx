@@ -15,7 +15,7 @@ const StyledChip = styled(Chip)`
 
 const PostTags = (props) => {
   return (
-    <Box display="flex" flexDirection="row" alignItems="baseline">
+    <Box display="flex" flexDirection="row">
       <Autocomplete
         multiple
         fullWidth
@@ -34,6 +34,7 @@ const PostTags = (props) => {
         renderInput={(params) => (
           <TextField
             {...params}
+            margin="dense"
             label="Tags"
             placeholder="Add a tag..."
             onKeyDown={(e) => {

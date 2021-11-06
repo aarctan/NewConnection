@@ -57,26 +57,28 @@ const Feed = (props) => {
                 <CircularProgress />
               </Box>
             ) : posts.length ? (
-              posts.sort(function (p1, p2) {
-                const d1 = new Date(p1.published);
-                const d2 = new Date(p2.published);
-                return d2 - d1;
-              }).map((post, idx) => {
-                return (
-                  <Post
-                    key={idx}
-                    id={post.id}
-                    title={post.title}
-                    description={post.description}
-                    author={post.author}
-                    contentType={post.contentType}
-                    content={post.content}
-                    count={1}
-                    likes={[]}
-                    handleRemove={handleRemove}
-                  />
-                );
-              })
+              posts
+                .sort((p1, p2) => {
+                  const d1 = new Date(p1.published);
+                  const d2 = new Date(p2.published);
+                  return d2 - d1;
+                })
+                .map((post, idx) => {
+                  return (
+                    <Post
+                      key={idx}
+                      id={post.id}
+                      title={post.title}
+                      description={post.description}
+                      author={post.author}
+                      contentType={post.contentType}
+                      content={post.content}
+                      count={1}
+                      likes={[]}
+                      handleRemove={handleRemove}
+                    />
+                  );
+                })
             ) : (
               <Typography
                 variant="h6"

@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  Box,
-  Button,
-  Divider,
-  Popover,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Popover, Typography } from "@mui/material";
 import PublicIcon from "@mui/icons-material/Public";
 import FriendsIcon from "@mui/icons-material/People";
 import UnlistedIcon from "@mui/icons-material/InsertLink";
@@ -47,8 +40,12 @@ const PostVisibility = (props) => {
           setAnchorEl(null);
         }}
         anchorOrigin={{
-          vertical: "top",
+          vertical: "bottom",
           horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
         }}
       >
         <Box display="flex" flexDirection="column" sx={{ p: 1 }}>
@@ -65,64 +62,58 @@ const PostVisibility = (props) => {
               mx: 1,
               flexGrow: 1,
               display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
               justifyContent: "space-between",
-              alignItems: "left",
               py: 0,
             }}
           >
-            <Stack alignItems="center" direction="column" spacing={0}>
-              <Divider />
-              <Button
-                startIcon={<PublicIcon />}
-                onClick={() => {
-                  props.setVisibility("Public");
-                }}
-                endIcon={props.visibility === "Public" && <CheckIcon />}
+            <Button
+              startIcon={<PublicIcon />}
+              onClick={() => {
+                props.setVisibility("Public");
+              }}
+              endIcon={props.visibility === "Public" && <CheckIcon />}
+            >
+              <Typography
+                variant="body2"
+                sx={{ padding: 0 }}
+                style={{ fontSize: "12pt" }}
               >
-                {" "}
-                <Typography
-                  variant="body2"
-                  sx={{ padding: 0 }}
-                  style={{ fontSize: "12pt" }}
-                >
-                  Public
-                </Typography>
-              </Button>
-              <Divider />
-              <Button
-                startIcon={<FriendsIcon />}
-                endIcon={props.visibility === "Friends" && <CheckIcon />}
-                onClick={() => {
-                  props.setVisibility("Friends");
-                }}
+                Public
+              </Typography>
+            </Button>
+
+            <Button
+              startIcon={<FriendsIcon />}
+              endIcon={props.visibility === "Friends" && <CheckIcon />}
+              onClick={() => {
+                props.setVisibility("Friends");
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ padding: 0 }}
+                style={{ fontSize: "12pt" }}
               >
-                {" "}
-                <Typography
-                  variant="body2"
-                  sx={{ padding: 0 }}
-                  style={{ fontSize: "12pt" }}
-                >
-                  Friends
-                </Typography>
-              </Button>
-              <Divider />
-              <Button
-                startIcon={<UnlistedIcon />}
-                endIcon={props.visibility === "Unlisted" && <CheckIcon />}
-                onClick={() => {
-                  props.setVisibility("Unlisted");
-                }}
+                Friends
+              </Typography>
+            </Button>
+            <Button
+              startIcon={<UnlistedIcon />}
+              endIcon={props.visibility === "Unlisted" && <CheckIcon />}
+              onClick={() => {
+                props.setVisibility("Unlisted");
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ padding: 0 }}
+                style={{ fontSize: "12pt" }}
               >
-                {" "}
-                <Typography
-                  variant="body2"
-                  sx={{ padding: 0 }}
-                  style={{ fontSize: "12pt" }}
-                >
-                  Unlisted
-                </Typography>
-              </Button>
-            </Stack>
+                Unlisted
+              </Typography>
+            </Button>
           </Box>
         </Box>
       </Popover>

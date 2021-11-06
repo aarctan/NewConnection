@@ -36,6 +36,7 @@ const Feed = (props) => {
           for (let j = 0; j < data.length; j++) {
             setPosts((oldArray) => [...oldArray, data[j]]);
             console.log(data[j]);
+            console.log(data[j]["categories"][0]);
           }
           setPostsLoading(false);
         })
@@ -73,6 +74,8 @@ const Feed = (props) => {
                       author={post.author}
                       contentType={post.contentType}
                       content={post.content}
+                      published={post.published}
+                      categories={post.categories}
                       count={1}
                       likes={[]}
                       handleRemove={handleRemove}

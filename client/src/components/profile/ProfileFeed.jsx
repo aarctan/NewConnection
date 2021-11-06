@@ -48,6 +48,8 @@ const ProfileFeed = (props) => {
             author={props.author}
             contentType={post.contentType}
             content={post.content}
+            published={post.published}
+            categories={post.categories}
             count={idx}
             comments={[]}
             handleRemove={handleRemove}

@@ -23,9 +23,16 @@ const ProfileFeed = (props) => {
         return response.json();
       })
       .then((data) => {
+        let _posts = [];
         for (let j = 0; j < data.length; j++) {
-          setPosts((oldArray) => [...oldArray, data[j]]);
+          _posts.push(data[j]);
         }
+        _posts.sort(function (p1, p2) {
+          const d1 = new Date(p1.published);
+          const d2 = new Date(p2.published);
+          return d2 - d1;
+        });
+        setPosts(_posts);
         setPostsLoading(false);
       })
 

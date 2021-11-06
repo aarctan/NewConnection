@@ -32,7 +32,7 @@ class AuthorSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = Author
-        fields = ('type', 'id', 'host', 'displayName', 'url', 'github', 'profileImage')
+        fields = ('type', 'id', 'host', 'displayName', 'url', 'github', 'profileImage', 'created')
 
     def get_host_url(self, obj):
         uri = self.context['request'].build_absolute_uri('/')
@@ -53,7 +53,7 @@ class PostSerializer(HyperlinkedModelSerializer):
         model = Post
         fields = ('type', 'id', 'contentType',
             'content', 'author', 'title', 'description',
-            'source', 'origin')
+            'source', 'origin', 'published')
     
     def get_id_url(self, obj):
         uri = self.context['request'].build_absolute_uri('/')

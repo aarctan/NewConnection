@@ -32,7 +32,6 @@ class PostViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         d = util.response_to_json(response)
         self.assertEqual(d["type"], "post")
-        self.assertEquals(len(d["author"]), 7)  # author has 6 fields
         host = d["author"]["host"]
         self.assertTrue("http" in host)
         self.assertEquals(d["id"], f"{host}api/v1/author/{self.author_id}/posts/{post_id}")

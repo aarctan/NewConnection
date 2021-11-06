@@ -46,7 +46,6 @@ const InboxMenu = (props) => {
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
       {props.inbox.map((item, idx) => {
-        console.log(item);
         return (
           <MenuItem key={idx} sx={{ height: 55 }}>
             {item.type === "Follow" && (

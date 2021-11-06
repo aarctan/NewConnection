@@ -1,9 +1,8 @@
 # NewConnection
+
 ### CMPUT 404 Fall 2021
 
 ![NewConnection sample dashboard](https://i.imgur.com/pCs8bKc.png)
-
-
 
 ## API / Webservice
 
@@ -82,12 +81,10 @@ Author:https://stackoverflow.com/users/143880/johntellsall<br>
 Link: https://stackoverflow.com/a/23918960<br>
 Source:https://stackoverflow.com/questions/23918619/django-rest-framework-and-filefield-absolute-url/23918960#23918960<br>
 
-
 POST in ModelViewSet:<br>
 Author: https://stackoverflow.com/users/5017015/tristan<br>
 Link:https://stackoverflow.com/questions/34797050/django-rest-framework-create-child-of-nested-relationship/34797456#34797456<br>
 Source: https://stackoverflow.com/a/34797050/<br>
-
 
 Button Text Styling<br>
 Author:https://stackoverflow.com/users/644589/marc-steffens<br>
@@ -97,9 +94,8 @@ Author:https://stackoverflow.com/users/644589/marc-steffens<br>
 Link: https://stackoverflow.com/a/65034457<br>
 Source: https://stackoverflow.com/questions/39297616/how-to-left-align-the-label-in-a-button/65034457#65034457<br>
 
-
 Removing Items from list React<br>
-Author:  ROBIN WIERUCH<br>
+Author: ROBIN WIERUCH<br>
 Link:https://www.robinwieruch.de/react-remove-item-from-list<br>
 Source: https://www.robinwieruch.de/react-remove-item-from-list<br>
 
@@ -128,7 +124,6 @@ Author:https://stackoverflow.com/users/11852581/tommy-neeld<br>
 Link:https://stackoverflow.com/a/59669317<br>
 Source:https://stackoverflow.com/questions/48049247/how-to-set-is-active-false-in-django-usercreationform/59669317#59669317<br>
 
-
 Django Unique Contraints<br>
 Author: https://stackoverflow.com/users/675577/dialex<br>
 Link: https://stackoverflow.com/a/2881071<br>
@@ -139,10 +134,14 @@ Author: https://stackoverflow.com/users/8035475/ankit-kumar-rajpoot<br>
 Link: https://stackoverflow.com/a/64767180<br>
 Source: https://stackoverflow.com/questions/36580196/reactjs-base64-file-upload<br>
 
+Delete icon on hover for MUI Chip<br>
+Author: https://stackoverflow.com/users/10778932/bhalahariharan-v<br>
+Link: https://stackoverflow.com/a/66527909<br>
+Source: https://stackoverflow.com/questions/66497460/material-ui-chip-on-hover-show-delete-icon<br>
+
 Layout Sourcing:<br>
 
 MainLayout - Client side based off of devias-io/material-kit-react<br>
 Arthor: https://github.com/devias-io<br>
 Link: https://github.com/devias-io/material-kit-react.git<br>
 Source:https://github.com/devias-io/material-kit-react<br>
-

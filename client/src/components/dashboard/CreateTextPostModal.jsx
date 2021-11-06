@@ -117,14 +117,14 @@ const CreateTextPostModal = ({
               }}
             />
           </Box>
-          <Box display="flex" flexDirection="row">
-            <PostTags tags={tags} setTags={setTags} />
-          </Box>
-          <PostVisibility
-            visibility={visibility}
-            setVisibility={setVisibility}
-          />
-          <Box display="flex" justifyContent="flex-end">
+
+          <PostTags tags={tags} setTags={setTags} />
+
+          <Box display="flex" justifyContent="space-between">
+            <PostVisibility
+              visibility={visibility}
+              setVisibility={setVisibility}
+            />
             <Button
               variant="contained"
               endIcon={<SendIcon />}

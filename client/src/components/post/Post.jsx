@@ -1,9 +1,10 @@
 import { useState, useContext, useEffect, useCallback } from "react";
 import {
-  Card,
-  CardContent,
   Box,
+  Card,
+  Stack,
   CardActions,
+  CardContent,
   Typography,
   CardMedia,
   Paper,
@@ -39,6 +40,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// https://stackoverflow.com/a/8888498
+function formatAMPM(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? "pm" : "am";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  var strTime = hours + ":" + minutes + " " + ampm;
+  return strTime;
+}
+
 const Post = (props) => {
   const classes = useStyles();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,6 +64,17 @@ const Post = (props) => {
   const [comment, setComment] = useState("");
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
+
+  const currDate = new Date();
+  const postDate = new Date(props.published);
+  const days_ago = Math.floor((currDate - postDate) / 86400000);
+  let days_ago_text = `${days_ago} days ago`;
+  if (days_ago === 0) {
+    days_ago_text = "today";
+  } else if (days_ago === 1) {
+    days_ago_text = "yesterday";
+  }
+  const posted_time = formatAMPM(postDate);
 
   const onSendComment = async (e) => {
     try {
@@ -193,14 +217,42 @@ const Post = (props) => {
             }}
             style={{ cursor: "pointer" }}
           />
-          <Typography variant="body1" color="text.primary" fontWeight="600">
-            {props.title}
-          </Typography>
+          <Stack direction="column" spacing={0}>
+            <Typography variant="body1" color="text.primary" fontWeight="600">
+              {props.title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" fontSize="10pt">
+              {props.description}
+            </Typography>
+          </Stack>
         </Box>
         <IconButton aria-label="settings" onClick={() => setIsMenuOpen(true)}>
           <MoreHorizIcon />
         </IconButton>
       </CardContent>
+      <CardActions
+        className={classes.root}
+        disableSpacing
+        sx={{ paddingBottom: "0px" }}
+      >
+        <Link
+          component="button"
+          variant="body2"
+          underline="hover"
+          fontWeight="550"
+          sx={{ marginLeft: 1, mt: -1, mb: -1 }}
+          onClick={() => {
+            const words = props.author.id.split("/");
+            const word = words[words.length - 1];
+            navigate(`/app/author/${word}`, { state: props.author });
+          }}
+        >
+          {props.author.displayName}
+        </Link>
+        <Typography variant="body2" sx={{ marginLeft: 0.5, mt: -1, mb: -1 }}>
+          posted {days_ago_text} at {posted_time}
+        </Typography>
+      </CardActions>
       {props.contentType === "text/plain" &&
       props.content.slice(0, 4) === "http" ? (
         <CardContent className={classes.root} sx={{ padding: 0 }}>
@@ -239,7 +291,7 @@ const Post = (props) => {
       <CardActions
         className={classes.root}
         disableSpacing
-        sx={{ paddingBottom: "5px" }}
+        sx={{ paddingBottom: "5px", pt: 0 }}
       >
         <IconButton aria-label="like" onClick={onLikePost}>
           {likedPost ? (
@@ -274,32 +326,15 @@ const Post = (props) => {
           <Link
             component="button"
             variant="body2"
-            underline="hover"
+            color="text.secondary"
             fontWeight="600"
-            sx={{ marginRight: 1 }}
-            onClick={() => {
-              const words = props.author.id.split("/");
-              const word = words[words.length - 1];
-              navigate(`/app/author/${word}`, { state: props.author });
-            }}
+            underline="hover"
+            onClick={() => setIsModalOpen(true)}
+            sx={{ marginTop: 0.5 }}
           >
-            {props.author.displayName}
+            View all comments
           </Link>
-          <Typography variant="body2" color="text.secondary" fontSize="10pt">
-            {props.description}
-          </Typography>
         </Box>
-        <Link
-          component="button"
-          variant="body2"
-          color="text.secondary"
-          fontWeight="600"
-          underline="hover"
-          onClick={() => setIsModalOpen(true)}
-          sx={{ marginTop: 0.5 }}
-        >
-          View all comments
-        </Link>
       </CardContent>
       {/* Comments */}
       <CardContent className={classes.root} sx={{ py: 0.5 }}>

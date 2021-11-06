@@ -39,7 +39,6 @@ const CreateTextPostModal = ({
 
   const handleCreate = async (e) => {
     const userdata = authCtx.userdata;
-    console.log(userdata);
     try {
       const postResponse = await fetch(`${userdata.id}/posts/`, {
         method: "POST",
@@ -49,6 +48,7 @@ const CreateTextPostModal = ({
           description: description,
           contentType: "text/plain",
           content: text,
+          categories: tags,
         }),
         headers: {
           "Content-Type": "application/json",

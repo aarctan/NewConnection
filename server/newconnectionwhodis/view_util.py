@@ -1,4 +1,5 @@
 import uuid
+import json
 
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -39,11 +40,15 @@ def create_post_with_id(author, data, id=None):
     """
     if not id:
         id = uuid.uuid4()
+    categories = '[]'
+    if 'categories' in data:
+        categories = json.dumps(list(data['categories']))
     post = Post.objects.create(
         id=id,
         author=author,
         content=data['content'],
         contentType=data['contentType'],
         title=data['title'],
-        description=data['description'])
+        description=data['description'],
+        categories=categories)
     return post

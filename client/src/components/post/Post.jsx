@@ -20,6 +20,10 @@ import LikeButtonIcon from "@mui/icons-material/FavoriteBorder";
 import LikedIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import PublicIcon from "@mui/icons-material/Public";
+import FriendsIcon from "@mui/icons-material/People";
+import UnlistedIcon from "@mui/icons-material/InsertLink";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import SendIcon from "@mui/icons-material/Send";
 import { makeStyles } from "@mui/styles";
@@ -234,25 +238,7 @@ const Post = (props) => {
         className={classes.root}
         disableSpacing
         sx={{ paddingBottom: "0px" }}
-      >
-        <Link
-          component="button"
-          variant="body2"
-          underline="hover"
-          fontWeight="550"
-          sx={{ marginLeft: 1, mt: -1, mb: -1 }}
-          onClick={() => {
-            const words = props.author.id.split("/");
-            const word = words[words.length - 1];
-            navigate(`/app/author/${word}`, { state: props.author });
-          }}
-        >
-          {props.author.displayName}
-        </Link>
-        <Typography variant="body2" sx={{ marginLeft: 0.5, mt: -1, mb: -1 }}>
-          posted {days_ago_text} at {posted_time}
-        </Typography>
-      </CardActions>
+      ></CardActions>
       {props.contentType === "text/plain" &&
       props.content.slice(0, 4) === "http" ? (
         <CardContent className={classes.root} sx={{ padding: 0 }}>
@@ -337,7 +323,7 @@ const Post = (props) => {
         </Box>
       </CardContent>
       {/* Comments */}
-      <CardContent className={classes.root} sx={{ py: 0.5 }}>
+      <CardContent className={classes.root} sx={{ pt: 1, pb: 0.5 }}>
         {comments.slice(0, 2).map((comment, idx) => (
           <Comment
             key={idx}
@@ -345,6 +331,42 @@ const Post = (props) => {
             comment={comment.comment}
           />
         ))}
+      </CardContent>
+      <CardContent
+        className={classes.root}
+        sx={{
+          pt: 0,
+          pb: 1,
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          backgroundColor: "#fafafa",
+        }}
+      >
+        <Stack display="flex" direction="row" alignItems="center" spacing={0.5}>
+          <Typography variant="body2" color="text.secondary" fontSize="9pt">
+            Posted {days_ago_text} by
+          </Typography>
+          <Link
+            component="button"
+            color="text.secondary"
+            variant="body2"
+            fontSize="9pt"
+            underline="hover"
+            onClick={() => {
+              const words = props.author.id.split("/");
+              const word = words[words.length - 1];
+              navigate(`/app/author/${word}`, { state: props.author });
+            }}
+          >
+            {props.author.displayName}
+          </Link>
+          <Typography variant="body2" color="text.secondary" fontSize="9pt">
+            at {posted_time}
+          </Typography>
+          <FiberManualRecordIcon sx={{ color: "#646464", fontSize: "4pt" }} />
+          {<PublicIcon sx={{ color: "#646464", fontSize: "10pt" }} />}
+        </Stack>
       </CardContent>
       <Paper
         component="form"

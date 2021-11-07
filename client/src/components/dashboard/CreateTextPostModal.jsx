@@ -21,52 +21,18 @@ const style = {
   borderRadius: "8px",
 };
 
-const CreateTextPostModal = ({
-  isModalOpen,
-  setIsModalOpen,
-  handlePostSubmit,
-}) => {
+const CreateTextPostModal = ({ isModalOpen, setIsModalOpen, handleCreate }) => {
   const handleClose = () => setIsModalOpen(false);
   const authCtx = useContext(AuthContext);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [text, setText] = useState("");
-  const [tags, setTags] = useState([]);
-  const [visibility, setVisibility] = useState("Public");
+  const [content, setContent] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [visibility, setVisibility] = useState("PUBLIC");
+  // const [unlisted, setUnlisted] = useState(false);
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
   if (!isModalOpen) return null;
-
-  const handleCreate = async (e) => {
-    const userdata = authCtx.userdata;
-    try {
-      const postResponse = await fetch(`${userdata.id}/posts/`, {
-        method: "POST",
-        body: JSON.stringify({
-          author: userdata,
-          title: title,
-          description: description,
-          contentType: "text/plain",
-          content: text,
-          categories: tags,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${authCtx.token}`,
-        },
-      });
-      if (postResponse.ok) {
-        const postData = await postResponse.json();
-        handlePostSubmit(e, postData);
-        setIsModalOpen(false);
-      } else {
-      }
-    } catch (error) {
-      let errorMessage = "Post failed";
-      console.log(error.message);
-      alert(errorMessage);
-    }
-  };
 
   return (
     <>
@@ -109,12 +75,12 @@ const CreateTextPostModal = ({
               fullWidth
               margin="dense"
               onChange={(e) => {
-                setText(e.target.value);
+                setContent(e.target.value);
               }}
             />
           </Box>
 
-          <PostTags tags={tags} setTags={setTags} />
+          <PostTags categories={categories} setCategories={setCategories} />
 
           <Box display="flex" justifyContent="space-between">
             <PostVisibility
@@ -124,7 +90,17 @@ const CreateTextPostModal = ({
             <Button
               variant="contained"
               endIcon={<SendIcon />}
-              onClick={handleCreate}
+              onClick={() =>
+                handleCreate(
+                  title,
+                  description,
+                  "text/plain",
+                  content,
+                  categories,
+                  visibility,
+                  false
+                )
+              }
               style={{
                 color: "black",
                 backgroundColor: "white",

@@ -1,22 +1,14 @@
 import { useState, useEffect } from "react";
 import { Box, Grid, Typography, Hidden, Container } from "@mui/material";
 import SideProfile from "src/components/dashboard/SideProfile";
-import CreateTextPostModal from "src/components/dashboard/CreateTextPostModal";
-import CreateImagePostModal from "src/components/dashboard/CreateImagePostModal";
+
 import Post from "src/components/post/Post";
 import CreateNewPostContainer from "src/components/dashboard/CreateNewPostContainer";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const Feed = (props) => {
-  const [isTextModalOpen, setIsTextModalOpen] = useState(false);
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-
   const [posts, setPosts] = useState([]);
   const [postsLoading, setPostsLoading] = useState(false);
-
-  const handlePostSubmit = (e, post) => {
-    setPosts([...posts, post]);
-  };
 
   // https://www.robinwieruch.de/react-remove-item-from-list
   const handleRemove = (id) => {
@@ -49,10 +41,7 @@ const Feed = (props) => {
       <Box display="flex" my="85px">
         <Grid container spacing={4}>
           <Grid item xs={12} sm={12} md={8} lg={9}>
-            <CreateNewPostContainer
-              setIsTextModalOpen={setIsTextModalOpen}
-              setIsImageModalOpen={setIsImageModalOpen}
-            />
+            <CreateNewPostContainer setPosts={setPosts} />
             {postsLoading ? (
               <Box display="flex" justifyContent="center" mt={3}>
                 <CircularProgress />
@@ -106,16 +95,6 @@ const Feed = (props) => {
             </Grid>
           </Hidden>
         </Grid>
-        <CreateTextPostModal
-          isModalOpen={isTextModalOpen}
-          setIsModalOpen={setIsTextModalOpen}
-          handlePostSubmit={handlePostSubmit}
-        ></CreateTextPostModal>
-        <CreateImagePostModal
-          isModalOpen={isImageModalOpen}
-          setIsModalOpen={setIsImageModalOpen}
-          handlePostSubmit={handlePostSubmit}
-        ></CreateImagePostModal>
       </Box>
     </Container>
   );

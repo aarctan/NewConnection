@@ -55,6 +55,8 @@ class Follower(models.Model):
         return f'{self.sender} follows {self.receiver}'
 
 
+        
+
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.TextField(default="post", editable=False)

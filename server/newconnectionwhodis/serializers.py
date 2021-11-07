@@ -53,7 +53,7 @@ class PostSerializer(HyperlinkedModelSerializer):
         model = Post
         fields = ('type', 'id', 'contentType',
             'content', 'author', 'title', 'description',
-            'source', 'origin', 'published', 'categories')
+            'source', 'origin', 'published', 'categories', 'visibility', 'unlisted')
     
     def get_id_url(self, obj):
         uri = self.context['request'].build_absolute_uri('/')

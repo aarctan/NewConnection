@@ -21,8 +21,8 @@ import LikedIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import PublicIcon from "@mui/icons-material/Public";
-import FriendsIcon from "@mui/icons-material/People";
-import UnlistedIcon from "@mui/icons-material/InsertLink";
+//import FriendsIcon from "@mui/icons-material/People";
+//import UnlistedIcon from "@mui/icons-material/InsertLink";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import SendIcon from "@mui/icons-material/Send";
@@ -264,7 +264,7 @@ const Post = (props) => {
           </CardContent>
         )
       )}
-      {props.contentType === "image/png;base64" && (
+      {props.contentType.includes("base64") && (
         <CardContent className={classes.root} sx={{ padding: 0 }}>
           <CardMedia
             component="img"

@@ -1,10 +1,10 @@
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SendIcon from "@mui/icons-material/Send";
-import { useState, useContext } from "react";
-import AuthContext from "src/store/auth-context";
+import { useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import PostTags from "./createpost/PostTags";
 
 const style = {
   display: "flex",
@@ -27,63 +27,32 @@ const Input = styled("input")({
 const CreateImagePostModal = ({
   isModalOpen,
   setIsModalOpen,
-  handlePostSubmit,
+  handleCreate,
 }) => {
   const handleClose = () => {
     setIsModalOpen(false);
     setContentType("text/plain");
     setImgPreview("");
-    setImgURL("");
+    setContent("");
   };
-  const authCtx = useContext(AuthContext);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [imgURL, setImgURL] = useState("");
+  const [content, setContent] = useState("");
   const [contentType, setContentType] = useState("text/plain");
   const [imgPreview, setImgPreview] = useState(""); // image url or base64 encoded image
+  const [categories, setCategories] = useState([]);
+  // const [visibility, setVisibility] = useState("PUBLIC");
+  // const [unlisted, setUnlisted] = useState(false);
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
   if (!isModalOpen) return null;
-
-  // https://stackoverflow.com/a/29672957
-  const handleCreate = async (e) => {
-    const userdata = authCtx.userdata;
-    try {
-      const postResponse = await fetch(`${userdata.id}/posts/`, {
-        method: "POST",
-        body: JSON.stringify({
-          author: userdata,
-          title: title,
-          description: description,
-          contentType: contentType,
-          content: imgURL,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${authCtx.token}`,
-        },
-      });
-      if (postResponse.ok) {
-        const postData = await postResponse.json();
-        handlePostSubmit(e, postData);
-        setIsModalOpen(false);
-        setContentType("text/plain");
-        setImgPreview("");
-        setImgURL("");
-      } else {
-      }
-    } catch (error) {
-      let errorMessage = "Post failed";
-      console.log(error.message);
-      alert(errorMessage);
-    }
-  };
 
   const handleFileRead = async (event) => {
     const file = event.target.files[0];
     const base64 = await convertBase64(file);
     setImgPreview(base64);
-    setImgURL(base64);
+    setContent(base64);
   };
 
   const convertBase64 = (file) => {
@@ -148,7 +117,7 @@ const CreateImagePostModal = ({
                   width: "60%",
                 }}
                 onChange={(e) => {
-                  setImgURL(e.target.value);
+                  setContent(e.target.value);
                   setImgPreview(e.target.value);
                   setContentType("text/plain");
                 }}
@@ -158,7 +127,7 @@ const CreateImagePostModal = ({
               </Typography>
               <label htmlFor="contained-button-file">
                 <Input
-                  disabled={imgURL !== ""}
+                  disabled={content !== ""}
                   accept="image/*"
                   id="contained-button-file"
                   multiple
@@ -169,7 +138,7 @@ const CreateImagePostModal = ({
                   onChange={handleFileRead}
                 />
                 <Button
-                  disabled={imgURL !== ""}
+                  disabled={content !== ""}
                   variant="contained"
                   component="span"
                   sx={{
@@ -200,10 +169,21 @@ const CreateImagePostModal = ({
               }}
             />
           </Box>
+          <PostTags categories={categories} setCategories={setCategories} />
           <Box display="flex" justifyContent="center" mt={1.5}>
             <Button
               endIcon={<SendIcon />}
-              onClick={handleCreate}
+              onClick={() =>
+                handleCreate(
+                  title,
+                  description,
+                  contentType,
+                  content,
+                  categories,
+                  "PUBLIC",
+                  false
+                )
+              }
               variant="contained"
               style={{
                 color: "black",

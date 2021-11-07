@@ -15,8 +15,8 @@ const PostVisibility = (props) => {
         variant="contained"
         fullWidth
         startIcon={
-          (props.visibility === "Public" && <PublicIcon />) ||
-          (props.visibility === "Friends" && <FriendsIcon />) ||
+          (props.visibility === "PUBLIC" && <PublicIcon />) ||
+          (props.visibility === "FRIENDS" && <FriendsIcon />) ||
           (props.visibility === "Unlisted" && <UnlistedIcon />)
         }
         onClick={(e) => {
@@ -71,9 +71,9 @@ const PostVisibility = (props) => {
             <Button
               startIcon={<PublicIcon />}
               onClick={() => {
-                props.setVisibility("Public");
+                props.setVisibility("PUBLIC");
               }}
-              endIcon={props.visibility === "Public" && <CheckIcon />}
+              endIcon={props.visibility === "PUBLIC" && <CheckIcon />}
             >
               <Typography
                 variant="body2"
@@ -86,9 +86,9 @@ const PostVisibility = (props) => {
 
             <Button
               startIcon={<FriendsIcon />}
-              endIcon={props.visibility === "Friends" && <CheckIcon />}
+              endIcon={props.visibility === "FRIENDS" && <CheckIcon />}
               onClick={() => {
-                props.setVisibility("Friends");
+                props.setVisibility("FRIENDS");
               }}
             >
               <Typography

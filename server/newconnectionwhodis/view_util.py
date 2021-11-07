@@ -50,5 +50,7 @@ def create_post_with_id(author, data, id=None):
         contentType=data['contentType'],
         title=data['title'],
         description=data['description'],
+        visibility=data['visibility'],
+        unlisted=data['unlisted'],
         categories=categories)
     return post

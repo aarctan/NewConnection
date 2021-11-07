@@ -22,9 +22,9 @@ const PostTags = (props) => {
         id="tags"
         options={[]}
         freeSolo
-        value={props.tags}
+        value={props.categories}
         onChange={(e, newTag) => {
-          props.setTags(newTag);
+          props.setCategories(newTag);
         }}
         renderTags={(value, getTagProps) =>
           value.map((tag, index) => (
@@ -39,7 +39,10 @@ const PostTags = (props) => {
             placeholder="Add a tag..."
             onKeyDown={(e) => {
               if (e.key === "Enter" && e.target.value) {
-                props.setTags((prevTags) => [...prevTags, e.target.value]);
+                props.setCategories((prevTags) => [
+                  ...prevTags,
+                  e.target.value,
+                ]);
               }
             }}
           />

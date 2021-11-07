@@ -126,10 +126,12 @@ class PostListView(APIView):
     # GET: get recent posts of author (paginated)
     def get(self, request, author_id):
         author = Author.objects.get(pk=author_id)
+        public_posts = Post.objects.filter(author=author, visibility='PUBLIC')
+
         return Response(
             PostSerializer(
                 view_util.paginate_queryset(
-                    self.request.query_params, Post.objects.filter(author=author)
+                    self.request.query_params, public_posts
                 ),
                 context={"request": request},
                 many=True,

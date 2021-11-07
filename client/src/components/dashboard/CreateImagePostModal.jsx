@@ -105,11 +105,7 @@ const CreateImagePostModal = ({
       <Modal open={isModalOpen} onClose={handleClose}>
         <Box
           sx={style}
-          style={
-            small
-              ? { width: "90%", height: "70%" }
-              : { width: 500, height: imgPreview ? "550px" : "400px" }
-          }
+          style={small ? { width: "90%", height: "70%" } : { width: 500 }}
         >
           <Box>
             <Typography
@@ -196,6 +192,7 @@ const CreateImagePostModal = ({
               alt=""
               src={imgPreview}
               style={{
+                marginTop: 5,
                 maxHeight: 200,
                 border: 0,
                 borderRadius: "5px",
@@ -203,7 +200,7 @@ const CreateImagePostModal = ({
               }}
             />
           </Box>
-          <Box display="flex" justifyContent="center">
+          <Box display="flex" justifyContent="center" mt={1.5}>
             <Button
               endIcon={<SendIcon />}
               onClick={handleCreate}

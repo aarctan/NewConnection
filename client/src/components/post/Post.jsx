@@ -266,12 +266,18 @@ const Post = (props) => {
       )}
       {props.contentType.includes("base64") && (
         <CardContent className={classes.root} sx={{ padding: 0 }}>
-          <CardMedia
-            component="img"
-            height="600"
-            image={props.content}
-            alt="selfie"
-          />
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <CardMedia
+              component="img"
+              style={{
+                maxHeight: 500,
+                maxWidth: "100%",
+                width: "auto",
+              }}
+              image={props.content}
+              alt="selfie"
+            />
+          </div>
         </CardContent>
       )}
       <CardActions

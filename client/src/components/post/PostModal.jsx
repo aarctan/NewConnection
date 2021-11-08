@@ -8,6 +8,7 @@ import {
   InputBase,
   Divider,
   Avatar,
+  Stack,
 } from "@mui/material";
 import Comment from "src/components/post/Comment";
 import IconButton from "@mui/material/IconButton";
@@ -23,10 +24,10 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 815,
-  height: 600,
+  minHeight: 400,
+  maxHeight: 600,
   bgcolor: "background.paper",
   boxShadow: 20,
-  p: 0,
   borderRadius: "0px",
 };
 
@@ -47,22 +48,102 @@ const PostModal = ({ isModalOpen, setIsModalOpen, post, comments }) => {
           {/* Left box to hold image/text */}
           <Box
             sx={{
-              height: 600,
+              display: "flex",
+              flexDirection: "column",
               width: 480,
               minWidth: 480,
+              borderRight: 1,
+              borderColor: "#0000001f",
             }}
-            alt="The house from the offer."
-            src={post.content}
-          />
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                height: 56,
+              }}
+            >
+              <Stack direction="column" sx={{ marginLeft: 2 }}>
+                <Typography
+                  variant="body1"
+                  color="text.primary"
+                  fontWeight="600"
+                >
+                  {post.title}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  fontSize="10pt"
+                >
+                  {post.description}
+                </Typography>
+              </Stack>
+            </Box>
+            <Divider />
+            {/* Conditionally render content based on content type */}
+            {post.contentType === "text/plain" &&
+            post.content.slice(0, 4) === "http" ? (
+              /* Render an image if it is a hyperlink */
+              <Box
+                sx={{ display: "flex", justifyContent: "center", padding: 0 }}
+              >
+                <img
+                  style={{
+                    maxHeight: 500,
+                    maxWidth: "100%",
+                    width: "auto",
+                  }}
+                  image={post.content}
+                  alt=""
+                />
+              </Box>
+            ) : (
+              /* Render text */
+              post.contentType === "text/plain" && (
+                <Box sx={{ marginLeft: 2, marginTop: 2 }}>
+                  <Typography variant="body1" color="text.primary">
+                    {post.content}
+                  </Typography>
+                </Box>
+              )
+            )}
+            {/* Renders an image */}
+            {post.contentType.includes("base64") && (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexGrow: 1,
+                }}
+              >
+                <Box sx={{ padding: 0, margin: 0 }}>
+                  <img
+                    style={{
+                      maxHeight: 500,
+                      maxWidth: "100%",
+                      width: "auto",
+                    }}
+                    src={post.content}
+                    alt=""
+                  />
+                </Box>
+              </Box>
+            )}
+          </Box>
+
+          {/* Right box to hold comments */}
           <Box
             sx={{
               display: "flex",
               flexGrow: 1,
               flexDirection: "column",
               justifyContent: "space-between",
+              maxHeight: 600,
             }}
           >
-            {/* Right box to hold comments */}
             <Box
               sx={{
                 display: "flex",
@@ -81,6 +162,7 @@ const PostModal = ({ isModalOpen, setIsModalOpen, post, comments }) => {
                   padding: 1,
                 }}
               >
+                {/* Box containing avatar, displayName and horizantal icon */}
                 <Box
                   sx={{
                     display: "flex",
@@ -111,14 +193,20 @@ const PostModal = ({ isModalOpen, setIsModalOpen, post, comments }) => {
                   <MoreHorizIcon />
                 </IconButton>
               </Box>
+
               <Divider />
-              <CardContent sx={{ py: 1 }}>
+
+              {/* Card content that displays all of the comments on the post */}
+              <Box sx={{ py: 1, px: 1.5, overflow: "auto", maxHeight: 350 }}>
                 {comments.map((comment) => (
                   <Comment author={comment.author} comment={comment.comment} />
                 ))}
-              </CardContent>
+              </Box>
             </Box>
+
             <Divider />
+
+            {/* Box containing like button and amount if likes */}
             <CardActions disableSpacing sx={{ paddingBottom: "5px" }}>
               <IconButton aria-label="add to favorites">
                 <FavoriteBorderIcon />
@@ -141,8 +229,10 @@ const PostModal = ({ isModalOpen, setIsModalOpen, post, comments }) => {
                 8,032 likes
               </Typography>
             </CardContent>
+
             <Divider />
 
+            {/* Hold the comment input base */}
             <Paper
               component="form"
               sx={{

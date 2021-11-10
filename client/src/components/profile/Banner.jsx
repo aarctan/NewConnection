@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -8,6 +8,7 @@ import {
   Divider,
 } from "@mui/material";
 import EditProfileModal from "src/components/profile/EditProfileModal";
+import FollowersModal from "src/components/profile/FollowersModal";
 import CheckIcon from "@mui/icons-material/Check";
 import AuthContext from "src/store/auth-context";
 
@@ -15,9 +16,12 @@ import AuthContext from "src/store/auth-context";
 // post, follower and following counts
 const Banner = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
   const [followBtnText, setFollowBtnText] = useState("Follow");
   const authCtx = useContext(AuthContext);
+  const [followers, setFollowers] = useState([]);
 
+  // Sends a follow object to the authors inbox
   const sendFollowToInbox = async (e) => {
     let body = {
       type: "Follow",
@@ -44,6 +48,7 @@ const Banner = (props) => {
     }
   };
 
+  // Unfollows the author
   const stopFollowing = async (e) => {
     try {
       const words = authCtx.userdata.id.split("/");
@@ -66,6 +71,24 @@ const Banner = (props) => {
       alert(errorMessage);
     }
   };
+
+  // Checks if the if from the url matches the logged in user id
+  // if it doesnt, we need to check if the logged in user is following the user id from the URL
+  useEffect(() => {
+    const fetchFollowers = async () => {
+      try {
+        const response = await fetch(`${props.author.id}/followers/`);
+        if (response.ok) {
+          const data = await response.json();
+          setFollowers(data["items"]);
+        }
+      } catch (error) {
+        setFollowers([]);
+      }
+    };
+
+    fetchFollowers();
+  }, [props.author.id]);
 
   return (
     <Container maxWidth="sm">
@@ -156,15 +179,27 @@ const Banner = (props) => {
         <Typography variant="body2" fontSize="14pt">
           1 Post
         </Typography>
-        <Typography variant="body2" fontSize="14pt">
-          5 Followers
+        <Typography
+          sx={{ cursor: "pointer" }}
+          variant="body2"
+          fontSize="14pt"
+          onClick={() => setIsFollowersModalOpen(true)}
+        >
+          {`${followers.length} followers`}
         </Typography>
       </Box>
       <Divider />
+      {/* Opens modal for user to edit their profile */}
       <EditProfileModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
       ></EditProfileModal>
+      {/* Opens the followers in a modal to view all followers of the author */}
+      <FollowersModal
+        isModalOpen={isFollowersModalOpen}
+        setIsModalOpen={setIsFollowersModalOpen}
+        followers={followers}
+      ></FollowersModal>
     </Container>
   );
 };

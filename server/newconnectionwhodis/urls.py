@@ -1,7 +1,23 @@
 from django.urls import path, include
 from .views import *
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 SERVICE = "api/v1/"
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="NewConnenction APIs",
+      default_version='v1',
+      description="Test description",
+      terms_of_service="Apache License 2.0",
+      contact=openapi.Contact(email="contact@snippets.local"),
+      license=openapi.License(name="Apache License 2.0"),
+   ),
+   public=True,
+   permission_classes=[permissions.AllowAny],
+)
 
 urlpatterns = [
     path(
@@ -56,4 +72,6 @@ urlpatterns = [
         name="comment-likes",
     ),
     path(f"{SERVICE}author/<str:author_id>/inbox/", InboxView.as_view(), name="inbox"),
+
+    path('swagger', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

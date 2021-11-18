@@ -9,10 +9,7 @@
 Our Webservice is deployed on heroku:<br>
 `https://newconnection-server.herokuapp.com/api/v1/`
 
-Here is an example GET request:<br>
-`https://newconnection-server.herokuapp.com/api/v1/author/{AUTHOR_ID}/posts/`
-
-All URLs match the specification outlined [here](https://github.com/abramhindle/CMPUT404-project-socialdistribution/blob/master/project.org)<br>
+All endpoints are documented in the wiki found [here](https://github.com/Exanut/NewConnection/wiki/API-Endpoints)<br>
 
 ## Getting started
 

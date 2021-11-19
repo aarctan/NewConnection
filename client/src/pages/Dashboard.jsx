@@ -8,12 +8,20 @@ const Dashboard = () => {
   const [authors, setAuthors] = useState([]);
 
   useEffect(() => {
-    fetch(`${API_URL}/authors/`)
+    fetch(`https://cmput404-vgt-socialdist.herokuapp.com/service/authors`)
       .then((response) => {
         return response.json();
       })
       .then((data) => {
         setAuthors(data.items);
+      });
+
+    fetch(`${API_URL}/authors/`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setAuthors((prevState) => [...prevState, data.items]);
       })
       .catch((error) => console.log("Dashboard useEffect", error));
   }, []);

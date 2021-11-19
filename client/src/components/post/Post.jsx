@@ -392,6 +392,12 @@ const Post = (props) => {
             e.preventDefault();
             setComment(e.target.value);
           }}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              onSendComment();
+            }
+          }}
         />
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
         <IconButton

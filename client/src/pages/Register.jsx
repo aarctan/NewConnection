@@ -161,6 +161,11 @@ const Register = () => {
                 setUsernameError(false);
               }}
               onBlur={(e) => handleUsernameBlur()}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  handleRegistration();
+                }
+              }}
             />
 
             <TextField

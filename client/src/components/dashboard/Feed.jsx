@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { Box, Grid, Typography, Hidden, Container } from "@mui/material";
 import SideProfile from "src/components/dashboard/SideProfile";
-
+import AuthContext from "src/store/auth-context";
 import Post from "src/components/post/Post";
 import CreateNewPostContainer from "src/components/dashboard/CreateNewPostContainer";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -9,6 +9,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 const Feed = (props) => {
   const [posts, setPosts] = useState([]);
   const [postsLoading, setPostsLoading] = useState(false);
+  const authCtx = useContext(AuthContext);
 
   // https://www.robinwieruch.de/react-remove-item-from-list
   const handleRemove = (id) => {
@@ -16,25 +17,26 @@ const Feed = (props) => {
     setPosts(newList);
   };
 
-  useEffect(() => {
+  // fetch the users inbox
+  const fetchInbox = useCallback(async () => {
     setPosts([]);
     setPostsLoading(true);
-    for (let i = 0; i < props.recentAuthors.length; i++) {
-      fetch(`${props.recentAuthors[i].id}/posts/`)
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          for (let j = 0; j < data.length; j++) {
-            setPosts((oldArray) => [...oldArray, data[j]]);
-            console.log(data[j]);
-            console.log(data[j]["categories"][0]);
-          }
-          setPostsLoading(false);
-        })
-        .catch((error) => console.log("Feed useEffect", error));
+    const response = await fetch(`${authCtx.userdata.id}/inbox/`, {
+      headers: { Authorization: `Token ${authCtx.token}` },
+    });
+    if (response.ok) {
+      const inboxData = await response.json();
+      const inbox = inboxData["items"].filter((item) => item.type === "post");
+      setPostsLoading(false);
+      setPosts(inbox);
+    } else {
+      console.log("Feed useEffect failed - fetching inbox");
     }
-  }, [props.recentAuthors]);
+  }, [authCtx]);
+
+  useEffect(() => {
+    fetchInbox();
+  }, [fetchInbox]);
 
   return (
     <Container maxWidth="md" sx={{ px: 0 }}>

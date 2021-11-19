@@ -306,8 +306,6 @@ class InboxView(APIView):
                 save_inbox = False
             except:
                 FollowReq.objects.create(requestor=sender, requestee=receiver)
-        elif item_type == 'post':
-            pass
     
         if save_inbox:
             items.append(data)

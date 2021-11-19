@@ -3,8 +3,6 @@ import { Box, Typography } from "@mui/material";
 import Post from "src/components/post/Post";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 const ProfileFeed = (props) => {
   const [posts, setPosts] = useState([]);
   const [postsLoading, setPostsLoading] = useState(false);
@@ -18,19 +16,34 @@ const ProfileFeed = (props) => {
   useEffect(() => {
     setPosts([]);
     setPostsLoading(true);
-    fetch(`${API_URL}/author/${props.authorID}/posts/`)
+    console.log(props.author.id);
+    fetch(`${props.author.id}/posts/`)
       .then((response) => {
         return response.json();
       })
       .then((data) => {
-        for (let j = 0; j < data.length; j++) {
-          setPosts((oldArray) => [...oldArray, data[j]]);
+        console.log(data);
+        if (
+          props.author.host === "https://cmput404-vgt-socialdist.herokuapp.com/"
+        ) {
+          for (let j = 0; j < data.items.length; j++) {
+            setPosts((oldArray) => [...oldArray, data.items[j]]);
+          }
+        } else {
+          for (let j = 0; j < data.length; j++) {
+            setPosts((oldArray) => [...oldArray, data[j]]);
+          }
         }
+
+        setPostsLoading(false);
+      })
+      .catch((error) => {
+        console.log("NOT FOUND");
         setPostsLoading(false);
       })
 
       .catch((error) => console.log("ProfileFeed useEffect", error));
-  }, [props.authorID]);
+  }, [props.author.id, props.author.host]);
 
   return (
     <Box display="flex" flexDirection="column">

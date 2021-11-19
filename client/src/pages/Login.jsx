@@ -162,6 +162,11 @@ const Login = () => {
                 setPasswordError(false);
               }}
               onBlur={(e) => handlePasswordBlur()}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  handleLogin();
+                }
+              }}
             />
             <Box sx={{ py: 2 }}>
               <Button

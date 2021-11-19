@@ -77,7 +77,7 @@ const Banner = (props) => {
   useEffect(() => {
     const fetchFollowers = async () => {
       try {
-        const response = await fetch(`${props.author.id}/followers/`);
+        const response = await fetch(`${props.author.id}/followers`);
         if (response.ok) {
           const data = await response.json();
           setFollowers(data["items"]);

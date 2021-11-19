@@ -2,6 +2,7 @@ import { Menu, MenuItem, Typography } from "@mui/material";
 import InboxFollowItem from "./InboxFollowItem";
 import InboxLikeItem from "./InboxLikeItem";
 import InboxDelete from "./InboxDelete";
+import InboxPostItem from "./InboxPostItem";
 
 // Menu container that takes in a list of inbox items from Header.jsx
 const InboxMenu = (props) => {
@@ -53,7 +54,10 @@ const InboxMenu = (props) => {
               <InboxFollowItem item={item}> </InboxFollowItem>
             )}
             {item.type === "Like" && (
-              <InboxLikeItem item={item}> </InboxLikeItem>
+              <InboxLikeItem item={item}></InboxLikeItem>
+            )}
+            {item.type === "post" && (
+              <InboxPostItem item={item}></InboxPostItem>
             )}
           </MenuItem>
         );

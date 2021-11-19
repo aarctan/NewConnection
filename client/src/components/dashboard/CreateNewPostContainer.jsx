@@ -32,6 +32,9 @@ const CreateNewPostContainer = (props) => {
   const [isTextModalOpen, setIsTextModalOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
+  // Creates a post
+  // This function is called from CreateImagePostModal.jsx and CreateTextPostModal.jsx
+  // Gets passed in as a prop to these files
   const handleCreate = async (
     title,
     description,
@@ -42,18 +45,20 @@ const CreateNewPostContainer = (props) => {
     unlisted
   ) => {
     try {
+      let body = {
+        author: authCtx.userdata,
+        title: title,
+        description: description,
+        contentType: contentType,
+        content: content,
+        categories: categories,
+        visibility: visibility,
+        unlisted: false,
+      };
+      // Create a post
       const postResponse = await fetch(`${authCtx.userdata.id}/posts/`, {
         method: "POST",
-        body: JSON.stringify({
-          author: authCtx.userdata,
-          title: title,
-          description: description,
-          contentType: contentType,
-          content: content,
-          categories: categories,
-          visibility: visibility,
-          unlisted: false,
-        }),
+        body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Token ${authCtx.token}`,
@@ -61,10 +66,37 @@ const CreateNewPostContainer = (props) => {
       });
       if (postResponse.ok) {
         const postData = await postResponse.json();
-        props.setPosts((oldPosts) => [...oldPosts, postData]);
+        // If the post if a friends post, get followers of author and send to their inbox
+        if (postData.visibility === "FRIENDS") {
+          // Get Followers
+          const responseFollowers = await fetch(
+            `${authCtx.userdata.id}/followers/`
+          );
+          if (responseFollowers.ok) {
+            const data = await responseFollowers.json();
+            console.log(data);
+            body["type"] = "post";
+            // Loop through the followers and send them the post to their inbox
+            for (let follower of data["items"]) {
+              console.log(body);
+              fetch(`${follower.id}/inbox/`, {
+                method: "POST",
+                body: JSON.stringify(postData),
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Token ${authCtx.token}`,
+                },
+              });
+            }
+          }
+        }
+        // If its a public post or unlisted, add the post to the users feed
+        else {
+          props.setPosts((oldPosts) => [...oldPosts, postData]);
+        }
+
         setIsTextModalOpen(false);
         setIsImageModalOpen(false);
-      } else {
       }
     } catch (error) {
       let errorMessage = "Post failed";

@@ -75,7 +75,7 @@ const ProfileFeed = (props) => {
           align="center"
           sx={{ color: "#858585", marginTop: "10%" }}
         >
-          <i>Looks like you have no posts. Why not try creating one!</i>
+          <i>No posts found</i>
         </Typography>
       )}
     </Box>

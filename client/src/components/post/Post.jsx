@@ -33,6 +33,9 @@ import MenuModal from "src/components/post/MenuModal";
 import DeletePostModal from "src/components/post/DeletePostModal";
 import LikesModal from "./LikesModal";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const API_URL = process.env.REACT_APP_API_URL;
 
 const useStyles = makeStyles((theme) => ({
@@ -80,7 +83,11 @@ const Post = (props) => {
   }
   const posted_time = formatAMPM(postDate);
 
-  const onSendComment = async (e) => {
+  const notify = (author) =>
+    toast.success(`Comment sent to ${author}'s inbox!`);
+
+  // If the post is public, add the comment to the posts comments
+  const sendPublicComment = async (e) => {
     try {
       const userdata_url = authCtx.userdata.id.split("/");
       const author_id = userdata_url[userdata_url.length - 1];
@@ -104,6 +111,37 @@ const Post = (props) => {
         const comment = await postResponse.json();
         setComments([comment, ...comments]);
         setComment("");
+      } else {
+      }
+    } catch (error) {
+      let errorMessage = "Send Comment failed";
+      console.log(error.message);
+      alert(errorMessage);
+    }
+  };
+
+  // Comments on friends posts go to the friends inbox
+  const sendPrivateComment = async (e) => {
+    try {
+      let date = new Date();
+      date = date.toISOString();
+      const postResponse = await fetch(`${props.author.id}/inbox/`, {
+        method: "POST",
+        body: JSON.stringify({
+          type: "comment",
+          author: authCtx.userdata,
+          comment: comment,
+          contentType: "text/plain",
+          published: date,
+          id: props.id,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ` + btoa("admin:admin"),
+        },
+      });
+      if (postResponse.ok) {
+        notify(props.author.displayName);
       } else {
       }
     } catch (error) {
@@ -400,16 +438,32 @@ const Post = (props) => {
           onKeyPress={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
-              onSendComment();
+              if (props.visibility === "FRIENDS") sendPrivateComment();
+              else sendPublicComment();
             }
           }}
+        />
+        <ToastContainer
+          position="top-right"
+          autoClose={2500}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
         />
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
         <IconButton
           color="primary"
           sx={{ p: "10px" }}
           aria-label="send"
-          onClick={onSendComment}
+          onClick={
+            props.visibility === "FRIENDS"
+              ? sendPrivateComment
+              : sendPublicComment
+          }
         >
           <SendIcon />
         </IconButton>

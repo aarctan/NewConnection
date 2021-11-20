@@ -3,6 +3,7 @@ import InboxFollowItem from "./InboxFollowItem";
 import InboxLikeItem from "./InboxLikeItem";
 import InboxDelete from "./InboxDelete";
 import InboxPostItem from "./InboxPostItem";
+import InboxCommentItem from "./InboxCommentItem";
 
 // Menu container that takes in a list of inbox items from Header.jsx
 const InboxMenu = (props) => {
@@ -58,6 +59,9 @@ const InboxMenu = (props) => {
             )}
             {item.type === "post" && (
               <InboxPostItem item={item}></InboxPostItem>
+            )}
+            {item.type === "comment" && (
+              <InboxCommentItem item={item}></InboxCommentItem>
             )}
           </MenuItem>
         );

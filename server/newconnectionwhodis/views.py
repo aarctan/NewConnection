@@ -20,6 +20,14 @@ class UserdataViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
+class NodesListViewSet(APIView):
+    http_method_names = ["get"]
+
+    # GET: retrieve all nodes (host & credentials)
+    def get(self, request):
+        return Response(NodeSerializer(Node.objects.all(), many=True).data)
+
+
 class AuthorsView(APIView):
     http_method_names = ["get"]
 
@@ -56,7 +64,6 @@ class AuthorView(APIView):
         serializer = AuthorSerializer(author, context={"request": request})
         view_util.model_update(author, request.data)
         return Response(serializer.data)
-
 
 
 class FriendRequestView(APIView):

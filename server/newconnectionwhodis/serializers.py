@@ -25,6 +25,11 @@ class CustomRegisterSerializer(RegisterSerializer):
         return user
 
 
+class NodeSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = Node
+        fields = ["host_uri", "username", "password"]
+
 class AuthorSerializer(HyperlinkedModelSerializer):
     id = SerializerMethodField('get_id_url')
     host = SerializerMethodField('get_host_url')

@@ -55,8 +55,6 @@ class Follower(models.Model):
         return f'{self.sender} follows {self.receiver}'
 
 
-        
-
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.TextField(default="post", editable=False)
@@ -108,3 +106,14 @@ class Inbox(models.Model):
 
     def set_items(self, items):
         self.items = json.dumps(items)
+
+
+class Node(models.Model):
+    """
+    A node is a host URI as well as username/password credentials that will
+    be sent by the NewConnection client in basic-authenticated requests sent
+    to that host.
+    """
+    host_uri = models.TextField(primary_key=True)
+    username = models.TextField()
+    password = models.TextField()

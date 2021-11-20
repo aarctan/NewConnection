@@ -84,7 +84,7 @@ const CreateNewPostContainer = (props) => {
                 body: JSON.stringify(postData),
                 headers: {
                   "Content-Type": "application/json",
-                  Authorization: `Token ${authCtx.token}`,
+                  Authorization: `Basic ` + btoa("admin:admin"),
                 },
               });
             }

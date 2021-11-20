@@ -66,7 +66,7 @@ const Header = () => {
   // fetch the users inbox
   const fetchInbox = useCallback(async () => {
     const response = await fetch(`${authCtx.userdata.id}/inbox/`, {
-      headers: { Authorization: `Token ${authCtx.token}` },
+      headers: { Authorization: `Basic ` + btoa("admin:admin") },
     });
     if (response.ok) {
       const inboxData = await response.json();

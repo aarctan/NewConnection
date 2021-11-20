@@ -21,7 +21,7 @@ import LikedIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import PublicIcon from "@mui/icons-material/Public";
-//import FriendsIcon from "@mui/icons-material/People";
+import FriendsIcon from "@mui/icons-material/People";
 //import UnlistedIcon from "@mui/icons-material/InsertLink";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -371,7 +371,12 @@ const Post = (props) => {
             at {posted_time}
           </Typography>
           <FiberManualRecordIcon sx={{ color: "#646464", fontSize: "4pt" }} />
-          {<PublicIcon sx={{ color: "#646464", fontSize: "10pt" }} />}
+          {props.visibility === "PUBLIC" && (
+            <PublicIcon sx={{ color: "#646464", fontSize: "10pt" }} />
+          )}
+          {props.visibility === "FRIENDS" && (
+            <FriendsIcon sx={{ color: "#646464", fontSize: "10pt" }} />
+          )}
         </Stack>
       </CardContent>
       <Paper

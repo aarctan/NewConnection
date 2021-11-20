@@ -8,22 +8,21 @@ const Dashboard = () => {
   const [authors, setAuthors] = useState([]);
 
   useEffect(() => {
-    fetch(`https://cmput404-vgt-socialdist.herokuapp.com/service/authors`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setAuthors(data.items);
-      });
+    const fetchAuthors = async () => {
+      try {
+        const responseOne = await fetch(
+          `https://cmput404-vgt-socialdist.herokuapp.com/service/authors`
+        );
+        const responseOneData = await responseOne.json();
 
-    fetch(`${API_URL}/authors/`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setAuthors((prevState) => [...prevState, data.items]);
-      })
-      .catch((error) => console.log("Dashboard useEffect", error));
+        const responseTwo = await fetch(`${API_URL}/authors/`);
+        const responseTwoData = await responseTwo.json();
+        setAuthors([...responseOneData.items, ...responseTwoData.items]);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchAuthors();
   }, []);
 
   return (

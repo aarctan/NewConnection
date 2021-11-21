@@ -4,6 +4,7 @@ import PublicIcon from "@mui/icons-material/Public";
 import FriendsIcon from "@mui/icons-material/People";
 import UnlistedIcon from "@mui/icons-material/InsertLink";
 import CheckIcon from "@mui/icons-material/Check";
+import LockIcon from "@mui/icons-material/Lock";
 
 const PostVisibility = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -15,9 +16,12 @@ const PostVisibility = (props) => {
         variant="contained"
         fullWidth
         startIcon={
-          (props.visibility === "PUBLIC" && <PublicIcon />) ||
+          (props.visibility === "PUBLIC" && !props.unlisted && (
+            <PublicIcon />
+          )) ||
           (props.visibility === "FRIENDS" && <FriendsIcon />) ||
-          (props.visibility === "Unlisted" && <UnlistedIcon />)
+          (props.unlisted && <UnlistedIcon />) ||
+          (props.visibility === "PRIVATE" && <LockIcon />)
         }
         onClick={(e) => {
           setAnchorEl(e.currentTarget);
@@ -72,6 +76,8 @@ const PostVisibility = (props) => {
               startIcon={<PublicIcon />}
               onClick={() => {
                 props.setVisibility("PUBLIC");
+                props.setUnlisted(false);
+                setAnchorEl(false);
               }}
               endIcon={props.visibility === "PUBLIC" && <CheckIcon />}
             >
@@ -89,6 +95,8 @@ const PostVisibility = (props) => {
               endIcon={props.visibility === "FRIENDS" && <CheckIcon />}
               onClick={() => {
                 props.setVisibility("FRIENDS");
+                props.setUnlisted(false);
+                setAnchorEl(false);
               }}
             >
               <Typography
@@ -104,6 +112,8 @@ const PostVisibility = (props) => {
               endIcon={props.visibility === "Unlisted" && <CheckIcon />}
               onClick={() => {
                 props.setVisibility("Unlisted");
+                props.setUnlisted(true);
+                setAnchorEl(false);
               }}
             >
               <Typography
@@ -112,6 +122,23 @@ const PostVisibility = (props) => {
                 style={{ fontSize: "12pt" }}
               >
                 Unlisted
+              </Typography>
+            </Button>
+            <Button
+              startIcon={<LockIcon />}
+              endIcon={props.visibility === "PRIVATE" && <CheckIcon />}
+              onClick={() => {
+                props.setVisibility("PRIVATE");
+                props.setUnlisted(false);
+                setAnchorEl(false);
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ padding: 0 }}
+                style={{ fontSize: "12pt" }}
+              >
+                Private
               </Typography>
             </Button>
           </Box>

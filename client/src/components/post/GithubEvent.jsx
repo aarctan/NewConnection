@@ -22,7 +22,7 @@ const GithubEvent = (props) => {
   }
 
   return (
-    <Card elevation={3} sx={{ my: "15px" }}>
+    <Card elevation={3} sx={{ my: "25px" }}>
       <CardContent
         sx={{
           display: "flex",

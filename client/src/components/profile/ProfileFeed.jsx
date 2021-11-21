@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import Post from "src/components/post/Post";
 import CircularProgress from "@mui/material/CircularProgress";
+import GithubEvent from "../post/GithubEvent";
+
+const supportedGithubEvents = new Set();
+supportedGithubEvents.add("PushEvent");
 
 const ProfileFeed = (props) => {
   const [posts, setPosts] = useState([]);
+  const [githubEvents, setGithubEvents] = useState([]);
   const [postsLoading, setPostsLoading] = useState(false);
 
   // https://www.robinwieruch.de/react-remove-item-from-list
@@ -16,7 +21,21 @@ const ProfileFeed = (props) => {
   useEffect(() => {
     setPosts([]);
     setPostsLoading(true);
-    console.log(props.author.id);
+
+    const github_name = props.author.github;
+    if (github_name) {
+      fetch(`https://api.github.com/users/${props.author.github}/events`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          setGithubEvents(data);
+        })
+        .catch((err) =>
+          console.log(
+            `Could not retrieve github data for ${props.author.github}`
+          )
+        );
+    }
     fetch(`${props.author.id}/posts/`)
       .then((response) => {
         return response.json();
@@ -43,42 +62,54 @@ const ProfileFeed = (props) => {
       })
 
       .catch((error) => console.log("ProfileFeed useEffect", error));
-  }, [props.author.id, props.author.host]);
+  }, [props.author]);
 
   return (
-    <Box display="flex" flexDirection="column">
-      {postsLoading ? (
-        <Box display="flex" justifyContent="center" mt={3}>
-          <CircularProgress />
+    <Stack justifyContent="center" direction="row" spacing={2}>
+      <Box display="flex" flexDirection="column">
+        {postsLoading ? (
+          <Box display="flex" justifyContent="center" mt={3}>
+            <CircularProgress />
+          </Box>
+        ) : posts.length ? (
+          posts.map((post, idx) => (
+            <Post
+              key={idx}
+              id={post.id}
+              title={post.title}
+              description={post.description}
+              author={props.author}
+              contentType={post.contentType}
+              content={post.content}
+              published={post.published}
+              categories={post.categories}
+              visibility={post.visibility}
+              count={idx}
+              comments={[]}
+              handleRemove={handleRemove}
+            />
+          ))
+        ) : (
+          <Typography
+            variant="h6"
+            align="center"
+            sx={{ color: "#858585", marginTop: "10%" }}
+          >
+            <i>No posts found</i>
+          </Typography>
+        )}
+      </Box>
+      {githubEvents && (
+        <Box display="flex" flexDirection="column">
+          {githubEvents.map((event, idx) => {
+            if (supportedGithubEvents.has(event.type)) {
+              return <GithubEvent key={idx} event={event} />;
+            }
+            return <></>;
+          })}
         </Box>
-      ) : posts.length ? (
-        posts.map((post, idx) => (
-          <Post
-            key={idx}
-            id={post.id}
-            title={post.title}
-            description={post.description}
-            author={props.author}
-            contentType={post.contentType}
-            content={post.content}
-            published={post.published}
-            categories={post.categories}
-            visibility={post.visibility}
-            count={idx}
-            comments={[]}
-            handleRemove={handleRemove}
-          />
-        ))
-      ) : (
-        <Typography
-          variant="h6"
-          align="center"
-          sx={{ color: "#858585", marginTop: "10%" }}
-        >
-          <i>No posts found</i>
-        </Typography>
       )}
-    </Box>
+    </Stack>
   );
 };
 

@@ -3,11 +3,17 @@ import { Box, Typography, Avatar, Stack, Link } from "@mui/material";
 import AuthContext from "src/store/auth-context";
 import { useNavigate } from "react-router-dom";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 // Side profile displays the users avatar as well as display name.
 // Underneath that, there is recently joined users that you can click on to go to their profile pages.
 // This is rendered in the Feed.jsx file
 const SideProfile = (props) => {
-  const recentAuthors = props.recentAuthors;
+  // use this when we decide to remove foreign authors from "recently joined"
+  let recentAuthors = props.recentAuthors.filter(
+    (author) => `${author.host}api/v1` === API_URL
+  );
+  recentAuthors = props.recentAuthors;
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
   return (

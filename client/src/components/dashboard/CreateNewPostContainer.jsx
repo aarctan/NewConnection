@@ -42,9 +42,11 @@ const CreateNewPostContainer = (props) => {
     content,
     categories,
     visibility,
-    unlisted
+    unlisted,
+    privateReceiver
   ) => {
     try {
+      if (visibility === "Unlisted") visibility = "PUBLIC";
       let body = {
         author: authCtx.userdata,
         title: title,
@@ -53,7 +55,7 @@ const CreateNewPostContainer = (props) => {
         content: content,
         categories: categories,
         visibility: visibility,
-        unlisted: false,
+        unlisted: unlisted,
       };
       // Create a post
       const postResponse = await fetch(`${authCtx.userdata.id}/posts/`, {
@@ -74,11 +76,9 @@ const CreateNewPostContainer = (props) => {
           );
           if (responseFollowers.ok) {
             const data = await responseFollowers.json();
-            console.log(data);
             body["type"] = "post";
             // Loop through the followers and send them the post to their inbox
             for (let follower of data["items"]) {
-              console.log(body);
               fetch(`${follower.id}/inbox/`, {
                 method: "POST",
                 body: JSON.stringify(postData),
@@ -89,12 +89,21 @@ const CreateNewPostContainer = (props) => {
               });
             }
           }
+        } else if (postData.visibility === "PRIVATE") {
+          postData["visibility"] = "FRIENDS";
+          fetch(`${privateReceiver}/inbox/`, {
+            method: "POST",
+            body: JSON.stringify(postData),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Basic ` + btoa("admin:admin"),
+            },
+          });
         }
         // If its a public post or unlisted, add the post to the users feed
         else {
           props.setPosts((oldPosts) => [...oldPosts, postData]);
         }
-
         setIsTextModalOpen(false);
         setIsImageModalOpen(false);
       }

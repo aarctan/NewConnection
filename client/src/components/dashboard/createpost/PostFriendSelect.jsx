@@ -43,9 +43,9 @@ const PostFriendSelect = (props) => {
         options={followers}
         getOptionLabel={(option) => option.displayName}
         onChange={(e, value) => {
-          // const words = value.id.split("/");
-          // const word = words[words.length - 1];
-          // navigate(`/app/author/${word}`, { state: value });
+          try {
+            props.setPrivateReceiver(value.id);
+          } catch (error) {}
         }}
         renderInput={(params) => (
           <TextField

@@ -6,6 +6,7 @@ import AuthContext from "src/store/auth-context";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PostTags from "./createpost/PostTags";
 import PostVisibility from "./createpost/PostVisibility";
+import PostFriendSelect from "./createpost/PostFriendSelect";
 
 const style = {
   display: "flex",
@@ -29,7 +30,7 @@ const CreateTextPostModal = ({ isModalOpen, setIsModalOpen, handleCreate }) => {
   const [content, setContent] = useState("");
   const [categories, setCategories] = useState([]);
   const [visibility, setVisibility] = useState("PUBLIC");
-  // const [unlisted, setUnlisted] = useState(false);
+  const [unlisted, setUnlisted] = useState(false);
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
   if (!isModalOpen) return null;
@@ -69,7 +70,7 @@ const CreateTextPostModal = ({ isModalOpen, setIsModalOpen, handleCreate }) => {
               }}
             />
             <TextField
-              label={`What's happening, ${authCtx.userdata.displayName} ?`}
+              label={`What's happening, ${authCtx.userdata.displayName}?`}
               multiline
               rows={5}
               fullWidth
@@ -83,10 +84,15 @@ const CreateTextPostModal = ({ isModalOpen, setIsModalOpen, handleCreate }) => {
           <PostTags categories={categories} setCategories={setCategories} />
 
           <Box display="flex" justifyContent="space-between">
-            <PostVisibility
-              visibility={visibility}
-              setVisibility={setVisibility}
-            />
+            <Box display="flex" alignItems="center">
+              <PostVisibility
+                visibility={visibility}
+                setVisibility={setVisibility}
+                unlisted={unlisted}
+                setUnlisted={setUnlisted}
+              />
+              {visibility === "PRIVATE" && <PostFriendSelect />}
+            </Box>
             <Button
               variant="contained"
               endIcon={<SendIcon />}
@@ -98,7 +104,7 @@ const CreateTextPostModal = ({ isModalOpen, setIsModalOpen, handleCreate }) => {
                   content,
                   categories,
                   visibility,
-                  false
+                  unlisted
                 )
               }
               style={{

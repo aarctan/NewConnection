@@ -9,11 +9,9 @@ const API_URL = process.env.REACT_APP_API_URL;
 // Underneath that, there is recently joined users that you can click on to go to their profile pages.
 // This is rendered in the Feed.jsx file
 const SideProfile = (props) => {
-  // use this when we decide to remove foreign authors from "recently joined"
   let recentAuthors = props.recentAuthors.filter(
     (author) => `${author.host}api/v1` === API_URL
   );
-  recentAuthors = props.recentAuthors;
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
   return (

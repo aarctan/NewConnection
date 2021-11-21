@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import MailIcon from "@mui/icons-material/MailOutline";
+import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import { makeStyles } from "@mui/styles";
 import Search from "src/components/header/Search";
 import ProfileMenu from "src/components/header/ProfileMenu";
@@ -113,6 +114,17 @@ const Header = () => {
           </Hidden>
           <Box>
             <Stack alignItems="center" direction="row" spacing={1}>
+            <IconButton
+                onClick={() => {
+                  navigate(`/app/explore`);
+                }}
+                size="medium"
+                aria-label="show new mail"
+                color="inherit"
+                sx={{ ml: 2 }}
+              >
+                  <ExploreOutlinedIcon />
+              </IconButton>
               <IconButton
                 onClick={handleInboxClick}
                 size="medium"

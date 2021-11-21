@@ -6,6 +6,7 @@ import Login from "src/pages/Login";
 import NotFound from "src/pages/NotFound";
 import Register from "src/pages/Register";
 import Profile from "./pages/Profile";
+import Explore from "./pages/Explore";
 
 const routes = [
   {
@@ -13,6 +14,7 @@ const routes = [
     element: <DashboardLayout />,
     children: [
       { path: "dashboard", element: <Dashboard /> },
+      { path: "explore", element: <Explore /> },
       { path: "author/:authorID", element: <Profile /> },
       { path: "*", element: <Navigate to="/404" replace={true} /> },
     ],

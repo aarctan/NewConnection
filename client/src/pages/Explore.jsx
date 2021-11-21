@@ -20,7 +20,7 @@ const Explore = () => {
     const fetchAuthors = async () => {
       try {
         const responseOne = await fetch(
-          `https://cmput404-vgt-socialdist.herokuapp.com/service/authors`
+          `https://cmput404-vgt-socialdist.herokuapp.com/service/authors/`
         );
         const responseOneData = await responseOne.json();
 

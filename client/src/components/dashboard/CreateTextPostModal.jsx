@@ -31,6 +31,7 @@ const CreateTextPostModal = ({ isModalOpen, setIsModalOpen, handleCreate }) => {
   const [categories, setCategories] = useState([]);
   const [visibility, setVisibility] = useState("PUBLIC");
   const [unlisted, setUnlisted] = useState(false);
+  const [privateReceiver, setPrivateReceiver] = useState("");
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
   if (!isModalOpen) return null;
@@ -91,7 +92,9 @@ const CreateTextPostModal = ({ isModalOpen, setIsModalOpen, handleCreate }) => {
                 unlisted={unlisted}
                 setUnlisted={setUnlisted}
               />
-              {visibility === "PRIVATE" && <PostFriendSelect />}
+              {visibility === "PRIVATE" && (
+                <PostFriendSelect setPrivateReceiver={setPrivateReceiver} />
+              )}
             </Box>
             <Button
               variant="contained"
@@ -104,7 +107,8 @@ const CreateTextPostModal = ({ isModalOpen, setIsModalOpen, handleCreate }) => {
                   content,
                   categories,
                   visibility,
-                  unlisted
+                  unlisted,
+                  privateReceiver
                 )
               }
               style={{

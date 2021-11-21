@@ -5,6 +5,8 @@ import { useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import PostTags from "./createpost/PostTags";
+import PostVisibility from "./createpost/PostVisibility";
+import PostFriendSelect from "./createpost/PostFriendSelect";
 
 const style = {
   display: "flex",
@@ -42,8 +44,9 @@ const CreateImagePostModal = ({
   const [contentType, setContentType] = useState("text/plain");
   const [imgPreview, setImgPreview] = useState(""); // image url or base64 encoded image
   const [categories, setCategories] = useState([]);
-  // const [visibility, setVisibility] = useState("PUBLIC");
-  // const [unlisted, setUnlisted] = useState(false);
+  const [visibility, setVisibility] = useState("PUBLIC");
+  const [unlisted, setUnlisted] = useState(false);
+  const [privateReceiver, setPrivateReceiver] = useState("");
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
   if (!isModalOpen) return null;
@@ -170,7 +173,18 @@ const CreateImagePostModal = ({
             />
           </Box>
           <PostTags categories={categories} setCategories={setCategories} />
-          <Box display="flex" justifyContent="center" mt={1.5}>
+          <Box display="flex" justifyContent="space-between" mt={1}>
+            <Box display="flex" alignItems="center">
+              <PostVisibility
+                visibility={visibility}
+                setVisibility={setVisibility}
+                unlisted={unlisted}
+                setUnlisted={setUnlisted}
+              />
+              {visibility === "PRIVATE" && (
+                <PostFriendSelect setPrivateReceiver={setPrivateReceiver} />
+              )}
+            </Box>
             <Button
               endIcon={<SendIcon />}
               onClick={() =>
@@ -180,8 +194,9 @@ const CreateImagePostModal = ({
                   contentType,
                   content,
                   categories,
-                  "PUBLIC",
-                  false
+                  visibility,
+                  unlisted,
+                  privateReceiver
                 )
               }
               variant="contained"
@@ -189,6 +204,7 @@ const CreateImagePostModal = ({
                 color: "black",
                 border: "1pt solid #dbdbdb",
                 height: "25pt",
+                marginTop: "3pt",
                 justifyContent: "center",
                 alignItems: "center",
                 width: "80pt",

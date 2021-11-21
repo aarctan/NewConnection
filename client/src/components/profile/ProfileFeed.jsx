@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Box, Typography } from "@mui/material";
 import Post from "src/components/post/Post";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -19,52 +19,56 @@ const ProfileFeed = (props) => {
     setPosts(newList);
   };
 
-  useEffect(() => {
+  const fetchFeed = useCallback(async () => {
     setPosts([]);
     setPostsLoading(true);
 
     const github_name = props.author.github;
     if (github_name) {
-      fetch(`https://api.github.com/users/${props.author.github}/events`)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          setGithubEvents(
-            data.filter((event) => supportedGithubEvents.has(event.type)).slice(0,10)
-          );
-        })
-        .catch((err) =>
-          console.log(
-            `Could not retrieve github data for ${props.author.github}`
-          )
+      try {
+        const githubResponse = await fetch(
+          `https://api.github.com/users/${props.author.github}/events`
         );
+        const githubData = await githubResponse.json();
+
+        setGithubEvents(
+          githubData
+            .filter((event) => supportedGithubEvents.has(event.type))
+            .slice(0, 10)
+        );
+      } catch (error) {
+        console.log(
+          `Could not retrieve github data for ${props.author.github}`
+        );
+      }
     }
-    fetch(`${props.author.id}/posts/`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        if (
-          props.author.host === "https://cmput404-vgt-socialdist.herokuapp.com/"
-        ) {
-          for (let j = 0; j < data.items.length; j++) {
-            setPosts((oldArray) => [...oldArray, data.items[j]]);
-          }
-        } else {
-          for (let j = 0; j < data.length; j++) {
-            setPosts((oldArray) => [...oldArray, data[j]]);
-          }
+
+    try {
+      const postsResponse = await fetch(`${props.author.id}/posts/`);
+      const postsData = await postsResponse.json();
+
+      if (
+        props.author.host === "https://cmput404-vgt-socialdist.herokuapp.com/"
+      ) {
+        for (let j = 0; j < postsData.items.length; j++) {
+          setPosts((oldArray) => [...oldArray, postsData.items[j]]);
         }
-      })
-      .catch((error) => {
-        console.log("NOT FOUND");
-        setPostsLoading(false);
-      })
-      .catch((error) => console.log("ProfileFeed useEffect", error));
+      } else {
+        for (let j = 0; j < postsData.length; j++) {
+          setPosts((oldArray) => [...oldArray, postsData[j]]);
+        }
+      }
+    } catch (error) {
+      console.log("NOT FOUND");
+      setPostsLoading(false);
+    }
 
     setPostsLoading(false);
   }, [props.author]);
+
+  useEffect(() => {
+    fetchFeed();
+  }, [fetchFeed]);
 
   return (
     <Box display="flex" flexDirection="column">

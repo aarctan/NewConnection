@@ -1,4 +1,12 @@
-import { Modal, Box, Typography, TextField, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  InputAdornment,
+  Modal,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { styled } from '@mui/material/styles';
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useContext } from "react";
 import AuthContext from "src/store/auth-context";
@@ -20,6 +28,19 @@ const style = {
   p: 3,
   borderRadius: "8px",
 };
+
+// https://stackoverflow.com/a/69786705
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root': {
+    paddingLeft: 0,
+  },
+  '& .MuiInputAdornment-root': {
+    backgroundColor: "#dfdfdf",
+    padding: '28px 14px',
+    borderTopLeftRadius: theme.shape.borderRadius + 'px',
+    borderBottomLeftRadius: theme.shape.borderRadius + 'px',
+  },
+}));
 
 // This modal edits the user/author profile
 // When the user clicks update profile, it navigates to the users profile page.
@@ -101,7 +122,12 @@ const EditProfileModal = ({ isModalOpen, setIsModalOpen }) => {
                 setDisplayName(e.target.value);
               }}
             />
-            <TextField
+            <StyledTextField
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">https://github.com/</InputAdornment>
+                ),
+              }}
               label="Github"
               fullWidth
               margin="dense"
@@ -124,11 +150,13 @@ const EditProfileModal = ({ isModalOpen, setIsModalOpen }) => {
             <Button
               endIcon={<SendIcon />}
               onClick={handleUpdate}
+              variant="contained"
               style={{
-                backgroundColor: "#0095f6",
-                color: "white",
-                display: "flex",
-                width: "120pt",
+                color: "black",
+                backgroundColor: "white",
+                marginTop: "3pt",
+                border: "1pt solid #dbdbdb",
+                height: "25pt",
               }}
             >
               Update Profile

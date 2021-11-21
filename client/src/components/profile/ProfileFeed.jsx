@@ -6,6 +6,7 @@ import GithubEvent from "../post/GithubEvent";
 
 const supportedGithubEvents = new Set();
 supportedGithubEvents.add("PushEvent");
+supportedGithubEvents.add("IssuesEvent");
 
 const ProfileFeed = (props) => {
   const [posts, setPosts] = useState([]);
@@ -27,8 +28,9 @@ const ProfileFeed = (props) => {
       fetch(`https://api.github.com/users/${props.author.github}/events`)
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
           setGithubEvents(
-            data.filter((event) => supportedGithubEvents.has(event.type)).slice(0,5)
+            data.filter((event) => supportedGithubEvents.has(event.type)).slice(0,10)
           );
         })
         .catch((err) =>

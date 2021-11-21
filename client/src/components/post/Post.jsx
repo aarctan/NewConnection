@@ -225,7 +225,7 @@ const Post = (props) => {
   }
 
   return (
-    <Card elevation={3} sx={{ my: "25px" }}>
+    <Card elevation={3} sx={{ my: "10pt" }}>
       <CardContent
         sx={{
           display: "flex",

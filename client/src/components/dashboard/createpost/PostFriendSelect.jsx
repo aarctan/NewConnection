@@ -2,13 +2,9 @@ import * as React from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
-import { InputAdornment } from "@mui/material";
 import { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
-import AuthContext from "src/store/auth-context";
 
-const API_URL = process.env.REACT_APP_API_URL;
+import AuthContext from "src/store/auth-context";
 
 // This is a input component used to search for users
 // This component is rendered in the Header.jsx file
@@ -47,8 +43,8 @@ const PostFriendSelect = (props) => {
         options={followers}
         getOptionLabel={(option) => option.displayName}
         onChange={(e, value) => {
-          const words = value.id.split("/");
-          const word = words[words.length - 1];
+          // const words = value.id.split("/");
+          // const word = words[words.length - 1];
           // navigate(`/app/author/${word}`, { state: value });
         }}
         renderInput={(params) => (

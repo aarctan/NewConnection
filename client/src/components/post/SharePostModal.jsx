@@ -41,6 +41,7 @@ const SharePostModal = ({ isShareModalOpen, setIsShareModalOpen, post }) => {
         unlisted: post.unlisted,
       };
 
+      // Create the post, a shared post will have different source as you got it from another user
       const shareResponse = await fetch(`${authCtx.userdata.id}/posts/`, {
         method: "POST",
         body: JSON.stringify(body),
@@ -51,6 +52,28 @@ const SharePostModal = ({ isShareModalOpen, setIsShareModalOpen, post }) => {
       });
       if (shareResponse.ok) {
         setIsShareModalOpen(false);
+        const shareData = await shareResponse.json();
+        // if the post is a friends post, we should send this post to the inbox of our followers
+        if (shareData.visibility === "FRIENDS") {
+          // Get Followers
+          const responseFollowers = await fetch(
+            `${authCtx.userdata.id}/followers/`
+          );
+          if (responseFollowers.ok) {
+            const data = await responseFollowers.json();
+            // Loop through the followers and send them the post to their inbox
+            for (let follower of data["items"]) {
+              fetch(`${follower.id}/inbox/`, {
+                method: "POST",
+                body: JSON.stringify(shareData),
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Basic ` + btoa("admin:admin"),
+                },
+              });
+            }
+          }
+        }
       }
     } catch (error) {
       let errorMessage = "Share post in SharePostModal.jsx failed";

@@ -92,7 +92,7 @@ const Login = () => {
   return (
     <>
       <Helmet>
-        <title>Login | NewConnection</title>
+        <title>NewConnection</title>
       </Helmet>
 
       <Box

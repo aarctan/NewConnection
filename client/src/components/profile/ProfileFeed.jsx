@@ -92,6 +92,7 @@ const ProfileFeed = (props) => {
             "published" in post ? (
               <Post
                 key={idx}
+                post={post}
                 id={post.id}
                 title={post.title}
                 description={post.description}

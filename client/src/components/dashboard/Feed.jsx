@@ -59,6 +59,7 @@ const Feed = (props) => {
                   return (
                     <Post
                       key={idx}
+                      post={post}
                       id={post.id}
                       title={post.title}
                       description={post.description}

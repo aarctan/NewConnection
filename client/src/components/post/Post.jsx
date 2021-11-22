@@ -24,13 +24,13 @@ import PublicIcon from "@mui/icons-material/Public";
 import FriendsIcon from "@mui/icons-material/People";
 //import UnlistedIcon from "@mui/icons-material/InsertLink";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import SendIcon from "@mui/icons-material/Send";
 import { makeStyles } from "@mui/styles";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "src/store/auth-context";
 import MenuModal from "src/components/post/MenuModal";
 import DeletePostModal from "src/components/post/DeletePostModal";
+import SharePostModal from "src/components/post/SharePostModal";
 import LikesModal from "./LikesModal";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -65,6 +65,8 @@ const Post = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLikesModalOpen, setIsLikesModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
   const [likedPost, setLikedPost] = useState(false);
   const [likes, setLikes] = useState([]);
   const [comments, setComments] = useState([]);
@@ -212,6 +214,10 @@ const Post = (props) => {
     setIsLikesModalOpen(true);
   };
 
+  const openShareModal = () => {
+    setIsShareModalOpen(true);
+  };
+
   useEffect(() => {
     setComments([]);
     fetchComments();
@@ -330,11 +336,8 @@ const Post = (props) => {
             <LikeButtonIcon />
           )}
         </IconButton>
-        <IconButton aria-label="comment">
-          <ChatBubbleOutlineIcon />
-        </IconButton>
         <IconButton aria-label="share">
-          <ShareIcon />
+          <ShareIcon onClick={openShareModal} />
         </IconButton>
       </CardActions>
       <CardContent
@@ -453,6 +456,8 @@ const Post = (props) => {
           pauseOnFocusLoss
           draggable
           pauseOnHover
+          progressClassName="toastProgress"
+          bodyClassName="toastBody"
         />
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
         <IconButton
@@ -480,6 +485,11 @@ const Post = (props) => {
         setIsModalOpen={setIsModalOpen}
         post={props}
         comments={comments}
+      />
+      <SharePostModal
+        isShareModalOpen={isShareModalOpen}
+        setIsShareModalOpen={setIsShareModalOpen}
+        post={props.post}
       />
       {/* If the author is a user, open these modals */}
       {isAuthor && (

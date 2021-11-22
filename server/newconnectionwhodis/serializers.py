@@ -51,7 +51,7 @@ class AuthorSerializer(HyperlinkedModelSerializer):
 class PostSerializer(HyperlinkedModelSerializer):
     id = SerializerMethodField('get_id_url')
     author = AuthorSerializer(many=False, read_only=True)
-    source = SerializerMethodField('get_origin_url')
+    source = SerializerMethodField('get_source_url')
     origin = SerializerMethodField('get_origin_url')
 
     class Meta:
@@ -65,8 +65,18 @@ class PostSerializer(HyperlinkedModelSerializer):
         return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.id}'
     
     def get_origin_url(self, obj):
-        return self.context['request'].get_host()
+        if obj.origin:
+            return obj.origin
+        else:
+            uri = self.context['request'].build_absolute_uri('/')
+            return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.id}'
 
+    def get_source_url(self, obj):
+        if obj.source:
+            return obj.source
+        else:
+            uri = self.context['request'].build_absolute_uri('/')
+            return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.id}'
 
 class CommentSerializer(HyperlinkedModelSerializer):
     id = SerializerMethodField('get_id_url')

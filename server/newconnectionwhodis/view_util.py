@@ -43,14 +43,28 @@ def create_post_with_id(author, data, id=None):
     categories = '[]'
     if 'categories' in data:
         categories = json.dumps(list(data['categories']))
-    post = Post.objects.create(
-        id=id,
-        author=author,
-        content=data['content'],
-        contentType=data['contentType'],
-        title=data['title'],
-        description=data['description'],
-        visibility=data['visibility'],
-        unlisted=data['unlisted'],
-        categories=categories)
+    if 'source' and 'origin' in data:
+        post = Post.objects.create(
+            id=id,
+            author=author,
+            content=data['content'],
+            contentType=data['contentType'],
+            source=data['source'],
+            origin=data['origin'],
+            title=data['title'],
+            description=data['description'],
+            visibility=data['visibility'],
+            unlisted=data['unlisted'],
+            categories=categories) 
+    else:
+        post = Post.objects.create(
+            id=id,
+            author=author,
+            content=data['content'],
+            contentType=data['contentType'],
+            title=data['title'],
+            description=data['description'],
+            visibility=data['visibility'],
+            unlisted=data['unlisted'],
+            categories=categories)
     return post

@@ -103,7 +103,7 @@ const CreateTextPostModal = ({ isModalOpen, setIsModalOpen, handleCreate }) => {
                 handleCreate(
                   title,
                   description,
-                  "text/plain",
+                  "text/markdown",
                   content,
                   categories,
                   visibility,

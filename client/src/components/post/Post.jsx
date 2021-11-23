@@ -36,6 +36,9 @@ import LikesModal from "./LikesModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
 const API_URL = process.env.REACT_APP_API_URL;
 
 const useStyles = makeStyles((theme) => ({
@@ -231,7 +234,7 @@ const Post = (props) => {
   }
 
   return (
-    <Card elevation={3} sx={{ my: "10pt" }}>
+    <Card elevation={3} sx={{ my: "10pt", backgroundColor: "#fafafa" }}>
       <CardContent
         sx={{
           display: "flex",
@@ -283,6 +286,11 @@ const Post = (props) => {
         disableSpacing
         sx={{ paddingBottom: "0px" }}
       ></CardActions>
+      {props.contentType === "text/markdown" && (
+        <CardContent className={classes.root} sx={{ ml: 1 }}>
+          <ReactMarkdown children={props.content} remarkPlugins={[remarkGfm]} />
+        </CardContent>
+      )}
       {props.contentType === "text/plain" &&
       props.content.slice(0, 4) === "http" ? (
         <CardContent className={classes.root} sx={{ padding: 0 }}>

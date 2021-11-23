@@ -23,11 +23,13 @@ const ProfileFeed = (props) => {
     setPosts([]);
     setPostsLoading(true);
 
-    const github_name = props.author.github;
-    if (github_name) {
+    if (props.author.github) {
+      const github_name = props.author.github.substring(
+        props.author.github.lastIndexOf("/") + 1
+      );
       try {
         const githubResponse = await fetch(
-          `https://api.github.com/users/${props.author.github}/events`
+          `https://api.github.com/users/${github_name}/events`
         );
         const githubData = await githubResponse.json();
 
@@ -37,9 +39,7 @@ const ProfileFeed = (props) => {
             .slice(0, 10)
         );
       } catch (error) {
-        console.log(
-          `Could not retrieve github data for ${props.author.github}`
-        );
+        console.log(`Could not retrieve github data for ${github_name}`);
       }
     }
 

@@ -1,6 +1,7 @@
 import Header from "src/components/header/Header";
 import Feed from "src/components/dashboard/Feed";
 import { useEffect, useState } from "react";
+import { authCredentials } from "src/utils/utils";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -10,8 +11,16 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchAuthors = async () => {
       try {
+        let credentials = authCredentials(
+          "https://cmput404-vgt-socialdist.herokuapp.com/"
+        );
         const responseOne = await fetch(
-          `https://cmput404-vgt-socialdist.herokuapp.com/service/authors/`
+          `https://cmput404-vgt-socialdist.herokuapp.com/service/authors/`,
+          {
+            headers: {
+              Authorization: `Basic ` + btoa(credentials),
+            },
+          }
         );
         const responseOneData = await responseOne.json();
 

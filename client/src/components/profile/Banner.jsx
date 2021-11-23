@@ -11,6 +11,7 @@ import EditProfileModal from "src/components/profile/EditProfileModal";
 import FollowersModal from "src/components/profile/FollowersModal";
 import CheckIcon from "@mui/icons-material/Check";
 import AuthContext from "src/store/auth-context";
+import { authCredentials } from "src/utils/utils";
 
 // This component is on the user profile page and consists of their profile picture, display name, editprofile/follow button as well as
 // post, follower and following counts
@@ -30,12 +31,13 @@ const Banner = (props) => {
       object: props.author,
     };
     try {
+      let credentials = authCredentials(props.author.host);
       const postResponse = await fetch(`${props.author.id}/inbox/`, {
         method: "POST",
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ` + btoa("admin:admin"),
+          Authorization: `Basic ` + btoa(credentials),
         },
       });
       if (postResponse.ok) {
@@ -53,12 +55,13 @@ const Banner = (props) => {
     try {
       const words = authCtx.userdata.id.split("/");
       const id = words[words.length - 1];
+      let credentials = authCredentials(props.author.host);
       const deleteResponse = await fetch(
         `${props.author.id}/followers/${id}/`,
         {
           method: "DELETE",
           headers: {
-            Authorization: `Token ${authCtx.token}`,
+            Authorization: `Basic ` + btoa(credentials),
           },
         }
       );
@@ -77,7 +80,12 @@ const Banner = (props) => {
   useEffect(() => {
     const fetchFollowers = async () => {
       try {
-        const response = await fetch(`${props.author.id}/followers`);
+        let credentials = authCredentials(props.author.host);
+        const response = await fetch(`${props.author.id}/followers`, {
+          headers: {
+            Authorization: `Basic ` + btoa(credentials),
+          },
+        });
         if (response.ok) {
           const data = await response.json();
           setFollowers(data["items"]);
@@ -88,7 +96,7 @@ const Banner = (props) => {
     };
 
     fetchFollowers();
-  }, [props.author.id]);
+  }, [props.author.id, props.author.host]);
 
   return (
     <Container maxWidth="sm">

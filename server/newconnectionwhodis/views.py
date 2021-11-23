@@ -88,7 +88,7 @@ class FollowerListView(APIView):
 
 
 class FollowerView(APIView):
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [TokenAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly]
     http_method_names = ['delete', 'put', 'get']
 

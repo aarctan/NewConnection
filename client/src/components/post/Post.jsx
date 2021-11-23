@@ -38,6 +38,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { authCredentials } from "src/utils/utils";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -98,6 +99,7 @@ const Post = (props) => {
       const author_id = userdata_url[userdata_url.length - 1];
       const post_url = props.id.split("/");
       const post_id = post_url[post_url.length - 1];
+      let credentials = authCredentials(API_URL);
       const postResponse = await fetch(
         `${API_URL}/author/${author_id}/posts/${post_id}/comments/`,
         {
@@ -108,7 +110,7 @@ const Post = (props) => {
           }),
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Token ${authCtx.token}`,
+            Authorization: `Basic ` + btoa(credentials),
           },
         }
       );
@@ -130,6 +132,7 @@ const Post = (props) => {
     try {
       let date = new Date();
       date = date.toISOString();
+      let credentials = authCredentials(props.author.id);
       const postResponse = await fetch(`${props.author.id}/inbox/`, {
         method: "POST",
         body: JSON.stringify({
@@ -142,7 +145,7 @@ const Post = (props) => {
         }),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ` + btoa("admin:admin"),
+          Authorization: `Basic ` + btoa(credentials),
         },
       });
       if (postResponse.ok) {
@@ -161,6 +164,7 @@ const Post = (props) => {
       return;
     }
     try {
+      let credentials = authCredentials(props.author.id);
       const postResponse = await fetch(`${props.author.id}/inbox/`, {
         method: "POST",
         body: JSON.stringify({
@@ -171,7 +175,7 @@ const Post = (props) => {
         }),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ` + btoa("admin:admin"),
+          Authorization: `Basic ` + btoa(credentials),
         },
       });
       if (postResponse.ok) {
@@ -187,17 +191,27 @@ const Post = (props) => {
 
   // Get comments for the post
   const fetchComments = useCallback(async () => {
-    const response = await fetch(`${props.id}/comments/`);
+    let credentials = authCredentials(props.author.id);
+    const response = await fetch(`${props.id}/comments/`, {
+      headers: {
+        Authorization: `Basic ` + btoa(credentials),
+      },
+    });
     if (response.ok) {
       const commentData = await response.json();
       setComments(commentData["comments"]);
     } else {
       console.log("Post useEffect failed - fetching comments");
     }
-  }, [props.id]);
+  }, [props.id, props.author.id]);
 
   const fetchLikes = useCallback(async () => {
-    const response = await fetch(`${props.id}/likes/`);
+    let credentials = authCredentials(props.author.id);
+    const response = await fetch(`${props.id}/likes/`, {
+      headers: {
+        Authorization: `Basic ` + btoa(credentials),
+      },
+    });
     if (response.ok) {
       const likeData = await response.json();
       setLikes(likeData);
@@ -211,7 +225,7 @@ const Post = (props) => {
     } else {
       console.log("Post useEffect failed - fetching comments");
     }
-  }, [props.id, authCtx.userdata.id]);
+  }, [props.id, authCtx.userdata.id, props.author.id]);
 
   const openLikesModal = () => {
     setIsLikesModalOpen(true);

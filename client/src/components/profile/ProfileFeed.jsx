@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 import Post from "src/components/post/Post";
 import CircularProgress from "@mui/material/CircularProgress";
 import GithubEvent from "../post/GithubEvent";
+import { authCredentials } from "src/utils/utils";
 
 const supportedGithubEvents = new Set();
 supportedGithubEvents.add("PushEvent");
@@ -44,7 +45,12 @@ const ProfileFeed = (props) => {
     }
 
     try {
-      const postsResponse = await fetch(`${props.author.id}/posts/`);
+      let credentials = authCredentials(props.author.host);
+      const postsResponse = await fetch(`${props.author.id}/posts/`, {
+        headers: {
+          Authorization: `Basic ` + btoa(credentials),
+        },
+      });
       const postsData = await postsResponse.json();
 
       if (

@@ -44,7 +44,7 @@ const PostFriendSelect = (props) => {
         getOptionLabel={(option) => option.displayName}
         onChange={(e, value) => {
           try {
-            props.setPrivateReceiver(value.id);
+            props.setPrivateReceiver(value);
           } catch (error) {}
         }}
         renderInput={(params) => (

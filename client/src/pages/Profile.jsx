@@ -5,6 +5,7 @@ import ProfileFeed from "src/components/profile/ProfileFeed";
 import { useState, useContext, useEffect } from "react";
 import AuthContext from "src/store/auth-context";
 import { Container } from "@mui/material";
+import { authCredentials } from "src/utils/utils";
 
 const Profile = () => {
   let { authorID } = useParams();
@@ -13,14 +14,19 @@ const Profile = () => {
   const [following, setFollowing] = useState(false);
   const [isUser, setIsUser] = useState(false);
 
-  // Checks if the if from the url matches the logged in user id
+  // Checks if the id from the url matches the logged in user id
   // if it doesnt, we need to check if the logged in user is following the user id from the URL
   useEffect(() => {
     const fetchFollower = async () => {
       try {
         const words = authCtx.userdata.id.split("/");
         const authctxid = words[words.length - 1];
-        const response = await fetch(`${state.id}/followers/${authctxid}/`);
+        let credentials = authCredentials(state.host);
+        const response = await fetch(`${state.id}/followers/${authctxid}/`, {
+          headers: {
+            Authorization: `Basic ` + btoa(credentials),
+          },
+        });
         if (response.ok) {
           const data = await response.json();
           setFollowing(data === "true" ? true : false);
@@ -34,7 +40,7 @@ const Profile = () => {
     } else {
       fetchFollower();
     }
-  }, [state.id, authCtx.userdata.id]);
+  }, [state.id, state.host, authCtx.userdata.id]);
 
   return (
     <>

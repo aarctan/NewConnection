@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import MailIcon from "@mui/icons-material/MailOutline";
-import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
+import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import { makeStyles } from "@mui/styles";
 import Search from "src/components/header/Search";
 import ProfileMenu from "src/components/header/ProfileMenu";
@@ -20,6 +20,7 @@ import AuthContext from "src/store/auth-context";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import InboxMenu from "./InboxMenu";
+import { authCredentials } from "src/utils/utils";
 
 const useStyles = makeStyles({
   logo: {
@@ -66,8 +67,9 @@ const Header = () => {
 
   // fetch the users inbox
   const fetchInbox = useCallback(async () => {
+    let credentials = authCredentials(authCtx.userdata.host);
     const response = await fetch(`${authCtx.userdata.id}/inbox/`, {
-      headers: { Authorization: `Basic ` + btoa("admin:NewConnectionAdmin") },
+      headers: { Authorization: `Basic ` + btoa(credentials) },
     });
     if (response.ok) {
       const inboxData = await response.json();
@@ -114,7 +116,7 @@ const Header = () => {
           </Hidden>
           <Box>
             <Stack alignItems="center" direction="row" spacing={1}>
-            <IconButton
+              <IconButton
                 onClick={() => {
                   navigate(`/app/explore`);
                 }}
@@ -123,7 +125,7 @@ const Header = () => {
                 color="inherit"
                 sx={{ ml: 2 }}
               >
-                  <ExploreOutlinedIcon />
+                <ExploreOutlinedIcon />
               </IconButton>
               <IconButton
                 onClick={handleInboxClick}

@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Header from "src/components/header/Header";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import { authCredentials } from "src/utils/utils";
 
 const API_URL = process.env.REACT_APP_API_URL;
 const hostColorMap = {
@@ -25,8 +26,16 @@ const Explore = () => {
   useEffect(() => {
     const fetchAuthors = async () => {
       try {
+        let credentials = authCredentials(
+          "https://cmput404-vgt-socialdist.herokuapp.com/"
+        );
         const responseOne = await fetch(
-          `https://cmput404-vgt-socialdist.herokuapp.com/service/authors/`
+          `https://cmput404-vgt-socialdist.herokuapp.com/service/authors/`,
+          {
+            headers: {
+              Authorization: `Basic ` + btoa(credentials),
+            },
+          }
         );
         const responseOneData = await responseOne.json();
 

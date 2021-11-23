@@ -12,6 +12,7 @@ import AuthContext from "src/store/auth-context";
 import { useNavigate } from "react-router-dom";
 import CreateTextPostModal from "src/components/dashboard/CreateTextPostModal";
 import CreateImagePostModal from "src/components/dashboard/CreateImagePostModal";
+import { authCredentials } from "src/utils/utils";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -79,24 +80,26 @@ const CreateNewPostContainer = (props) => {
             body["type"] = "post";
             // Loop through the followers and send them the post to their inbox
             for (let follower of data["items"]) {
+              let credentials = authCredentials(follower.hostname);
               fetch(`${follower.id}/inbox/`, {
                 method: "POST",
                 body: JSON.stringify(postData),
                 headers: {
                   "Content-Type": "application/json",
-                  Authorization: `Basic ` + btoa("admin:admin"),
+                  Authorization: `Basic ` + btoa(credentials),
                 },
               });
             }
           }
         } else if (postData.visibility === "PRIVATE") {
           postData["visibility"] = "FRIENDS";
-          fetch(`${privateReceiver}/inbox/`, {
+          let credentials = authCredentials(privateReceiver.hostname);
+          fetch(`${privateReceiver.id}/inbox/`, {
             method: "POST",
             body: JSON.stringify(postData),
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Basic ` + btoa("admin:admin"),
+              Authorization: `Basic ` + btoa(credentials),
             },
           });
         }

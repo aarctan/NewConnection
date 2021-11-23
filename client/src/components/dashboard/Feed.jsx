@@ -5,6 +5,7 @@ import AuthContext from "src/store/auth-context";
 import Post from "src/components/post/Post";
 import CreateNewPostContainer from "src/components/dashboard/CreateNewPostContainer";
 import CircularProgress from "@mui/material/CircularProgress";
+import { authCredentials } from "src/utils/utils";
 
 const Feed = (props) => {
   const [posts, setPosts] = useState([]);
@@ -21,8 +22,9 @@ const Feed = (props) => {
   const fetchInbox = useCallback(async () => {
     setPosts([]);
     setPostsLoading(true);
+    let credentials = authCredentials(authCtx.userdata.host);
     const response = await fetch(`${authCtx.userdata.id}/inbox/`, {
-      headers: { Authorization: `Basic ` + btoa("admin:NewConnectionAdmin") },
+      headers: { Authorization: `Basic ` + btoa(credentials) },
     });
     if (response.ok) {
       const inboxData = await response.json();

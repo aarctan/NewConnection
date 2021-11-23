@@ -1,6 +1,7 @@
 import { Modal, Box, Divider, Button, Typography } from "@mui/material";
 import { useContext } from "react";
 import AuthContext from "src/store/auth-context";
+import { authCredentials } from "src/utils/utils";
 
 const style = {
   display: "flex",
@@ -63,12 +64,13 @@ const SharePostModal = ({ isShareModalOpen, setIsShareModalOpen, post }) => {
             const data = await responseFollowers.json();
             // Loop through the followers and send them the post to their inbox
             for (let follower of data["items"]) {
+              let credentials = authCredentials(follower.host);
               fetch(`${follower.id}/inbox/`, {
                 method: "POST",
                 body: JSON.stringify(shareData),
                 headers: {
                   "Content-Type": "application/json",
-                  Authorization: `Basic ` + btoa("admin:admin"),
+                  Authorization: `Basic ` + btoa(credentials),
                 },
               });
             }

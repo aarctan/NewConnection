@@ -95,6 +95,10 @@ class Like(models.Model):
     comment = models.ForeignKey(
         Comment, on_delete=models.CASCADE, null=True, blank=True)
 
+    def __str__(self):
+        print(self.author)
+        return ""
+
 
 class Inbox(models.Model):
     type = models.TextField(default="inbox", editable=False)

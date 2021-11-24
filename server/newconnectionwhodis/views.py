@@ -259,12 +259,13 @@ class LikedView(APIView):
 
     # GET: list what public things author_id liked
     def get(self, request, author_id):
-        author = Author.objects.get(pk=author_id)
+        # author_id is only the uuid, it is not a uri. However, our schema
+        # stores the full uri, so it needs to be stripped
         return Response(
             {
                 "type": "liked",
                 "items": LikeSerializer(
-                    Like.objects.filter(author=author),
+                    Like.objects.filter(author__id__endswith=author_id),
                     context={"request": request},
                     many=True,
                 ).data,

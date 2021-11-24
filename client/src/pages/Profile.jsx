@@ -5,12 +5,13 @@ import ProfileFeed from "src/components/profile/ProfileFeed";
 import { useState, useContext, useEffect } from "react";
 import AuthContext from "src/store/auth-context";
 import { Container } from "@mui/material";
-import { authCredentials } from "src/utils/utils";
+import CredentialsContext from "src/store/credentials-context";
 
 const Profile = () => {
   let { authorID } = useParams();
   const { state } = useLocation();
   const authCtx = useContext(AuthContext);
+  const getCredentialsHandler = useContext(CredentialsContext);
   const [following, setFollowing] = useState(false);
   const [isUser, setIsUser] = useState(false);
 
@@ -21,7 +22,7 @@ const Profile = () => {
       try {
         const words = authCtx.userdata.id.split("/");
         const authctxid = words[words.length - 1];
-        let credentials = authCredentials(state.host);
+        let credentials = getCredentialsHandler(state.host);
         const response = await fetch(`${state.id}/followers/${authctxid}/`, {
           headers: {
             Authorization: `Basic ` + btoa(credentials),
@@ -40,7 +41,7 @@ const Profile = () => {
     } else {
       fetchFollower();
     }
-  }, [state.id, state.host, authCtx.userdata.id]);
+  }, [state.id, state.host, authCtx.userdata.id, getCredentialsHandler]);
 
   return (
     <>

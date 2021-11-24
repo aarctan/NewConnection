@@ -20,7 +20,7 @@ import AuthContext from "src/store/auth-context";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import InboxMenu from "./InboxMenu";
-import { authCredentials } from "src/utils/utils";
+import CredentialsContext from "src/store/credentials-context";
 
 const useStyles = makeStyles({
   logo: {
@@ -35,6 +35,7 @@ const Header = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
+  const getCredentialsHandler = useContext(CredentialsContext);
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -67,7 +68,7 @@ const Header = () => {
 
   // fetch the users inbox
   const fetchInbox = useCallback(async () => {
-    let credentials = authCredentials(authCtx.userdata.host);
+    let credentials = getCredentialsHandler(authCtx.userdata.host);
     const response = await fetch(`${authCtx.userdata.id}/inbox/`, {
       headers: { Authorization: `Basic ` + btoa(credentials) },
     });
@@ -77,7 +78,7 @@ const Header = () => {
     } else {
       console.log("Header useEffect failed - fetching inbox");
     }
-  }, [authCtx]);
+  }, [authCtx, getCredentialsHandler]);
 
   useEffect(() => {
     fetchInbox();

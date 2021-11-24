@@ -1,17 +1,18 @@
 import Header from "src/components/header/Header";
 import Feed from "src/components/dashboard/Feed";
-import { useEffect, useState } from "react";
-import { authCredentials } from "src/utils/utils";
+import { useEffect, useState, useContext } from "react";
+import CredentialsContext from "src/store/credentials-context";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 const Dashboard = () => {
   const [authors, setAuthors] = useState([]);
+  const getCredentialsHandler = useContext(CredentialsContext);
 
   useEffect(() => {
     const fetchAuthors = async () => {
       try {
-        let credentials = authCredentials(
+        let credentials = getCredentialsHandler(
           "https://cmput404-vgt-socialdist.herokuapp.com/"
         );
         const responseOne = await fetch(
@@ -32,7 +33,7 @@ const Dashboard = () => {
       }
     };
     fetchAuthors();
-  }, []);
+  }, [getCredentialsHandler]);
 
   return (
     <>

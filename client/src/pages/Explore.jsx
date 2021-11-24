@@ -17,6 +17,7 @@ const hostColorMap = {
   "http://127.0.0.1:8000/": "black",
   "https://newconnection-server.herokuapp.com/": "black",
   "https://cmput404-vgt-socialdist.herokuapp.com/": "darkgreen",
+  "https://i-connect.herokuapp.com/": "purple",
 };
 
 const Explore = () => {
@@ -40,9 +41,24 @@ const Explore = () => {
         );
         const responseOneData = await responseOne.json();
 
-        const responseTwo = await fetch(`${API_URL}/authors/`);
+        credentials = getCredentialsHandler("https://i-connect.herokuapp.com/");
+        const responseTwo = await fetch(
+          `https://i-connect.herokuapp.com/service/authors/`,
+          {
+            headers: {
+              Authorization: `Basic ` + btoa(credentials),
+            },
+          }
+        );
         const responseTwoData = await responseTwo.json();
-        setAuthors([...responseOneData.items, ...responseTwoData.items]);
+
+        const responseThree = await fetch(`${API_URL}/authors/`);
+        const responseThreeData = await responseThree.json();
+        setAuthors([
+          ...responseOneData.items,
+          ...responseTwoData.items,
+          ...responseThreeData.items,
+        ]);
       } catch (error) {
         console.log(error.message);
       }

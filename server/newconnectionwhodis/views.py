@@ -293,8 +293,7 @@ class InboxView(APIView):
 
         save_inbox = True
         if item_type == 'Like':
-            actor_id = data['actor']['id'].split('/')[-1]
-            liker = Author.objects.get(pk=actor_id)
+            liker = data['actor']
             like_obj_url = data['object']
             post_id = like_obj_url.split('posts/')[-1].split('/')[0]
             post_obj = Post.objects.get(pk=post_id)

@@ -90,7 +90,7 @@ class Like(models.Model):
     context = models.TextField(
         default="https://www.w3.org/ns/activitystreams", editable=False)
     type = models.TextField(default="Like", editable=False)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.JSONField()
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment = models.ForeignKey(
         Comment, on_delete=models.CASCADE, null=True, blank=True)

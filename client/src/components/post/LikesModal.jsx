@@ -51,7 +51,7 @@ const LikesModal = ({ isModalOpen, setIsModalOpen, likes }) => {
             Likes
           </Typography>
           <Divider />
-          <MenuList display="flex" flexDirection="column">
+          <MenuList display="flex" flexdirection="column">
             {likes.map((like, idx) => {
               return (
                 <MenuItem key={idx} sx={{ height: 55 }}>

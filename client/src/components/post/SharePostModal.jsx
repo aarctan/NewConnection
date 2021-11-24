@@ -68,7 +68,7 @@ const SharePostModal = ({ isShareModalOpen, setIsShareModalOpen, post }) => {
                 body: JSON.stringify(shareData),
                 headers: {
                   "Content-Type": "application/json",
-                  Authorization: `Basic ` + btoa("admin:admin"),
+                  Authorization: `Basic ` + btoa("admin:NewConnectionAdmin"),
                 },
               });
             }

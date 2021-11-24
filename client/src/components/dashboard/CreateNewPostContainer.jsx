@@ -84,7 +84,7 @@ const CreateNewPostContainer = (props) => {
                 body: JSON.stringify(postData),
                 headers: {
                   "Content-Type": "application/json",
-                  Authorization: `Basic ` + btoa("admin:admin"),
+                  Authorization: `Basic ` + btoa("admin:NewConnectionAdmin"),
                 },
               });
             }
@@ -96,7 +96,7 @@ const CreateNewPostContainer = (props) => {
             body: JSON.stringify(postData),
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Basic ` + btoa("admin:admin"),
+              Authorization: `Basic ` + btoa("admin:NewConnectionAdmin"),
             },
           });
         }

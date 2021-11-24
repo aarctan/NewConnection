@@ -35,7 +35,7 @@ const Banner = (props) => {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ` + btoa("admin:admin"),
+          Authorization: `Basic ` + btoa("admin:NewConnectionAdmin"),
         },
       });
       if (postResponse.ok) {

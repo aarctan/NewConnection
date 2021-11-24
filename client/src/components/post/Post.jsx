@@ -163,7 +163,7 @@ const Post = (props) => {
         body: JSON.stringify({
           type: "Like",
           summary: `${authCtx.userdata.displayName} likes your post`,
-          actor: authCtx.userdata,
+          author: authCtx.userdata,
           object: props.id,
         }),
         headers: {

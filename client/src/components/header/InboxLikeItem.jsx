@@ -13,7 +13,7 @@ const InboxLikeItem = (props) => {
   const [followerName, setFollowerName] = useState("");
 
   const fetchInbox = useCallback(async () => {
-    const response = await fetch(`${item.actor.id}/`);
+    const response = await fetch(`${item.author.id}/`);
     if (response.ok) {
       const data = await response.json();
       setFollowerPic(data["profileImage"]);
@@ -21,7 +21,7 @@ const InboxLikeItem = (props) => {
     } else {
       console.log("InboxLikeItem useEffect failed - fetching inbox");
     }
-  }, [item.actor.id]);
+  }, [item.author.id]);
 
   useEffect(() => {
     fetchInbox();
@@ -59,9 +59,9 @@ const InboxLikeItem = (props) => {
             borderColor: "gray",
           }}
           onClick={() => {
-            const words = item.actor.id.split("/");
+            const words = item.author.id.split("/");
             const word = words[words.length - 1];
-            navigate(`/app/author/${word}`, { state: item.actor });
+            navigate(`/app/author/${word}`, { state: item.author });
           }}
         />
         <Typography variant="body2">

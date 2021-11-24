@@ -94,7 +94,6 @@ class CommentSerializer(HyperlinkedModelSerializer):
 class LikeSerializer(HyperlinkedModelSerializer):
     summary = SerializerMethodField('get_liker')
     object = SerializerMethodField('get_id_url')
-    author = AuthorSerializer(many=False, read_only=True)
 
     class Meta:
         model = Like
@@ -102,16 +101,17 @@ class LikeSerializer(HyperlinkedModelSerializer):
 
     def get_id_url(self, obj):
         uri = self.context['request'].build_absolute_uri('/')
+        author_id = obj.author['id']
         if obj.comment:
-            return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.comment.id}'
+            return f'{uri}{SERVICE}author/{author_id}/posts/{obj.post.id}/comments/{obj.comment.id}'
         elif obj.post:
-            return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.post.id}'
+            return f'{uri}{SERVICE}author/{author_id}/posts/{obj.post.id}'
 
     def get_liker(self, obj):
         if obj.comment:
-            return obj.author.displayName + " likes your %s" % (obj.comment.type)
+            return obj.author['displayName'] + " likes your %s" % (obj.comment.type)
         elif obj.post:
-            return obj.author.displayName + " likes your %s" % (obj.post.type)
+            return obj.author['displayName'] + " likes your %s" % (obj.post.type)
 
 
 class InboxSerializer(HyperlinkedModelSerializer):

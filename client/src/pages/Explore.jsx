@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
   Avatar,
   Container,
@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Header from "src/components/header/Header";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import CredentialsContext from "src/store/credentials-context";
 
 const API_URL = process.env.REACT_APP_API_URL;
 const hostColorMap = {
@@ -21,12 +22,21 @@ const hostColorMap = {
 const Explore = () => {
   const [authors, setAuthors] = useState([]);
   const navigate = useNavigate();
+  const getCredentialsHandler = useContext(CredentialsContext);
 
   useEffect(() => {
     const fetchAuthors = async () => {
       try {
+        let credentials = getCredentialsHandler(
+          "https://cmput404-vgt-socialdist.herokuapp.com/"
+        );
         const responseOne = await fetch(
-          `https://cmput404-vgt-socialdist.herokuapp.com/service/authors/`
+          `https://cmput404-vgt-socialdist.herokuapp.com/service/authors/`,
+          {
+            headers: {
+              Authorization: `Basic ` + btoa(credentials),
+            },
+          }
         );
         const responseOneData = await responseOne.json();
 
@@ -38,7 +48,7 @@ const Explore = () => {
       }
     };
     fetchAuthors();
-  }, []);
+  }, [getCredentialsHandler]);
 
   return (
     <>
@@ -46,7 +56,7 @@ const Explore = () => {
       <Container maxWidth="md" sx={{ px: 0, my: "60pt" }}>
         <Grid container spacing={5} justifyContent="center">
           {authors.map((author, idx) => (
-            <Grid item xs={6} sm={4} md={2}>
+            <Grid key={idx} item xs={6} sm={4} md={2}>
               <Stack alignItems="center" direction="column">
                 <Link
                   component="button"

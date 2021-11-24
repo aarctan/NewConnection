@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useContext } from "react";
 import AuthContext from "src/store/auth-context";
@@ -31,14 +31,14 @@ const style = {
 
 // https://stackoverflow.com/a/69786705
 const StyledTextField = styled(TextField)(({ theme }) => ({
-  '& .MuiOutlinedInput-root': {
+  "& .MuiOutlinedInput-root": {
     paddingLeft: 0,
   },
-  '& .MuiInputAdornment-root': {
+  "& .MuiInputAdornment-root": {
     backgroundColor: "#dfdfdf",
-    padding: '28px 14px',
-    borderTopLeftRadius: theme.shape.borderRadius + 'px',
-    borderBottomLeftRadius: theme.shape.borderRadius + 'px',
+    padding: "28px 14px",
+    borderTopLeftRadius: theme.shape.borderRadius + "px",
+    borderBottomLeftRadius: theme.shape.borderRadius + "px",
   },
 }));
 
@@ -66,7 +66,7 @@ const EditProfileModal = ({ isModalOpen, setIsModalOpen }) => {
         method: "POST",
         body: JSON.stringify({
           displayName: displayName,
-          github: github,
+          github: `https://github.com/${github}`,
           profileImage: profileImage,
         }),
         headers: {
@@ -125,7 +125,9 @@ const EditProfileModal = ({ isModalOpen, setIsModalOpen }) => {
             <StyledTextField
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">https://github.com/</InputAdornment>
+                  <InputAdornment position="start">
+                    https://github.com/
+                  </InputAdornment>
                 ),
               }}
               label="Github"

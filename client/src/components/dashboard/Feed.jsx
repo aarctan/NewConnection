@@ -5,11 +5,13 @@ import AuthContext from "src/store/auth-context";
 import Post from "src/components/post/Post";
 import CreateNewPostContainer from "src/components/dashboard/CreateNewPostContainer";
 import CircularProgress from "@mui/material/CircularProgress";
+import CredentialsContext from "src/store/credentials-context";
 
 const Feed = (props) => {
   const [posts, setPosts] = useState([]);
   const [postsLoading, setPostsLoading] = useState(false);
   const authCtx = useContext(AuthContext);
+  const getCredentialsHandler = useContext(CredentialsContext);
 
   // https://www.robinwieruch.de/react-remove-item-from-list
   const handleRemove = (id) => {
@@ -21,8 +23,9 @@ const Feed = (props) => {
   const fetchInbox = useCallback(async () => {
     setPosts([]);
     setPostsLoading(true);
+    let credentials = getCredentialsHandler(authCtx.userdata.host);
     const response = await fetch(`${authCtx.userdata.id}/inbox/`, {
-      headers: { Authorization: `Basic ` + btoa("admin:NewConnectionAdmin") },
+      headers: { Authorization: `Basic ` + btoa(credentials) },
     });
     if (response.ok) {
       const inboxData = await response.json();
@@ -32,7 +35,7 @@ const Feed = (props) => {
     } else {
       console.log("Feed useEffect failed - fetching inbox");
     }
-  }, [authCtx]);
+  }, [authCtx, getCredentialsHandler]);
 
   useEffect(() => {
     fetchInbox();

@@ -11,6 +11,7 @@ import EditProfileModal from "src/components/profile/EditProfileModal";
 import FollowersModal from "src/components/profile/FollowersModal";
 import CheckIcon from "@mui/icons-material/Check";
 import AuthContext from "src/store/auth-context";
+import CredentialsContext from "src/store/credentials-context";
 
 // This component is on the user profile page and consists of their profile picture, display name, editprofile/follow button as well as
 // post, follower and following counts
@@ -19,6 +20,7 @@ const Banner = (props) => {
   const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
   const [followBtnText, setFollowBtnText] = useState("Follow");
   const authCtx = useContext(AuthContext);
+  const getCredentialsHandler = useContext(CredentialsContext);
   const [followers, setFollowers] = useState([]);
 
   // Sends a follow object to the authors inbox
@@ -30,12 +32,13 @@ const Banner = (props) => {
       object: props.author,
     };
     try {
+      let credentials = getCredentialsHandler(props.author.host);
       const postResponse = await fetch(`${props.author.id}/inbox/`, {
         method: "POST",
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ` + btoa("admin:NewConnectionAdmin"),
+          Authorization: `Basic ` + btoa(credentials),
         },
       });
       if (postResponse.ok) {
@@ -53,12 +56,13 @@ const Banner = (props) => {
     try {
       const words = authCtx.userdata.id.split("/");
       const id = words[words.length - 1];
+      let credentials = getCredentialsHandler(props.author.host);
       const deleteResponse = await fetch(
         `${props.author.id}/followers/${id}/`,
         {
           method: "DELETE",
           headers: {
-            Authorization: `Token ${authCtx.token}`,
+            Authorization: `Basic ` + btoa(credentials),
           },
         }
       );
@@ -77,7 +81,12 @@ const Banner = (props) => {
   useEffect(() => {
     const fetchFollowers = async () => {
       try {
-        const response = await fetch(`${props.author.id}/followers`);
+        let credentials = getCredentialsHandler(props.author.host);
+        const response = await fetch(`${props.author.id}/followers`, {
+          headers: {
+            Authorization: `Basic ` + btoa(credentials),
+          },
+        });
         if (response.ok) {
           const data = await response.json();
           setFollowers(data["items"]);
@@ -88,7 +97,7 @@ const Banner = (props) => {
     };
 
     fetchFollowers();
-  }, [props.author.id]);
+  }, [props.author.id, props.author.host, getCredentialsHandler]);
 
   return (
     <Container maxWidth="sm">

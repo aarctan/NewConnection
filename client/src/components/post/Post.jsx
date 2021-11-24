@@ -28,6 +28,8 @@ import SendIcon from "@mui/icons-material/Send";
 import { makeStyles } from "@mui/styles";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "src/store/auth-context";
+import CredentialsContext from "src/store/credentials-context";
+
 import MenuModal from "src/components/post/MenuModal";
 import DeletePostModal from "src/components/post/DeletePostModal";
 import SharePostModal from "src/components/post/SharePostModal";
@@ -38,8 +40,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-
-const API_URL = process.env.REACT_APP_API_URL;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,6 +76,7 @@ const Post = (props) => {
   const [comment, setComment] = useState("");
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
+  const getCredentialsHandler = useContext(CredentialsContext);
 
   const currDate = new Date();
   const postDate = new Date(props.published);
@@ -94,24 +95,18 @@ const Post = (props) => {
   // If the post is public, add the comment to the posts comments
   const sendPublicComment = async (e) => {
     try {
-      const userdata_url = authCtx.userdata.id.split("/");
-      const author_id = userdata_url[userdata_url.length - 1];
-      const post_url = props.id.split("/");
-      const post_id = post_url[post_url.length - 1];
-      const postResponse = await fetch(
-        `${API_URL}/author/${author_id}/posts/${post_id}/comments/`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            author: authCtx.userdata,
-            comment: comment,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${authCtx.token}`,
-          },
-        }
-      );
+      let credentials = getCredentialsHandler(props.author.host);
+      const postResponse = await fetch(`${props.id}/comments/`, {
+        method: "POST",
+        body: JSON.stringify({
+          author: authCtx.userdata,
+          comment: comment,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ` + btoa(credentials),
+        },
+      });
       if (postResponse.ok) {
         const comment = await postResponse.json();
         setComments([comment, ...comments]);
@@ -130,6 +125,7 @@ const Post = (props) => {
     try {
       let date = new Date();
       date = date.toISOString();
+      let credentials = getCredentialsHandler(props.author.host);
       const postResponse = await fetch(`${props.author.id}/inbox/`, {
         method: "POST",
         body: JSON.stringify({
@@ -142,7 +138,7 @@ const Post = (props) => {
         }),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ` + btoa("admin:NewConnectionAdmin"),
+          Authorization: `Basic ` + btoa(credentials),
         },
       });
       if (postResponse.ok) {
@@ -161,6 +157,7 @@ const Post = (props) => {
       return;
     }
     try {
+      let credentials = getCredentialsHandler(props.author.host);
       const postResponse = await fetch(`${props.author.id}/inbox/`, {
         method: "POST",
         body: JSON.stringify({
@@ -171,7 +168,7 @@ const Post = (props) => {
         }),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ` + btoa("admin:NewConnectionAdmin"),
+          Authorization: `Basic ` + btoa(credentials),
         },
       });
       if (postResponse.ok) {
@@ -187,17 +184,27 @@ const Post = (props) => {
 
   // Get comments for the post
   const fetchComments = useCallback(async () => {
-    const response = await fetch(`${props.id}/comments/`);
+    let credentials = getCredentialsHandler(props.author.host);
+    const response = await fetch(`${props.id}/comments/`, {
+      headers: {
+        Authorization: `Basic ` + btoa(credentials),
+      },
+    });
     if (response.ok) {
       const commentData = await response.json();
       setComments(commentData["comments"]);
     } else {
       console.log("Post useEffect failed - fetching comments");
     }
-  }, [props.id]);
+  }, [props.id, props.author.host, getCredentialsHandler]);
 
   const fetchLikes = useCallback(async () => {
-    const response = await fetch(`${props.id}/likes/`);
+    let credentials = getCredentialsHandler(props.author.host);
+    const response = await fetch(`${props.id}/likes/`, {
+      headers: {
+        Authorization: `Basic ` + btoa(credentials),
+      },
+    });
     if (response.ok) {
       const likeData = await response.json();
       setLikes(likeData);
@@ -211,7 +218,7 @@ const Post = (props) => {
     } else {
       console.log("Post useEffect failed - fetching comments");
     }
-  }, [props.id, authCtx.userdata.id]);
+  }, [props.id, authCtx.userdata.id, props.author.host, getCredentialsHandler]);
 
   const openLikesModal = () => {
     setIsLikesModalOpen(true);
@@ -344,8 +351,8 @@ const Post = (props) => {
             <LikeButtonIcon />
           )}
         </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon onClick={openShareModal} />
+        <IconButton onClick={openShareModal} aria-label="share">
+          <ShareIcon />
         </IconButton>
       </CardActions>
       <CardContent

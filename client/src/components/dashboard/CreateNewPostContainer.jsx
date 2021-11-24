@@ -12,6 +12,7 @@ import AuthContext from "src/store/auth-context";
 import { useNavigate } from "react-router-dom";
 import CreateTextPostModal from "src/components/dashboard/CreateTextPostModal";
 import CreateImagePostModal from "src/components/dashboard/CreateImagePostModal";
+import CredentialsContext from "src/store/credentials-context";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 const CreateNewPostContainer = (props) => {
   const classes = useStyles();
   const authCtx = useContext(AuthContext);
+  const getCredentialsHandler = useContext(CredentialsContext);
   const navigate = useNavigate();
   const [isTextModalOpen, setIsTextModalOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
@@ -79,24 +81,26 @@ const CreateNewPostContainer = (props) => {
             body["type"] = "post";
             // Loop through the followers and send them the post to their inbox
             for (let follower of data["items"]) {
+              let credentials = getCredentialsHandler(follower.host);
               fetch(`${follower.id}/inbox/`, {
                 method: "POST",
                 body: JSON.stringify(postData),
                 headers: {
                   "Content-Type": "application/json",
-                  Authorization: `Basic ` + btoa("admin:NewConnectionAdmin"),
+                  Authorization: `Basic ` + btoa(credentials),
                 },
               });
             }
           }
         } else if (postData.visibility === "PRIVATE") {
           postData["visibility"] = "FRIENDS";
-          fetch(`${privateReceiver}/inbox/`, {
+          let credentials = getCredentialsHandler(privateReceiver.hostname);
+          fetch(`${privateReceiver.id}/inbox/`, {
             method: "POST",
             body: JSON.stringify(postData),
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Basic ` + btoa("admin:NewConnectionAdmin"),
+              Authorization: `Basic ` + btoa(credentials),
             },
           });
         }

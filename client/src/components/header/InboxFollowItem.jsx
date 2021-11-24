@@ -1,13 +1,12 @@
 import { Box, Button, Typography, Avatar } from "@mui/material";
-
 import { useState, useEffect, useCallback, useContext } from "react";
-
 import { useNavigate } from "react-router-dom";
-
 import AuthContext from "src/store/auth-context";
+import CredentialsContext from "src/store/credentials-context";
 
 const InboxFollowItem = (props) => {
   const item = props.item;
+  const getCredentialsHandler = useContext(CredentialsContext);
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
 
@@ -17,15 +16,21 @@ const InboxFollowItem = (props) => {
 
   // Gets info about the author sending the inbox item
   const fetchActor = useCallback(async () => {
-    const response = await fetch(`${item.actor.id}/`);
+    let credentials = getCredentialsHandler(item.actor.host);
+    const response = await fetch(`${item.actor.id}/`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ` + btoa(credentials),
+      },
+    });
     if (response.ok) {
       const data = await response.json();
       setFollowerPic(data["profileImage"]);
       setFollowerName(data["displayName"]);
-    } else {
+    }  else {
       console.log("InboxFollowItem useEffect failed - fetching inbox");
     }
-  }, [item.actor.id]);
+  }, [item.actor, getCredentialsHandler]);
 
   useEffect(() => {
     fetchActor();

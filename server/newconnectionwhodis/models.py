@@ -23,8 +23,12 @@ class Author(models.Model):
 
 
 class FollowReq(models.Model):
-    requestor = models.ForeignKey(
-        Author, on_delete=models.CASCADE, related_name="requestor")
+    """
+    The requestor cannot be a foreign key since authors from other nodes do
+    not exist in our database. Instead, model the follow requesting initiator
+    as a json object.
+    """
+    requestor = models.JSONField()
     requestee = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="requestee")
 
@@ -37,9 +41,7 @@ class Follower(models.Model):
     This model represents a sending author following a receiving author.
     If the receiving author also follows the sending author, we consider it a friendship.
     """
-    sender = models.ForeignKey(
-        Author, on_delete=models.CASCADE, related_name="sender"
-        )
+    sender = models.JSONField()
     receiver = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="receiver"
     )
@@ -85,6 +87,8 @@ class Like(models.Model):
     """
     A like has a many-to-one relationship with a post and a comment.
     It can be identified by either a post or a comment and the author that added the like.
+    Cannot use foreign key for author since foreign authors do not exist in our
+    database. Instead, model the author as a json object as per the spec.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     context = models.TextField(

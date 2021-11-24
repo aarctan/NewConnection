@@ -1,11 +1,10 @@
-import { Box, Typography, Avatar } from "@mui/material";
-
-import { useState, useEffect, useCallback } from "react";
-
+import { Avatar, Box, Typography } from "@mui/material";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CredentialsContext from "src/store/credentials-context";
 
 const InboxLikeItem = (props) => {
-  console.log(props.item);
+  const getCredentialsHandler = useContext(CredentialsContext);
   const item = props.item;
   const navigate = useNavigate();
 
@@ -13,7 +12,13 @@ const InboxLikeItem = (props) => {
   const [followerName, setFollowerName] = useState("");
 
   const fetchInbox = useCallback(async () => {
-    const response = await fetch(`${item.author.id}/`);
+    let credentials = getCredentialsHandler(item.author.host);
+    const response = await fetch(`${item.author.id}/`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ` + btoa(credentials),
+      },
+    });
     if (response.ok) {
       const data = await response.json();
       setFollowerPic(data["profileImage"]);
@@ -21,7 +26,7 @@ const InboxLikeItem = (props) => {
     } else {
       console.log("InboxLikeItem useEffect failed - fetching inbox");
     }
-  }, [item.author.id]);
+  }, [item.author, getCredentialsHandler]);
 
   useEffect(() => {
     fetchInbox();

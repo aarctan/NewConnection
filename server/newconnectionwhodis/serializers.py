@@ -48,6 +48,16 @@ class AuthorSerializer(HyperlinkedModelSerializer):
         return f'{uri}{SERVICE}author/{obj.id}'
 
 
+class FollowerSerializer(HyperlinkedModelSerializer):
+    sender = SerializerMethodField('get_sender_keys')
+
+    class Meta:
+        model = Follower
+        fields = ('sender',)
+    
+    def get_sender_keys(self, obj):
+        return obj.sender['type']
+
 class PostSerializer(HyperlinkedModelSerializer):
     id = SerializerMethodField('get_id_url')
     author = AuthorSerializer(many=False, read_only=True)

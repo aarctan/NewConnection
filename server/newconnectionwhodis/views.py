@@ -79,12 +79,10 @@ class FollowerListView(APIView):
 
     # GET: get a list of authors who are their followers
     def get(self, request, author_id):
+        x = Follower.objects.filter(receiver=author_id)
         return Response({
             'type': "followers",
-            'items': AuthorSerializer(
-                Author.objects.filter(sender__receiver=author_id),
-                context={'request': request},
-                many=True).data})
+            'items': [followerobj.sender for followerobj in x]})
 
 
 class FollowerView(APIView):
@@ -95,9 +93,8 @@ class FollowerView(APIView):
     # DELETE: remove a follower
     def delete(self, request, author_id, follower_id):
         receiver = Author.objects.get(pk=author_id)
-        sender = Author.objects.get(pk=follower_id)
         try:
-            Follower.objects.get(receiver=receiver, sender=sender).delete()
+            Follower.objects.get(receiver=receiver, sender__id__endswith=follower_id).delete()
             return Response(status=status.HTTP_202_ACCEPTED)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -105,20 +102,18 @@ class FollowerView(APIView):
     # PUT: Add a follower (must be authenticated)
     def put(self, request, author_id, follower_id):
         receiver = Author.objects.get(pk=author_id)
-        sender = Author.objects.get(pk=follower_id)
-        req = FollowReq.objects.get(requestor=sender, requestee=receiver)
+        req = FollowReq.objects.get(requestor__id__endswith=follower_id, requestee=receiver)
         if not req:
             return Response(status=status.HTTP_404_NOT_FOUND)
         req.delete()
-        follow = Follower.objects.create(sender=sender, receiver=receiver)
+        follow = Follower.objects.create(sender=req.requestor, receiver=receiver)
         follow.save()
         return Response(status=status.HTTP_201_CREATED)
 
     # GET: check if follower
     def get(self, request, author_id, follower_id):
         receiver = Author.objects.get(pk=author_id)
-        sender = Author.objects.get(pk=follower_id)
-        if not Follower.objects.filter(receiver=receiver, sender=sender):
+        if not Follower.objects.filter(receiver=receiver, sender__id__endswith=follower_id):
             #return Response(status=status.HTTP_404_NOT_FOUND)
             return Response("false")
         else:
@@ -304,10 +299,9 @@ class InboxView(APIView):
                 comment_obj = Comment.objects.get(pk=comment_id)
             Like.objects.create(author=liker, post=post_obj, comment=comment_obj)
         elif item_type == "Follow":
-            actor_id = data['actor']['id'].split('/')[-1]
             object_id = data['object']['id'].split('/')[-1]
             receiver = Author.objects.get(pk=object_id)
-            sender = Author.objects.get(pk=actor_id)
+            sender = data['actor']
             try:
                 FollowReq.objects.get(requestor=sender, requestee=receiver)
                 save_inbox = False

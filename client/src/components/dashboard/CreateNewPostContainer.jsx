@@ -94,7 +94,7 @@ const CreateNewPostContainer = (props) => {
           }
         } else if (postData.visibility === "PRIVATE") {
           postData["visibility"] = "FRIENDS";
-          let credentials = getCredentialsHandler(privateReceiver.hostname);
+          let credentials = getCredentialsHandler(privateReceiver.host);
           fetch(`${privateReceiver.id}/inbox/`, {
             method: "POST",
             body: JSON.stringify(postData),

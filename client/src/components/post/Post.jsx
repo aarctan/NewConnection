@@ -161,6 +161,7 @@ const Post = (props) => {
       const postResponse = await fetch(`${props.author.id}/inbox/`, {
         method: "POST",
         body: JSON.stringify({
+          "@context": "https://www.w3.org/ns/activitystreams",
           type: "Like",
           summary: `${authCtx.userdata.displayName} likes your post`,
           author: authCtx.userdata,

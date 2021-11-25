@@ -1,5 +1,13 @@
 import { useState, useContext } from "react";
-import { Box, Button, Modal, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Modal,
+  TextField,
+  Typography,
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import SendIcon from "@mui/icons-material/Send";
 import AuthContext from "src/store/auth-context";
@@ -31,10 +39,18 @@ const CreateTextPostModal = ({ isModalOpen, setIsModalOpen, handleCreate }) => {
   const [categories, setCategories] = useState([]);
   const [visibility, setVisibility] = useState("PUBLIC");
   const [unlisted, setUnlisted] = useState(false);
+  const [markdownCheckbox, setMarkdownCheckbox] = useState(false);
+  const [contentType, setContentType] = useState("text/plain");
   const [privateReceiver, setPrivateReceiver] = useState("");
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
   if (!isModalOpen) return null;
+
+  const handleMarkdownChange = (event) => {
+    setMarkdownCheckbox(event.target.checked);
+    if (event.target.checked) setContentType("text/markdown");
+    else setContentType("text/plain");
+  };
 
   return (
     <>
@@ -81,9 +97,18 @@ const CreateTextPostModal = ({ isModalOpen, setIsModalOpen, handleCreate }) => {
               }}
             />
           </Box>
-
-          <PostTags categories={categories} setCategories={setCategories} />
-
+          <Box display="flex" justifyContent="space-between" sx={{ mb: 0.5 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={markdownCheckbox}
+                  onChange={handleMarkdownChange}
+                />
+              }
+              label="Markdown"
+            />
+            <PostTags categories={categories} setCategories={setCategories} />
+          </Box>
           <Box display="flex" justifyContent="space-between">
             <Box display="flex" alignItems="center">
               <PostVisibility
@@ -103,7 +128,7 @@ const CreateTextPostModal = ({ isModalOpen, setIsModalOpen, handleCreate }) => {
                 handleCreate(
                   title,
                   description,
-                  "text/markdown",
+                  contentType,
                   content,
                   categories,
                   visibility,

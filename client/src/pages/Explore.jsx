@@ -5,12 +5,14 @@ import {
   Grid,
   Link,
   Stack,
+  Box,
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Header from "src/components/header/Header";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import CredentialsContext from "src/store/credentials-context";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const API_URL = process.env.REACT_APP_API_URL;
 const hostColorMap = {
@@ -24,10 +26,12 @@ const Explore = () => {
   const [authors, setAuthors] = useState([]);
   const navigate = useNavigate();
   const getCredentialsHandler = useContext(CredentialsContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchAuthors = async () => {
       try {
+        setIsLoading(true);
         let credentials = getCredentialsHandler(
           "https://cmput404-vgt-socialdist.herokuapp.com/"
         );
@@ -59,6 +63,7 @@ const Explore = () => {
           ...responseTwoData.items,
           ...responseThreeData.items,
         ]);
+        setIsLoading(true);
       } catch (error) {
         console.log(error.message);
       }
@@ -71,60 +76,66 @@ const Explore = () => {
       <Header />
       <Container maxWidth="md" sx={{ px: 0, my: "60pt" }}>
         <Grid container spacing={5} justifyContent="center">
-          {authors.map((author, idx) => (
-            <Grid key={idx} item xs={6} sm={4} md={2}>
-              <Stack alignItems="center" direction="column">
-                <Link
-                  component="button"
-                  onClick={() => {
-                    const words = author.id.split("/");
-                    const word = words[words.length - 1];
-                    navigate(`/app/author/${word}`, { state: author });
-                  }}
-                >
-                  <Avatar
-                    alt="Avatar"
-                    src={author.profileImage}
-                    sx={{
-                      width: 128,
-                      height: 128,
-                      border: 2,
-                      borderColor:
-                        author.host in hostColorMap
-                          ? hostColorMap[author.host]
-                          : "red",
-                    }}
-                  />
-                </Link>
-                <Stack alignItems="center" direction="row" spacing={1}>
+          {isLoading ? (
+            <Box display="flex" justifyContent="center" mt={3}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            authors.map((author, idx) => (
+              <Grid key={idx} item xs={6} sm={4} md={2}>
+                <Stack alignItems="center" direction="column">
                   <Link
                     component="button"
-                    variant="body2"
-                    underline="hover"
                     onClick={() => {
                       const words = author.id.split("/");
                       const word = words[words.length - 1];
                       navigate(`/app/author/${word}`, { state: author });
                     }}
                   >
-                    <Typography variant="h6">{author.displayName}</Typography>
+                    <Avatar
+                      alt="Avatar"
+                      src={author.profileImage}
+                      sx={{
+                        width: 128,
+                        height: 128,
+                        border: 2,
+                        borderColor:
+                          author.host in hostColorMap
+                            ? hostColorMap[author.host]
+                            : "red",
+                      }}
+                    />
                   </Link>
-                  {author.github && (
-                    <Stack alignItems="center" direction="row" spacing={1}>
-                      <Link
-                        component="button"
-                        onClick={() => {
-                          window.open(author.github);
-                        }}
-                      >
-                        <GitHubIcon sx={{ width: "15pt", height: "15pt" }} />
-                      </Link>
-                    </Stack>
-                  )}
+                  <Stack alignItems="center" direction="row" spacing={1}>
+                    <Link
+                      component="button"
+                      variant="body2"
+                      underline="hover"
+                      onClick={() => {
+                        const words = author.id.split("/");
+                        const word = words[words.length - 1];
+                        navigate(`/app/author/${word}`, { state: author });
+                      }}
+                    >
+                      <Typography variant="h6">{author.displayName}</Typography>
+                    </Link>
+                    {author.github && (
+                      <Stack alignItems="center" direction="row" spacing={1}>
+                        <Link
+                          component="button"
+                          onClick={() => {
+                            window.open(author.github);
+                          }}
+                        >
+                          <GitHubIcon sx={{ width: "15pt", height: "15pt" }} />
+                        </Link>
+                      </Stack>
+                    )}
+                  </Stack>
                 </Stack>
-              </Stack>
-            </Grid>
-          ))}
+              </Grid>
+            ))
+          )}
         </Grid>
       </Container>
     </>

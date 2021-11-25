@@ -40,9 +40,10 @@ def create_post_with_id(author, data, id=None):
     """
     if not id:
         id = uuid.uuid4()
-    categories = '[]'
+    categories = []
+
     if 'categories' in data:
-        categories = json.dumps(list(data['categories']))
+        categories = data['categories']
     if 'source' and 'origin' in data:
         post = Post.objects.create(
             id=id,

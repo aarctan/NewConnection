@@ -55,6 +55,7 @@ def create_post_with_id(author, data, id=None):
             description=data['description'],
             visibility=data['visibility'],
             unlisted=data['unlisted'],
+            count=0,
             categories=categories) 
     else:
         post = Post.objects.create(
@@ -66,5 +67,6 @@ def create_post_with_id(author, data, id=None):
             description=data['description'],
             visibility=data['visibility'],
             unlisted=data['unlisted'],
+            count=0,
             categories=categories)
     return post

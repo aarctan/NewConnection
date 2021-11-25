@@ -61,6 +61,7 @@ class FollowerSerializer(HyperlinkedModelSerializer):
 class PostSerializer(HyperlinkedModelSerializer):
     id = SerializerMethodField('get_id_url')
     author = AuthorSerializer(many=False, read_only=True)
+    comments = SerializerMethodField('get_comments_url')
     source = SerializerMethodField('get_source_url')
     origin = SerializerMethodField('get_origin_url')
 
@@ -68,11 +69,16 @@ class PostSerializer(HyperlinkedModelSerializer):
         model = Post
         fields = ('type', 'id', 'contentType',
             'content', 'author', 'title', 'description',
-            'source', 'origin', 'published', 'categories', 'visibility', 'unlisted')
+            'source', 'origin', 'published', 'categories', 'visibility',
+            'count', 'comments', 'unlisted')
     
     def get_id_url(self, obj):
         uri = self.context['request'].build_absolute_uri('/')
         return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.id}'
+    
+    def get_comments_url(self, obj):
+        uri = self.context['request'].build_absolute_uri('/')
+        return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.id}/comments'
     
     def get_origin_url(self, obj):
         if obj.origin:

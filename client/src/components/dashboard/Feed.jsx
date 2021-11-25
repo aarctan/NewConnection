@@ -72,7 +72,7 @@ const Feed = (props) => {
                       published={post.published}
                       categories={post.categories}
                       visibility={post.visibility}
-                      count={1}
+                      count={post.count}
                       likes={[]}
                       handleRemove={handleRemove}
                     />

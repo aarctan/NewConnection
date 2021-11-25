@@ -21,6 +21,7 @@ python manage.py makemigrations;python manage.py migrate
 
 # Add all the groups we are connected to
 ./manage.py shell -c "from newconnectionwhodis.models import Node; Node.objects.create(host_uri='https://cmput404-vgt-socialdist.herokuapp.com/', username='VeryGoodAuth', password='CoolPassword');"
+./manage.py shell -c "from newconnectionwhodis.models import Node; Node.objects.create(host_uri='https://i-connect.herokuapp.com/', username='admin', password='admin');"
 ./manage.py shell -c "from newconnectionwhodis.models import Node; Node.objects.create(host_uri='https://newconnection-server.herokuapp.com/', username='admin', password='NewConnectionAdmin');"
 ./manage.py shell -c "from newconnectionwhodis.models import Node; Node.objects.create(host_uri='http://127.0.0.1:8000/', username='admin', password='NewConnectionAdmin');"
 

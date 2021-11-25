@@ -71,6 +71,8 @@ class Post(models.Model):
     title = models.TextField()
     description = models.TextField()
     content = models.TextField()
+    count = models.IntegerField(default=0)
+    comments = models.TextField(editable=False)
 
 
 class Comment(models.Model):

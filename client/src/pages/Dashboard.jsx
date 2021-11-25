@@ -12,37 +12,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchAuthors = async () => {
       try {
-        let credentials = getCredentialsHandler(
-          "https://cmput404-vgt-socialdist.herokuapp.com/"
-        );
-        const responseOne = await fetch(
-          `https://cmput404-vgt-socialdist.herokuapp.com/service/authors/`,
-          {
-            headers: {
-              Authorization: `Basic ` + btoa(credentials),
-            },
-          }
-        );
-        const responseOneData = await responseOne.json();
-
-        credentials = getCredentialsHandler("https://i-connect.herokuapp.com/");
-        const responseTwo = await fetch(
-          `https://i-connect.herokuapp.com/service/authors/`,
-          {
-            headers: {
-              Authorization: `Basic ` + btoa(credentials),
-            },
-          }
-        );
-        const responseTwoData = await responseTwo.json();
-
-        const responseThree = await fetch(`${API_URL}/authors/`);
-        const responseThreeData = await responseThree.json();
-        setAuthors([
-          ...responseOneData.items,
-          ...responseTwoData.items,
-          ...responseThreeData.items,
-        ]);
+        const response = await fetch(`${API_URL}/authors/`);
+        const responseData = await response.json();
+        setAuthors([...responseData.items]);
       } catch (error) {
         console.log(error.message);
       }

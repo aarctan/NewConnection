@@ -63,7 +63,7 @@ const Explore = () => {
           ...responseTwoData.items,
           ...responseThreeData.items,
         ]);
-        setIsLoading(true);
+        setIsLoading(false);
       } catch (error) {
         console.log(error.message);
       }

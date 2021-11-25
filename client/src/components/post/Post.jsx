@@ -12,6 +12,7 @@ import {
   Divider,
   Avatar,
   Link,
+  Chip,
 } from "@mui/material";
 import Comment from "src/components/post/Comment";
 import PostModal from "src/components/post/PostModal";
@@ -359,6 +360,17 @@ const Post = (props) => {
         <IconButton onClick={openShareModal} aria-label="share">
           <ShareIcon />
         </IconButton>
+        <Box sx={{ ml: 1 }}>
+          {props.post.categories.map((tag, idx) => (
+            <Chip
+              key={idx}
+              label={tag}
+              variant="outlined"
+              size="small"
+              sx={{ ml: 1 }}
+            />
+          ))}
+        </Box>
       </CardActions>
       <CardContent
         sx={{ py: "0px", paddingBottom: 0 }}

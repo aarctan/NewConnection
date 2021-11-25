@@ -93,36 +93,8 @@ const Post = (props) => {
   const notify = (author) =>
     toast.success(`Comment sent to ${author}'s inbox!`);
 
-  // If the post is public, add the comment to the posts comments
-  const sendPublicComment = async (e) => {
-    try {
-      let credentials = getCredentialsHandler(props.author.host);
-      const postResponse = await fetch(`${props.id}/comments/`, {
-        method: "POST",
-        body: JSON.stringify({
-          author: authCtx.userdata,
-          comment: comment,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Basic ` + btoa(credentials),
-        },
-      });
-      if (postResponse.ok) {
-        const comment = await postResponse.json();
-        setComments([comment, ...comments]);
-        setComment("");
-      } else {
-      }
-    } catch (error) {
-      let errorMessage = "Send Comment failed";
-      console.log(error.message);
-      alert(errorMessage);
-    }
-  };
-
   // Comments on friends posts go to the friends inbox
-  const sendPrivateComment = async (e) => {
+  const sendComment = async (e) => {
     try {
       let date = new Date();
       date = date.toISOString();
@@ -474,8 +446,8 @@ const Post = (props) => {
           onKeyPress={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
-              if (props.visibility === "FRIENDS") sendPrivateComment();
-              else sendPublicComment();
+              if (props.visibility === "FRIENDS") sendComment();
+              else sendComment();
             }
           }}
         />
@@ -497,11 +469,7 @@ const Post = (props) => {
           color="primary"
           sx={{ p: "10px" }}
           aria-label="send"
-          onClick={
-            props.visibility === "FRIENDS"
-              ? sendPrivateComment
-              : sendPublicComment
-          }
+          onClick={props.visibility === "FRIENDS" ? sendComment : sendComment}
         >
           <SendIcon />
         </IconButton>

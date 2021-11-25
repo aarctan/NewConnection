@@ -96,7 +96,6 @@ class PostSerializer(HyperlinkedModelSerializer):
 
 class CommentSerializer(HyperlinkedModelSerializer):
     id = SerializerMethodField('get_id_url')
-    author = AuthorSerializer(many=False, read_only=True)
 
     class Meta:
         model = Comment
@@ -104,7 +103,8 @@ class CommentSerializer(HyperlinkedModelSerializer):
 
     def get_id_url(self, obj):
         uri = self.context['request'].build_absolute_uri('/')
-        return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.post.id}/comments/{obj.id}'
+        author_id = obj.author['id']
+        return f'{uri}{SERVICE}author/{author_id}/posts/{obj.post.id}/comments/{obj.id}'
         
         
 class LikeSerializer(HyperlinkedModelSerializer):

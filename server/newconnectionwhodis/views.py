@@ -192,7 +192,6 @@ class CommentView(APIView):
 
     # GET: get comments of the post
     def get(self, request, author_id, post_id):
-        author = Author.objects.get(pk=author_id)
         post = Post.objects.get(pk=post_id)
         comments = view_util.paginate_queryset(
             self.request.query_params,
@@ -209,6 +208,7 @@ class CommentView(APIView):
 
     # POST if you post an object of “type”:”comment”, it will add your comment to the post
     def post(self, request, author_id, post_id):
+        """
         author = Author.objects.get(pk=author_id)
         post = Post.objects.get(pk=post_id)
         data = request.data
@@ -219,6 +219,8 @@ class CommentView(APIView):
             CommentSerializer(comment, context={"request": request}).data,
             status=status.HTTP_201_CREATED,
         )
+        """
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 class PostLikesView(APIView):
@@ -285,10 +287,10 @@ class InboxView(APIView):
         inbox = Inbox.objects.get(author=author)
         items = inbox.get_items()
         data = request.data
-        item_type = data['type']
+        item_type = data['type'].lower()
 
         save_inbox = True
-        if item_type == 'Like':
+        if item_type == 'like':
             liker = data['author']
             like_obj_url = data['object']
             post_id = like_obj_url.split('posts/')[-1].split('/')[0]
@@ -298,7 +300,11 @@ class InboxView(APIView):
                 comment_id = like_obj_url.split('/')[-1]
                 comment_obj = Comment.objects.get(pk=comment_id)
             Like.objects.create(author=liker, post=post_obj, comment=comment_obj)
-        elif item_type == "Follow":
+        elif item_type == "comment":
+            post_id = data['id'].split('posts/')[-1].split('/')[0]
+            post_obj = Post.objects.get(pk=post_id)
+            Comment.objects.create(author=data['author'], post=post_obj, comment=data['comment'])
+        elif item_type == "follow":
             object_id = data['object']['id'].split('/')[-1]
             receiver = Author.objects.get(pk=object_id)
             sender = data['actor']

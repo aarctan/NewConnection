@@ -80,7 +80,7 @@ class Comment(models.Model):
     type = models.TextField(default="comment", editable=False)
     published = models.DateTimeField(default=timezone.now)
     contentType = models.TextField(default="text/markdown", editable=False)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.JSONField()
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment = models.TextField()
 

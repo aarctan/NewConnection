@@ -208,7 +208,11 @@ const Post = (props) => {
     });
     if (response.ok) {
       const likeData = await response.json();
-      setLikes(likeData);
+      if (
+        props.author.host === "https://cmput404-vgt-socialdist.herokuapp.com/"
+      )
+        setLikes(likeData["items"]);
+      else setLikes(likeData);
       // see if the user liked this post
       for (let i = 0; i < likeData.length; i++) {
         if (likeData[i].author.id === authCtx.userdata.id) {

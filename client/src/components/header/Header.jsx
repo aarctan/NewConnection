@@ -74,7 +74,14 @@ const Header = () => {
     });
     if (response.ok) {
       const inboxData = await response.json();
-      setInbox(inboxData["items"]);
+      setInbox(
+        inboxData["items"].filter((item) => {
+          if (item.type.toLowerCase() === "follow") {
+            return true;
+          }
+          return item.author.id !== authCtx.userdata.id;
+        })
+      );
     } else {
       console.log("Header useEffect failed - fetching inbox");
     }

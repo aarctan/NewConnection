@@ -22,7 +22,6 @@ function formatAMPM(date) {
 const cardColorMap = { PushEvent: "#DCFEE5", IssuesEvent: "#e6dcf9" };
 
 const GithubEvent = (props) => {
-  console.log(props.event);
   const eventType = props.event.type;
   let eventTitle = "";
   let content = "";

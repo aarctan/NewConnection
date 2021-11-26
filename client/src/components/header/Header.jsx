@@ -74,7 +74,7 @@ const Header = () => {
     });
     if (response.ok) {
       const inboxData = await response.json();
-      setInbox(inboxData["items"]);
+      setInbox(inboxData["items"].reverse());
     } else {
       console.log("Header useEffect failed - fetching inbox");
     }

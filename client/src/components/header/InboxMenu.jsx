@@ -1,13 +1,16 @@
+import { useContext } from "react";
 import { Menu, MenuItem, Typography } from "@mui/material";
 import InboxFollowItem from "./InboxFollowItem";
 import InboxLikeItem from "./InboxLikeItem";
 import InboxDelete from "./InboxDelete";
 import InboxPostItem from "./InboxPostItem";
 import InboxCommentItem from "./InboxCommentItem";
+import AuthContext from "src/store/auth-context";
 
 // Menu container that takes in a list of inbox items from Header.jsx
 const InboxMenu = (props) => {
   const num_items = props.inbox.length;
+  const authCtx = useContext(AuthContext);
   return (
     <Menu
       anchorEl={props.anchorEl}
@@ -47,25 +50,32 @@ const InboxMenu = (props) => {
       transformOrigin={{ horizontal: "right", vertical: "top" }}
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
-      {props.inbox.map((item, idx) => {
-        console.log(item);
-        return (
-          <MenuItem key={idx} sx={{ height: 55 }}>
-            {item.type === "Follow" && (
-              <InboxFollowItem item={item}> </InboxFollowItem>
-            )}
-            {item.type === "Like" && (
-              <InboxLikeItem item={item}></InboxLikeItem>
-            )}
-            {item.type === "post" && (
-              <InboxPostItem item={item}></InboxPostItem>
-            )}
-            {item.type === "comment" && (
-              <InboxCommentItem item={item}></InboxCommentItem>
-            )}
-          </MenuItem>
-        );
-      })}
+      {props.inbox
+        .filter((item) => {
+          if (item.type.toLowerCase() === "follow") {
+            return true;
+          }
+          return item.author.id !== authCtx.userdata.id;
+        })
+        .map((item, idx) => {
+          console.log(item);
+          return (
+            <MenuItem key={idx} sx={{ height: 55 }}>
+              {item.type === "Follow" && (
+                <InboxFollowItem item={item}> </InboxFollowItem>
+              )}
+              {item.type === "Like" && (
+                <InboxLikeItem item={item}></InboxLikeItem>
+              )}
+              {item.type === "post" && (
+                <InboxPostItem item={item}></InboxPostItem>
+              )}
+              {item.type === "comment" && (
+                <InboxCommentItem item={item}></InboxCommentItem>
+              )}
+            </MenuItem>
+          );
+        })}
       {num_items > 0 && (
         <MenuItem sx={{ height: 40, padding: 0 }}>
           <InboxDelete setInbox={props.setInbox} />

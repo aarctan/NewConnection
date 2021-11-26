@@ -74,14 +74,7 @@ const Header = () => {
     });
     if (response.ok) {
       const inboxData = await response.json();
-      setInbox(
-        inboxData["items"].filter((item) => {
-          if (item.type.toLowerCase() === "follow") {
-            return true;
-          }
-          return item.author.id !== authCtx.userdata.id;
-        })
-      );
+      setInbox(inboxData["items"]);
     } else {
       console.log("Header useEffect failed - fetching inbox");
     }
@@ -142,7 +135,17 @@ const Header = () => {
                 color="inherit"
                 sx={{ ml: 2 }}
               >
-                <Badge badgeContent={inbox.length} color="error">
+                <Badge
+                  badgeContent={
+                    inbox.filter((item) => {
+                      if (item.type.toLowerCase() === "follow") {
+                        return true;
+                      }
+                      return item.author.id !== authCtx.userdata.id;
+                    }).length
+                  }
+                  color="error"
+                >
                   <MailIcon />
                 </Badge>
               </IconButton>

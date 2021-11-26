@@ -4,6 +4,7 @@ import Post from "src/components/post/Post";
 import CircularProgress from "@mui/material/CircularProgress";
 import GithubEvent from "../post/GithubEvent";
 import CredentialsContext from "src/store/credentials-context";
+import AuthContext from "src/store/auth-context";
 
 const supportedGithubEvents = new Set();
 supportedGithubEvents.add("PushEvent");
@@ -14,6 +15,7 @@ const ProfileFeed = (props) => {
   const [githubEvents, setGithubEvents] = useState([]);
   const [postsLoading, setPostsLoading] = useState(false);
   const getCredentialsHandler = useContext(CredentialsContext);
+  const authCtx = useContext(AuthContext);
 
   // https://www.robinwieruch.de/react-remove-item-from-list
   const handleRemove = (id) => {
@@ -46,7 +48,24 @@ const ProfileFeed = (props) => {
     }
 
     try {
-      let credentials = getCredentialsHandler(props.author.host);
+      let credentials = getCredentialsHandler(authCtx.userdata.host);
+      const response = await fetch(`${authCtx.userdata.id}/inbox/`, {
+        headers: { Authorization: `Basic ` + btoa(credentials) },
+      });
+      if (response.ok) {
+        let inboxData = await response.json();
+        inboxData = inboxData["items"];
+        console.log(inboxData);
+        for (let j = 0; j < inboxData.length; j++) {
+          if (
+            inboxData[j].type.toLowerCase() === "post" &&
+            inboxData[j].author.id === props.author.id
+          ) {
+            setPosts((oldArray) => [...oldArray, inboxData[j]]);
+          }
+        }
+      }
+      credentials = getCredentialsHandler(props.author.host);
       const postsResponse = await fetch(`${props.author.id}/posts/`, {
         headers: {
           Authorization: `Basic ` + btoa(credentials),
@@ -71,7 +90,7 @@ const ProfileFeed = (props) => {
     }
 
     setPostsLoading(false);
-  }, [props.author, getCredentialsHandler]);
+  }, [props.author, authCtx.userdata, getCredentialsHandler]);
 
   useEffect(() => {
     fetchFeed();

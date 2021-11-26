@@ -79,6 +79,9 @@ const Post = (props) => {
   const authCtx = useContext(AuthContext);
   const getCredentialsHandler = useContext(CredentialsContext);
 
+  // Determine if this is the post of the author who is logged in
+  const isAuthor = props.author.id === authCtx.userdata.id;
+
   const currDate = new Date();
   const postDate = new Date(props.published);
   const days_ago = Math.floor((currDate - postDate) / 86400000);
@@ -160,18 +163,34 @@ const Post = (props) => {
   // Get comments for the post
   const fetchComments = useCallback(async () => {
     let credentials = getCredentialsHandler(props.author.host);
-    const response = await fetch(`${props.id}/comments/`, {
-      headers: {
-        Authorization: `Basic ` + btoa(credentials),
-      },
-    });
-    if (response.ok) {
-      const commentData = await response.json();
-      setComments(commentData["comments"]);
-    } else {
-      console.log("Post useEffect failed - fetching comments");
+    console.log(props);
+    if (props.visibility === "PUBLIC") {
+      console.log(props.id);
+      const response = await fetch(`${props.id}/comments/`, {
+        headers: {
+          Authorization: `Basic ` + btoa(credentials),
+        },
+      });
+      if (response.ok) {
+        const commentData = await response.json();
+        setComments(commentData["comments"]);
+      } else {
+        console.log("Post useEffect failed - fetching comments");
+      }
+    } else if (props.visibility === "FRIENDS" && isAuthor) {
+      const response = await fetch(`${authCtx.userdata.id}/inbox/`, {
+        headers: { Authorization: `Basic ` + btoa(credentials) },
+      });
+      if (response.ok) {
+        const inboxData = await response.json();
+        const inbox = inboxData["items"].filter(
+          (item) =>
+            item.type.toLowerCase() === "comment" && item.id.includes(props.id)
+        );
+        setComments(inbox);
+      }
     }
-  }, [props.id, props.author.host, getCredentialsHandler]);
+  }, [props, isAuthor, authCtx, getCredentialsHandler]);
 
   const fetchLikes = useCallback(async () => {
     let credentials = getCredentialsHandler(props.author.host);
@@ -222,12 +241,6 @@ const Post = (props) => {
     fetchComments();
     fetchLikes();
   }, [fetchComments, fetchLikes]);
-
-  // Determine if this is the post of the author who is logged in
-  let isAuthor = false;
-  if (props.author.id === authCtx.userdata.id) {
-    isAuthor = true;
-  }
 
   return (
     <Card elevation={3} sx={{ my: "10pt", backgroundColor: "#fafafa" }}>
@@ -390,7 +403,11 @@ const Post = (props) => {
           <Comment
             key={idx}
             author={comment.author}
-            comment={comment.comment}
+            comment={
+              comment.comment.length <= 30
+                ? comment.comment
+                : comment.comment.substring(0, 30) + "..."
+            }
           />
         ))}
       </CardContent>

@@ -32,6 +32,11 @@ const InboxCommentItem = (props) => {
     fetchInbox();
   }, [fetchInbox]);
 
+  let commentText = ` commented: ${item.comment}`;
+  if (commentText.length > 25) {
+    commentText = commentText.substring(0, 25) + "...";
+  }
+
   return (
     <Box
       sx={{
@@ -70,7 +75,7 @@ const InboxCommentItem = (props) => {
           }}
         />
         <Typography variant="body2">
-          <b>{followerName}</b> commented: {item.comment}
+          <b>{followerName}</b>{commentText}
         </Typography>
       </Box>
     </Box>

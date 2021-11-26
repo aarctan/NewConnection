@@ -195,7 +195,7 @@ class CommentView(APIView):
         post = Post.objects.get(pk=post_id)
         comments = view_util.paginate_queryset(
             self.request.query_params,
-            Comment.objects.order_by("-published").filter(post=post),
+            Comment.objects.order_by("-published").filter(post=post, post__visibility="PUBLIC"),
         )
         return Response(
             {

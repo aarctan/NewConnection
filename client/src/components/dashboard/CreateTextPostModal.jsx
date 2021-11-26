@@ -31,7 +31,6 @@ const style = {
 };
 
 const CreateTextPostModal = ({ isModalOpen, setIsModalOpen, handleCreate }) => {
-  const handleClose = () => setIsModalOpen(false);
   const authCtx = useContext(AuthContext);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -45,6 +44,12 @@ const CreateTextPostModal = ({ isModalOpen, setIsModalOpen, handleCreate }) => {
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("sm"));
   if (!isModalOpen) return null;
+
+  const handleClose = () => {
+    setMarkdownCheckbox(false);
+    setCategories([]);
+    setIsModalOpen(false);
+  };
 
   const handleMarkdownChange = (event) => {
     setMarkdownCheckbox(event.target.checked);

@@ -1,19 +1,25 @@
 import { Box, Typography, Avatar } from "@mui/material";
-
-import { useState, useEffect, useCallback } from "react";
-
+import { useState, useEffect, useCallback, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import CredentialsContext from "src/store/credentials-context";
 
 const InboxPostItem = (props) => {
   console.log(props.item);
   const item = props.item;
   const navigate = useNavigate();
+  const getCredentialsHandler = useContext(CredentialsContext);
 
   const [followerPic, setFollowerPic] = useState("");
   const [followerName, setFollowerName] = useState("");
 
   const fetchInbox = useCallback(async () => {
-    const response = await fetch(`${item.author.id}/`);
+    let credentials = getCredentialsHandler(item.author.host);
+    const response = await fetch(`${item.author.id}/`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ` + btoa(credentials),
+      },
+    });
     if (response.ok) {
       const data = await response.json();
       setFollowerPic(data["profileImage"]);
@@ -21,7 +27,7 @@ const InboxPostItem = (props) => {
     } else {
       console.log("InboxPostItem useEffect failed - fetching inbox");
     }
-  }, [item.author.id]);
+  }, [item.author, getCredentialsHandler]);
 
   useEffect(() => {
     fetchInbox();

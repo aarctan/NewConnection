@@ -181,17 +181,27 @@ const Post = (props) => {
       },
     });
     if (response.ok) {
-      const likeData = await response.json();
+      let likeData = await response.json();
+      // if host is T20 we need to parse out items from their response
       if (
         props.author.host === "https://cmput404-vgt-socialdist.herokuapp.com/"
-      )
+      ) {
         setLikes(likeData["items"]);
-      else setLikes(likeData);
-      // see if the user liked this post
-      for (let i = 0; i < likeData.length; i++) {
-        if (likeData[i].author.id === authCtx.userdata.id) {
-          setLikedPost(true);
-          break;
+        for (let i = 0; i < likeData["items"].length; i++) {
+          if (likeData["items"][i].author.id === authCtx.userdata.id) {
+            setLikedPost(true);
+            break;
+          }
+        }
+      } else {
+        // This is our servers likes format
+        setLikes(likeData);
+        // see if the user liked this post
+        for (let i = 0; i < likeData.length; i++) {
+          if (likeData[i].author.id === authCtx.userdata.id) {
+            setLikedPost(true);
+            break;
+          }
         }
       }
     } else {

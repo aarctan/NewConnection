@@ -30,7 +30,13 @@ const Profile = () => {
         });
         if (response.ok) {
           const data = await response.json();
-          setFollowing(data === "true" ? true : false);
+          if (state.host === "https://cmput404-vgt-socialdist.herokuapp.com/")
+            setFollowing(true);
+          else setFollowing(data === "true" ? true : false);
+        } else {
+          // T20 sends back a 404 so if the response is NOT ok (404), set following to false
+          if (state.host === "https://cmput404-vgt-socialdist.herokuapp.com/")
+            setFollowing(false);
         }
       } catch (error) {
         setFollowing(false);

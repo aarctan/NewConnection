@@ -15,7 +15,7 @@ const StyledChip = styled(Chip)`
 
 const PostTags = (props) => {
   return (
-    <Box display="flex" flexDirection="row">
+    <Box display="flex" flexDirection="row" width="100%">
       <Autocomplete
         multiple
         fullWidth

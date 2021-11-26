@@ -116,6 +116,7 @@ const Post = (props) => {
       });
       if (postResponse.ok) {
         notify(props.author.displayName);
+        setComment("");
       } else {
       }
     } catch (error) {

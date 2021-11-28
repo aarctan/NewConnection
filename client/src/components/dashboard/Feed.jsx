@@ -84,7 +84,7 @@ const Feed = (props) => {
                 align="center"
                 sx={{ color: "#858585", marginTop: "10%" }}
               >
-                <i>It's quiet here, why not add a new post?</i>
+                <i>Looks like you have nothing in your inbox!</i>
               </Typography>
             )}
           </Grid>

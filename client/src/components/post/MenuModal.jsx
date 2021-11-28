@@ -9,7 +9,6 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "300pt",
-  height: "90pt",
   bgcolor: "background.paper",
   boxShadow: 20,
   p: 0.5,
@@ -19,7 +18,16 @@ const style = {
 // This modal opens up a menu when the user clicks on the 3 dots in the top right corner of a post.
 // Menu is conditionally rendered based on if the user is the author of the post or not.
 // This modal is rendered in Post.jsx
-const MenuModal = ({ isMenuOpen, setIsMenuOpen, setIsDeleteModalOpen }) => {
+const MenuModal = ({
+  isMenuOpen,
+  setIsMenuOpen,
+  setIsDeleteModalOpen,
+  setIsEditTextPostModalOpen,
+  setIsEditImagePostModalOpen,
+  visibility,
+  contentType,
+  content,
+}) => {
   const handleClose = () => setIsMenuOpen(false);
   if (!isMenuOpen) return null;
 
@@ -44,17 +52,31 @@ const MenuModal = ({ isMenuOpen, setIsMenuOpen, setIsDeleteModalOpen }) => {
             Delete
           </Button>
           <Divider />
-          <Button
-            variant="outlined"
-            sx={{
-              justifyContent: "center",
-              backgroundColor: "white",
-            }}
-            fullWidth
-          >
-            Edit
-          </Button>
-          <Divider />
+          {visibility === "PUBLIC" && (
+            <>
+              <Button
+                variant="outlined"
+                sx={{
+                  justifyContent: "center",
+                  backgroundColor: "white",
+                }}
+                fullWidth
+                onClick={() => {
+                  handleClose();
+                  if (
+                    contentType.includes("base64") ||
+                    content.includes("http")
+                  )
+                    setIsEditImagePostModalOpen(true);
+                  else setIsEditTextPostModalOpen(true);
+                }}
+              >
+                Edit
+              </Button>
+              <Divider />
+            </>
+          )}
+
           <Button
             variant="outlined"
             sx={{

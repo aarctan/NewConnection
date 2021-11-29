@@ -532,7 +532,7 @@ const Post = (props) => {
       <PostModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
-        post={props}
+        post={post}
         comments={comments}
       />
       <SharePostModal

@@ -22,6 +22,9 @@ const style = {
   bgcolor: "background.paper",
   boxShadow: 20,
   borderRadius: "8px",
+  maxHeight: 400,
+  minHeight: 300,
+  overflow: "auto",
 };
 
 const LikesModal = ({ isModalOpen, setIsModalOpen, likes }) => {
@@ -35,11 +38,7 @@ const LikesModal = ({ isModalOpen, setIsModalOpen, likes }) => {
       <Modal open={isModalOpen} onClose={handleClose}>
         <Box
           sx={style}
-          style={
-            small
-              ? { width: "90%", height: "70%" }
-              : { width: 350, height: 350 }
-          }
+          style={small ? { width: "90%", height: "70%" } : { width: 350 }}
         >
           <Typography
             id="likes-modal-title"

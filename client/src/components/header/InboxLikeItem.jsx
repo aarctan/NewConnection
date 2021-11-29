@@ -32,6 +32,24 @@ const InboxLikeItem = (props) => {
     fetchInbox();
   }, [fetchInbox]);
 
+  const fetchPost = async () => {
+    try {
+      const response = await fetch(`${item.object}`, {
+        headers: {
+          Authorization: `Basic ` + btoa("admin:NewConnectionAdmin"),
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const author_array = data.author.id.split("/");
+        const author_id = author_array[author_array.length - 1];
+        const post_array = data.id.split("/");
+        const post_id = post_array[post_array.length - 1];
+        navigate(`/app/author/${author_id}/post/${post_id}`, { state: data }); // state contains the post
+      }
+    } catch (error) {}
+  };
+
   return (
     <Box
       sx={{
@@ -41,6 +59,10 @@ const InboxLikeItem = (props) => {
         justifyContent: "space-between",
         alignItems: "center",
         py: 0,
+      }}
+      // Navigate to the ViewPost page, pass the entire item into the state for ViewPost to use
+      onClick={() => {
+        fetchPost();
       }}
     >
       <Box

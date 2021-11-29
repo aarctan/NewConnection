@@ -7,6 +7,7 @@ import NotFound from "src/pages/NotFound";
 import Register from "src/pages/Register";
 import Profile from "./pages/Profile";
 import Explore from "./pages/Explore";
+import ViewPost from "./pages/ViewPost";
 
 const routes = [
   {
@@ -16,6 +17,7 @@ const routes = [
       { path: "dashboard", element: <Dashboard /> },
       { path: "explore", element: <Explore /> },
       { path: "author/:authorID", element: <Profile /> },
+      { path: "author/:authorID/post/:postID", element: <ViewPost /> },
       { path: "*", element: <Navigate to="/404" replace={true} /> },
     ],
   },

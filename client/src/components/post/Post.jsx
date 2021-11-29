@@ -41,6 +41,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import EditTextPostModal from "./EditTextPostModal";
+import EditImagePostModal from "./EditImagePostModal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,12 +67,22 @@ function formatAMPM(date) {
 
 const Post = (props) => {
   const classes = useStyles();
+  const post = props.post;
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditTextPostModalOpen, setIsEditTextPostModalOpen] = useState(false);
+  const [isEditImagePostModalOpen, setIsEditImagePostModalOpen] =
+    useState(false);
   const [isLikesModalOpen, setIsLikesModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
+  const [title, setTitle] = useState(post.title);
+  const [description, setDescription] = useState(post.description);
+  const [content, setContent] = useState(post.content);
+  const [contentType, setContentType] = useState(post.contentType);
+  const [categories, setCategories] = useState([...post.categories]);
   const [likedPost, setLikedPost] = useState(false);
   const [likes, setLikes] = useState([]);
   const [comments, setComments] = useState([]);
@@ -228,6 +240,15 @@ const Post = (props) => {
     }
   }, [props.id, authCtx.userdata.id, props.author.host, getCredentialsHandler]);
 
+  // When a post is edited, update the content that was editted
+  const handleEdit = (postData) => {
+    setTitle(postData["title"]);
+    setDescription(postData["description"]);
+    setContent(postData["content"]);
+    setContentType(postData["contentType"]);
+    setCategories([...postData["categories"]]);
+  };
+
   const openLikesModal = () => {
     setIsLikesModalOpen(true);
   };
@@ -279,10 +300,10 @@ const Post = (props) => {
           />
           <Stack direction="column" spacing={0}>
             <Typography variant="body1" color="text.primary" fontWeight="600">
-              {props.title}
+              {title}
             </Typography>
             <Typography variant="body2" color="text.secondary" fontSize="10pt">
-              {props.description}
+              {description}
             </Typography>
           </Stack>
         </Box>
@@ -295,13 +316,12 @@ const Post = (props) => {
         disableSpacing
         sx={{ paddingBottom: "0px" }}
       ></CardActions>
-      {props.contentType === "text/markdown" && (
+      {contentType === "text/markdown" && (
         <CardContent className={classes.root} sx={{ ml: 1 }}>
-          <ReactMarkdown children={props.content} remarkPlugins={[remarkGfm]} />
+          <ReactMarkdown children={content} remarkPlugins={[remarkGfm]} />
         </CardContent>
       )}
-      {props.contentType === "text/plain" &&
-      props.content.slice(0, 4) === "http" ? (
+      {contentType === "text/plain" && content.slice(0, 4) === "http" ? (
         <CardContent className={classes.root} sx={{ padding: 0 }}>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <CardMedia
@@ -311,21 +331,21 @@ const Post = (props) => {
                 maxWidth: "100%",
                 width: "auto",
               }}
-              image={props.content}
+              image={content}
               alt="selfie"
             />
           </div>
         </CardContent>
       ) : (
-        props.contentType === "text/plain" && (
+        contentType === "text/plain" && (
           <CardContent className={classes.root}>
             <Typography variant="body1" color="text.primary">
-              {props.content}
+              {content}
             </Typography>
           </CardContent>
         )
       )}
-      {props.contentType.includes("base64") && (
+      {contentType.includes("base64") && (
         <CardContent className={classes.root} sx={{ padding: 0 }}>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <CardMedia
@@ -335,7 +355,7 @@ const Post = (props) => {
                 maxWidth: "100%",
                 width: "auto",
               }}
-              image={props.content}
+              image={content}
               alt="selfie"
             />
           </div>
@@ -357,7 +377,7 @@ const Post = (props) => {
           <ShareIcon />
         </IconButton>
         <Box sx={{ ml: 1 }}>
-          {props.post.categories.map((tag, idx) => (
+          {categories.map((tag, idx) => (
             <Chip
               key={idx}
               label={tag}
@@ -424,7 +444,7 @@ const Post = (props) => {
       >
         <Stack display="flex" direction="row" alignItems="center" spacing={0.5}>
           <Typography variant="body2" color="text.secondary" fontSize="9pt">
-            {props.post.origin === props.post.id ? "Posted " : "Shared "}
+            {post.origin === post.id ? "Posted " : "Shared "}
             {days_ago_text} by
           </Typography>
           <Link
@@ -497,7 +517,7 @@ const Post = (props) => {
           color="primary"
           sx={{ p: "10px" }}
           aria-label="send"
-          onClick={props.visibility === "FRIENDS" ? sendComment : sendComment}
+          onClick={post.visibility === "FRIENDS" ? sendComment : sendComment}
         >
           <SendIcon />
         </IconButton>
@@ -512,13 +532,13 @@ const Post = (props) => {
       <PostModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
-        post={props}
+        post={post}
         comments={comments}
       />
       <SharePostModal
         isShareModalOpen={isShareModalOpen}
         setIsShareModalOpen={setIsShareModalOpen}
-        post={props.post}
+        post={post}
       />
       {/* If the author is a user, open these modals */}
       {isAuthor && (
@@ -527,12 +547,33 @@ const Post = (props) => {
             isMenuOpen={isMenuOpen}
             setIsMenuOpen={setIsMenuOpen}
             setIsDeleteModalOpen={setIsDeleteModalOpen}
+            setIsEditTextPostModalOpen={setIsEditTextPostModalOpen}
+            setIsEditImagePostModalOpen={setIsEditImagePostModalOpen}
+            visibility={props.visibility}
+            contentType={props.contentType}
+            content={props.content}
           />
           <DeletePostModal
             isDeleteModalOpen={isDeleteModalOpen}
             setIsDeleteModalOpen={setIsDeleteModalOpen}
             post={props}
             handleRemove={props.handleRemove}
+          />
+        </>
+      )}
+      {isAuthor && post.visibility === "PUBLIC" && (
+        <>
+          <EditTextPostModal
+            isEditTextPostModalOpen={isEditTextPostModalOpen}
+            setIsEditTextPostModalOpen={setIsEditTextPostModalOpen}
+            post={post}
+            handleEdit={handleEdit}
+          />
+          <EditImagePostModal
+            isEditImagePostModalOpen={isEditImagePostModalOpen}
+            setIsEditImagePostModalOpen={setIsEditImagePostModalOpen}
+            post={post}
+            handleEdit={handleEdit}
           />
         </>
       )}

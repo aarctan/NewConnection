@@ -2,21 +2,17 @@ import Modal from "@mui/material/Modal";
 import {
   CardContent,
   Box,
-  CardActions,
   Typography,
-  Paper,
-  InputBase,
   Divider,
   Avatar,
   Stack,
+  CardMedia,
 } from "@mui/material";
 import Comment from "src/components/post/Comment";
 import IconButton from "@mui/material/IconButton";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import ShareIcon from "@mui/icons-material/Share";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import SendIcon from "@mui/icons-material/Send";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const style = {
   position: "absolute",
@@ -36,6 +32,7 @@ const style = {
 const PostModal = ({ isModalOpen, setIsModalOpen, post, comments }) => {
   if (!isModalOpen) return null;
   const handleClose = () => setIsModalOpen(false);
+
   return (
     <>
       <Modal
@@ -81,23 +78,47 @@ const PostModal = ({ isModalOpen, setIsModalOpen, post, comments }) => {
               </Stack>
             </Box>
             <Divider />
+            {post.contentType === "text/markdown" && (
+              <CardContent sx={{ ml: 1 }}>
+                <ReactMarkdown
+                  children={post.content}
+                  remarkPlugins={[remarkGfm]}
+                />
+              </CardContent>
+            )}
             {/* Conditionally render content based on content type */}
             {post.contentType === "text/plain" &&
             post.content.slice(0, 4) === "http" ? (
               /* Render an image if it is a hyperlink */
-              <Box
-                sx={{ display: "flex", justifyContent: "center", padding: 0 }}
+              <CardContent
+                sx={{
+                  display: "flex",
+                  padding: 0,
+                  paddingBottom: 0,
+                }}
+                style={{ paddingBottom: "0px" }}
               >
-                <img
+                <div
                   style={{
-                    maxHeight: 500,
-                    maxWidth: "100%",
-                    width: "auto",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  image={post.content}
-                  alt=""
-                />
-              </Box>
+                >
+                  <CardMedia
+                    component="img"
+                    style={{
+                      padding: 0,
+                      margin: 0,
+                      maxHeight: 500,
+                      maxWidth: "100%",
+                      width: "auto",
+                    }}
+                    image={post.content}
+                    alt="selfie"
+                  />
+                </div>
+              </CardContent>
             ) : (
               /* Render text */
               post.contentType === "text/plain" && (
@@ -205,53 +226,6 @@ const PostModal = ({ isModalOpen, setIsModalOpen, post, comments }) => {
             </Box>
 
             <Divider />
-
-            {/* Box containing like button and amount if likes */}
-            <CardActions disableSpacing sx={{ paddingBottom: "5px" }}>
-              <IconButton aria-label="add to favorites">
-                <FavoriteBorderIcon />
-              </IconButton>
-              <IconButton aria-label="comment">
-                <ChatBubbleOutlineIcon />
-              </IconButton>
-              <IconButton aria-label="share">
-                <ShareIcon />
-              </IconButton>
-            </CardActions>
-
-            <CardContent sx={{ py: "0px", paddingBottom: 0 }}>
-              <Typography
-                variant="body2"
-                color="text.primary"
-                fontWeight="600"
-                sx={{ paddingBottom: 2 }}
-              >
-                8,032 likes
-              </Typography>
-            </CardContent>
-
-            <Divider />
-
-            {/* Hold the comment input base */}
-            <Paper
-              component="form"
-              sx={{
-                p: "2px 4px",
-                display: "flex",
-                alignItems: "center",
-                backgroundColor: "#fafafa",
-              }}
-            >
-              <InputBase
-                sx={{ ml: 1, flex: 1 }}
-                placeholder="Comment..."
-                inputProps={{ "aria-label": "comment" }}
-              />
-              <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-              <IconButton color="primary" sx={{ p: "10px" }} aria-label="send">
-                <SendIcon />
-              </IconButton>
-            </Paper>
           </Box>
         </Box>
       </Modal>

@@ -43,6 +43,13 @@ const InboxPostItem = (props) => {
         alignItems: "center",
         py: 0,
       }}
+      onClick={() => {
+        const author_array = item.author.id.split("/");
+        const author_id = author_array[author_array.length - 1];
+        const post_array = item.id.split("/");
+        const post_id = post_array[post_array.length - 1];
+        navigate(`/app/author/${author_id}/post/${post_id}`, { state: item }); // state contains the post
+      }}
     >
       <Box
         sx={{

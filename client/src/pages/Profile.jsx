@@ -9,7 +9,7 @@ import CredentialsContext from "src/store/credentials-context";
 
 const Profile = () => {
   let { authorID } = useParams();
-  const { state } = useLocation();
+  const { state } = useLocation(); // state in this case is a author object
   const authCtx = useContext(AuthContext);
   const getCredentialsHandler = useContext(CredentialsContext);
   const [following, setFollowing] = useState(false);

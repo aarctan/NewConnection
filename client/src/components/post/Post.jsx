@@ -316,9 +316,11 @@ const Post = (props) => {
             </Typography>
           </Stack>
         </Box>
-        <IconButton aria-label="settings" onClick={() => setIsMenuOpen(true)}>
-          <MoreHorizIcon />
-        </IconButton>
+        {post.visibility === "PUBLIC" && (
+          <IconButton aria-label="settings" onClick={() => setIsMenuOpen(true)}>
+            <MoreHorizIcon />
+          </IconButton>
+        )}
       </CardContent>
       <CardActions
         className={classes.root}

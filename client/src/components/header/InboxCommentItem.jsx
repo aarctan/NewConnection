@@ -1,12 +1,10 @@
 import { Box, Typography, Avatar } from "@mui/material";
-import { useState, useEffect, useCallback, useContext } from "react";
+
 import { useNavigate } from "react-router-dom";
-import CredentialsContext from "src/store/credentials-context";
 
 const InboxCommentItem = (props) => {
   const item = props.item;
   const navigate = useNavigate();
-  const getCredentialsHandler = useContext(CredentialsContext);
 
   let commentText = ` commented: ${item.comment}`;
   if (commentText.length > 25) {

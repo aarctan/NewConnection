@@ -1,10 +1,7 @@
 import { Avatar, Box, Typography } from "@mui/material";
-import { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CredentialsContext from "src/store/credentials-context";
 
 const InboxLikeItem = (props) => {
-  const getCredentialsHandler = useContext(CredentialsContext);
   const item = props.item;
   const navigate = useNavigate();
 

@@ -44,6 +44,8 @@ import remarkGfm from "remark-gfm";
 import EditTextPostModal from "./EditTextPostModal";
 import EditImagePostModal from "./EditImagePostModal";
 
+import { v4 as uuidv4 } from "uuid";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: "#fafafa",
@@ -114,7 +116,14 @@ const Post = (props) => {
       let date = new Date();
       date = date.toISOString();
       let credentials = getCredentialsHandler(props.author.host);
-      const postResponse = await fetch(`${props.author.id}/inbox/`, {
+      let url = `${props.author.id}/inbox/`;
+      let id = `${props.id}`;
+      if (props.author.host === "https://i-connect.herokuapp.com") {
+        let uuid = uuidv4();
+        url = `${props.id}/comments/`;
+        id = `${props.id}/comments/${uuid}`;
+      }
+      const postResponse = await fetch(url, {
         method: "POST",
         body: JSON.stringify({
           type: "comment",
@@ -122,7 +131,7 @@ const Post = (props) => {
           comment: comment,
           contentType: "text/plain",
           published: date,
-          id: props.id,
+          id: id,
         }),
         headers: {
           "Content-Type": "application/json",

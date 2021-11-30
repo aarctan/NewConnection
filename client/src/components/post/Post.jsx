@@ -364,7 +364,12 @@ const Post = (props) => {
                 maxWidth: "100%",
                 width: "auto",
               }}
-              image={content}
+              // T16 had a 'unique' way of sending back imaghes :)
+              image={
+                post.author.host === "https://i-connect.herokuapp.com"
+                  ? `data:${post.contentType},${post.content}`
+                  : content
+              }
               alt="selfie"
             />
           </div>

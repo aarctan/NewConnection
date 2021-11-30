@@ -9,30 +9,6 @@ const InboxPostItem = (props) => {
   const navigate = useNavigate();
   const getCredentialsHandler = useContext(CredentialsContext);
 
-  const [followerPic, setFollowerPic] = useState("");
-  const [followerName, setFollowerName] = useState("");
-
-  const fetchInbox = useCallback(async () => {
-    let credentials = getCredentialsHandler(item.author.host);
-    const response = await fetch(`${item.author.id}/`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Basic ` + btoa(credentials),
-      },
-    });
-    if (response.ok) {
-      const data = await response.json();
-      setFollowerPic(data["profileImage"]);
-      setFollowerName(data["displayName"]);
-    } else {
-      console.log("InboxPostItem useEffect failed - fetching inbox");
-    }
-  }, [item.author, getCredentialsHandler]);
-
-  useEffect(() => {
-    fetchInbox();
-  }, [fetchInbox]);
-
   return (
     <Box
       sx={{
@@ -62,7 +38,7 @@ const InboxPostItem = (props) => {
       >
         <Avatar
           alt="Avatar"
-          src={followerPic}
+          src={item.author.profileImage}
           sx={{
             width: 17,
             height: 17,
@@ -78,7 +54,7 @@ const InboxPostItem = (props) => {
           }}
         />
         <Typography variant="body2">
-          <b>{followerName}</b> created a post
+          <b>{item.author.displayName}</b> created a post
         </Typography>
       </Box>
     </Box>

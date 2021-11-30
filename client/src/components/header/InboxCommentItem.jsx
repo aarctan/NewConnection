@@ -8,30 +8,6 @@ const InboxCommentItem = (props) => {
   const navigate = useNavigate();
   const getCredentialsHandler = useContext(CredentialsContext);
 
-  const [followerPic, setFollowerPic] = useState("");
-  const [followerName, setFollowerName] = useState("");
-
-  const fetchInbox = useCallback(async () => {
-    let credentials = getCredentialsHandler(item.author.host);
-    const response = await fetch(`${item.author.id}/`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Basic ` + btoa(credentials),
-      },
-    });
-    if (response.ok) {
-      const data = await response.json();
-      setFollowerPic(data["profileImage"]);
-      setFollowerName(data["displayName"]);
-    } else {
-      console.log("InboxCommentItem useEffect failed - fetching inbox");
-    }
-  }, [item.author, getCredentialsHandler]);
-
-  useEffect(() => {
-    fetchInbox();
-  }, [fetchInbox]);
-
   let commentText = ` commented: ${item.comment}`;
   if (commentText.length > 25) {
     commentText = commentText.substring(0, 25) + "...";
@@ -81,7 +57,7 @@ const InboxCommentItem = (props) => {
       >
         <Avatar
           alt="Avatar"
-          src={followerPic}
+          src={item.author.profileImage}
           sx={{
             width: 17,
             height: 17,
@@ -97,7 +73,7 @@ const InboxCommentItem = (props) => {
           }}
         />
         <Typography variant="body2">
-          <b>{followerName}</b>
+          <b>{item.author.displayName}</b>
           {commentText}
         </Typography>
       </Box>

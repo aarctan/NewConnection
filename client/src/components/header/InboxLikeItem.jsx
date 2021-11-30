@@ -8,30 +8,6 @@ const InboxLikeItem = (props) => {
   const item = props.item;
   const navigate = useNavigate();
 
-  const [followerPic, setFollowerPic] = useState("");
-  const [followerName, setFollowerName] = useState("");
-
-  const fetchInbox = useCallback(async () => {
-    let credentials = getCredentialsHandler(item.author.host);
-    const response = await fetch(`${item.author.id}/`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Basic ` + btoa(credentials),
-      },
-    });
-    if (response.ok) {
-      const data = await response.json();
-      setFollowerPic(data["profileImage"]);
-      setFollowerName(data["displayName"]);
-    } else {
-      console.log("InboxLikeItem useEffect failed - fetching inbox");
-    }
-  }, [item.author, getCredentialsHandler]);
-
-  useEffect(() => {
-    fetchInbox();
-  }, [fetchInbox]);
-
   const fetchPost = async () => {
     try {
       const response = await fetch(`${item.object}`, {
@@ -76,7 +52,7 @@ const InboxLikeItem = (props) => {
       >
         <Avatar
           alt="Avatar"
-          src={followerPic}
+          src={item.author.profileImage}
           sx={{
             width: 17,
             height: 17,
@@ -92,7 +68,7 @@ const InboxLikeItem = (props) => {
           }}
         />
         <Typography variant="body2">
-          <b>{followerName}</b> liked your post
+          <b>{item.author.displayName}</b> liked your post
         </Typography>
       </Box>
     </Box>

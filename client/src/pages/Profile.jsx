@@ -32,7 +32,10 @@ const Profile = () => {
           const data = await response.json();
           if (state.host === "https://cmput404-vgt-socialdist.herokuapp.com/")
             setFollowing(true);
-          else setFollowing(data === "true" ? true : false);
+          else if (state.host === "https://i-connect.herokuapp.com") {
+            if (data["result"]) setFollowing(true);
+            else setFollowing(false);
+          } else setFollowing(data === "true" ? true : false);
         } else {
           // T20 sends back a 404 so if the response is NOT ok (404), set following to false
           if (state.host === "https://cmput404-vgt-socialdist.herokuapp.com/")

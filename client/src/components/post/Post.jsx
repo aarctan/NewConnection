@@ -316,7 +316,7 @@ const Post = (props) => {
             </Typography>
           </Stack>
         </Box>
-        {post.visibility === "PUBLIC" && (
+        {post.visibility === "PUBLIC" && isAuthor && (
           <IconButton aria-label="settings" onClick={() => setIsMenuOpen(true)}>
             <MoreHorizIcon />
           </IconButton>

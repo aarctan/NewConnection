@@ -38,12 +38,12 @@ Instructions above taken from https://uofa-cmput404.github.io/lab-4-django.html
 
 ## External Sources
 
-"Writing your first Django app", Django documentation:
+"Writing your first Django app", Django documentation:<br>
 Author:unknown<br>
 Link:https://docs.djangoproject.com/en/3.2/intro/<br>
 Source: https://docs.djangoproject.com/en/3.2/intro/<br>
 
-Writing Django unit tests:
+Writing Django unit tests:<br>
 Author: unknown<br>
 Link: https://docs.djangoproject.com/en/3.2/topics/testing/overview/<br>
 Source:https://docs.djangoproject.com/en/3.2/topics/testing/overview/<br>

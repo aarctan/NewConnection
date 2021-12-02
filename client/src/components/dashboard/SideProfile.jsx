@@ -9,9 +9,9 @@ const API_URL = process.env.REACT_APP_API_URL;
 // Underneath that, there is recently joined users that you can click on to go to their profile pages.
 // This is rendered in the Feed.jsx file
 const SideProfile = (props) => {
-  let recentAuthors = props.recentAuthors.filter(
-    (author) => `${author.host}api/v1` === API_URL
-  );
+  let recentAuthors = props.recentAuthors
+    .filter((author) => `${author.host}api/v1` === API_URL)
+    .reverse();
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
   return (
@@ -32,7 +32,7 @@ const SideProfile = (props) => {
           <Typography variant="h6">{authCtx.userdata.displayName}</Typography>
         </Stack>
         <Typography>Recently joined:</Typography>
-        {recentAuthors.map((author, idx) => (
+        {recentAuthors.slice(0, 6).map((author, idx) => (
           <Stack alignItems="center" direction="row" spacing={1} key={idx}>
             <Avatar
               alt="Avatar"

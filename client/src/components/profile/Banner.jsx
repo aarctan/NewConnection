@@ -180,14 +180,10 @@ const Banner = (props) => {
 
       <Box
         display="flex"
-        marginLeft="15pt"
-        justifyContent="space-around"
+        justifyContent="center"
         alignItems="center"
         sx={{ width: "100%" }}
       >
-        <Typography variant="body2" fontSize="14pt">
-          1 Post
-        </Typography>
         <Typography
           sx={{ cursor: "pointer" }}
           variant="body2"

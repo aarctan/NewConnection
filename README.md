@@ -142,3 +142,7 @@ MainLayout - Client side based off of devias-io/material-kit-react<br>
 Arthor: https://github.com/devias-io<br>
 Link: https://github.com/devias-io/material-kit-react.git<br>
 Source:https://github.com/devias-io/material-kit-react<br>
+
+UI design:<br>
+
+We took inspiration from Instagram to design our user interface. Specfically, the feed where we show posts and the site profile of users you may want to follow.

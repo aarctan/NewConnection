@@ -460,7 +460,7 @@ const Post = (props) => {
       >
         <Stack display="flex" direction="row" alignItems="center" spacing={0.5}>
           <Typography variant="body2" color="text.secondary" fontSize="9pt">
-            {post.origin === post.id ? "Posted " : "Shared "}
+            {post.origin === props.id ? "Posted " : "Shared "}
             {days_ago_text} by
           </Typography>
           <Link

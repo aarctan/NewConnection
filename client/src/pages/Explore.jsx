@@ -79,7 +79,7 @@ const Explore = () => {
         setAuthors([
           ...responseOneData.items,
           ...responseTwoData.items,
-          ...responseThreeData.items,
+          ...responseThreeData,
           ...responseFourData.items,
         ]);
         setIsLoading(false);

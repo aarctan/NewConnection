@@ -48,6 +48,7 @@ const ProfileFeed = (props) => {
     }
 
     try {
+      // Get the inbox of the logged in user
       let credentials = getCredentialsHandler(authCtx.userdata.host);
       const response = await fetch(`${authCtx.userdata.id}/inbox/`, {
         headers: { Authorization: `Basic ` + btoa(credentials) },
@@ -65,6 +66,7 @@ const ProfileFeed = (props) => {
           }
         }
       }
+      // Get the credentials of the authors page we are viewing
       credentials = getCredentialsHandler(props.author.host);
       const postsResponse = await fetch(`${props.author.id}/posts/`, {
         headers: {
@@ -72,7 +74,7 @@ const ProfileFeed = (props) => {
         },
       });
       const postsData = await postsResponse.json();
-
+      // check if the host is from T20, if so we need to do postData.items instead of just postData
       if (
         props.author.host === "https://cmput404-vgt-socialdist.herokuapp.com/"
       ) {
@@ -81,6 +83,7 @@ const ProfileFeed = (props) => {
         }
       } else {
         for (let j = 0; j < postsData.length; j++) {
+          if (postsData[j].categories == null) postsData[j].categories = []; // check if categories is null to avoid an uniterable error
           setPosts((oldArray) => [...oldArray, postsData[j]]);
         }
       }
@@ -119,7 +122,13 @@ const ProfileFeed = (props) => {
               <Post
                 key={idx}
                 post={post}
-                id={post.id}
+                // T23 has id as post_id for posts
+                id={
+                  post.author.host ===
+                  "https://project-api-404.herokuapp.com/api/"
+                    ? post.post_id
+                    : post.id
+                }
                 title={post.title}
                 description={post.description}
                 author={props.author}

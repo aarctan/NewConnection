@@ -30,15 +30,21 @@ const Profile = () => {
         });
         if (response.ok) {
           const data = await response.json();
+          // if the host is T20, and the reponse is ok, set following to true
           if (state.host === "https://cmput404-vgt-socialdist.herokuapp.com/")
             setFollowing(true);
+          // if the host is T16, check if the result key is true, if it is set to True, otherwise false
           else if (state.host === "https://i-connect.herokuapp.com") {
             if (data["result"]) setFollowing(true);
             else setFollowing(false);
-          } else setFollowing(data === "true" ? true : false);
+          }
+          // If the host is us
+          else setFollowing(data === "true" ? true : false);
         } else {
           // T20 sends back a 404 so if the response is NOT ok (404), set following to false
           if (state.host === "https://cmput404-vgt-socialdist.herokuapp.com/")
+            setFollowing(false);
+          else if (state.host === "https://project-api-404.herokuapp.com/api/")
             setFollowing(false);
         }
       } catch (error) {

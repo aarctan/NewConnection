@@ -20,6 +20,7 @@ const hostColorMap = {
   "https://newconnection-server.herokuapp.com/": "black",
   "https://cmput404-vgt-socialdist.herokuapp.com/": "darkgreen",
   "https://i-connect.herokuapp.com/": "purple",
+  "https://project-api-404.herokuapp.com/api/": "blue",
 };
 
 const Explore = () => {
@@ -32,6 +33,7 @@ const Explore = () => {
     const fetchAuthors = async () => {
       try {
         setIsLoading(true);
+        // Team 20
         let credentials = getCredentialsHandler(
           "https://cmput404-vgt-socialdist.herokuapp.com/"
         );
@@ -45,6 +47,7 @@ const Explore = () => {
         );
         const responseOneData = await responseOne.json();
 
+        // Team 16
         credentials = getCredentialsHandler("https://i-connect.herokuapp.com/");
         const responseTwo = await fetch(
           `https://i-connect.herokuapp.com/service/authors/`,
@@ -56,12 +59,28 @@ const Explore = () => {
         );
         const responseTwoData = await responseTwo.json();
 
-        const responseThree = await fetch(`${API_URL}/authors/`);
+        // Team 23
+        credentials = getCredentialsHandler(
+          "https://project-api-404.herokuapp.com/api/"
+        );
+        const responseThree = await fetch(
+          `https://project-api-404.herokuapp.com/api/authors`,
+          {
+            headers: {
+              Authorization: `Basic ` + btoa(credentials),
+            },
+          }
+        );
         const responseThreeData = await responseThree.json();
+
+        // Team 06 (us)
+        const responseFour = await fetch(`${API_URL}/authors/`);
+        const responseFourData = await responseFour.json();
         setAuthors([
           ...responseOneData.items,
           ...responseTwoData.items,
           ...responseThreeData.items,
+          ...responseFourData.items,
         ]);
         setIsLoading(false);
       } catch (error) {

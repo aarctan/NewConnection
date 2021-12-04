@@ -33,7 +33,7 @@ const Banner = (props) => {
     };
     try {
       let credentials = getCredentialsHandler(props.author.host);
-      let url = `${props.author.id}/inbox`;
+      let url = `${props.author.id}/inbox/`;
       // Fix for t26
       if (props.author.host === "https://plurr.herokuapp.com/")
         url = `${props.author.id.replace("/author", "/service/author")}/inbox/`;

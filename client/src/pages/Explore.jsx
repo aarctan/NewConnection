@@ -85,7 +85,7 @@ const Explore = () => {
             },
           }
         );
-        const responseFourData = await responseFour.json();
+        let responseFourData = await responseFour.json();
 
         // Team 06 (us)
         const responseFive = await fetch(`${API_URL}/authors/`);
@@ -94,7 +94,9 @@ const Explore = () => {
           ...responseOneData.items,
           ...responseTwoData.items,
           ...responseThreeData,
-          ...responseFourData.items,
+          ...responseFourData.items.filter(
+            (key) => key.host === "https://plurr.herokuapp.com/"
+          ),
           ...responseFiveData.items,
         ]);
         setIsLoading(false);

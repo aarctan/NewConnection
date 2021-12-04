@@ -38,6 +38,7 @@ const Profile = () => {
             if (data["result"]) setFollowing(true);
             else setFollowing(false);
           }
+
           // If the host is us
           else setFollowing(data === "true" ? true : false);
         } else {

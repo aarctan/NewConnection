@@ -19,8 +19,10 @@ const hostColorMap = {
   "http://127.0.0.1:8000/": "black",
   "https://newconnection-server.herokuapp.com/": "black",
   "https://cmput404-vgt-socialdist.herokuapp.com/": "darkgreen",
-  "https://i-connect.herokuapp.com/": "purple",
+  "https://i-connect.herokuapp.com": "#663399",
+  "https://i-connect.herokuapp.com/": "#663399", // rebecca purple
   "https://project-api-404.herokuapp.com/api/": "blue",
+  "https://plurr.herokuapp.com/": "#0fa6dc", // cerulean blue
 };
 
 const Explore = () => {
@@ -73,14 +75,27 @@ const Explore = () => {
         );
         const responseThreeData = await responseThree.json();
 
-        // Team 06 (us)
-        const responseFour = await fetch(`${API_URL}/authors/`);
+        // Team 26
+        credentials = getCredentialsHandler("https://plurr.herokuapp.com/");
+        const responseFour = await fetch(
+          `https://plurr.herokuapp.com/service/authors/`,
+          {
+            headers: {
+              Authorization: `Basic ` + btoa(credentials),
+            },
+          }
+        );
         const responseFourData = await responseFour.json();
+
+        // Team 06 (us)
+        const responseFive = await fetch(`${API_URL}/authors/`);
+        const responseFiveData = await responseFive.json();
         setAuthors([
           ...responseOneData.items,
           ...responseTwoData.items,
           ...responseThreeData,
           ...responseFourData.items,
+          ...responseFiveData.items,
         ]);
         setIsLoading(false);
       } catch (error) {
@@ -136,7 +151,11 @@ const Explore = () => {
                         navigate(`/app/author/${word}`, { state: author });
                       }}
                     >
-                      <Typography variant="h6">{author.displayName}</Typography>
+                      <Typography variant="h6">
+                        {author.displayName.length > 10
+                          ? `${author.displayName.substring(0, 10)}...`
+                          : author.displayName}
+                      </Typography>
                     </Link>
                     {author.github && (
                       <Stack alignItems="center" direction="row" spacing={1}>

@@ -112,46 +112,52 @@ const Post = (props) => {
 
   // Comments on friends posts go to the friends inbox
   const sendComment = async (e) => {
-    try {
-      let date = new Date();
-      date = date.toISOString();
-      let credentials = getCredentialsHandler(props.author.host);
-      let url = `${props.author.id}/inbox/`;
-      let id = `${props.id}`;
-      let uuid = uuidv4();
-      // Fix for t26
-      if (props.author.host === "https://plurr.herokuapp.com/")
-        url = `${props.id.replace("/author", "/service/author")}/comments/`;
-      id = `${url}${uuid}`;
-      // Fix for t16
-      if (props.author.host === "https://i-connect.herokuapp.com") {
-        url = `${props.id}/comments/`;
-        id = `${props.id}/comments/${uuid}`;
+    if (comment !== "") {
+      try {
+        let date = new Date();
+        date = date.toISOString();
+        let credentials = getCredentialsHandler(props.author.host);
+        let url = `${props.author.id}/inbox/`;
+        let id = `${props.id}`;
+        let uuid = uuidv4();
+        // Fix for t26
+        if (props.author.host === "https://plurr.herokuapp.com/") {
+          url = `${props.author.id.replace(
+            "/author",
+            "/service/author"
+          )}/inbox/`;
+          id = `${props.id.replace("/author", "/service/author")}/`;
+        }
+        // Fix for t16
+        if (props.author.host === "https://i-connect.herokuapp.com") {
+          url = `${props.id}/comments/`;
+          id = `${props.id}/comments/${uuid}`;
+        }
+        const postResponse = await fetch(url, {
+          method: "POST",
+          body: JSON.stringify({
+            type: "comment",
+            author: authCtx.userdata,
+            comment: comment,
+            contentType: "text/plain",
+            published: date,
+            id: id,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Basic ` + btoa(credentials),
+          },
+        });
+        if (postResponse.ok) {
+          notify(props.author.displayName);
+          setComment("");
+        } else {
+        }
+      } catch (error) {
+        let errorMessage = "Send Comment failed";
+        console.log(error.message);
+        alert(errorMessage);
       }
-      const postResponse = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify({
-          type: "comment",
-          author: authCtx.userdata,
-          comment: comment,
-          contentType: "text/plain",
-          published: date,
-          id: id,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Basic ` + btoa(credentials),
-        },
-      });
-      if (postResponse.ok) {
-        notify(props.author.displayName);
-        setComment("");
-      } else {
-      }
-    } catch (error) {
-      let errorMessage = "Send Comment failed";
-      console.log(error.message);
-      alert(errorMessage);
     }
   };
 

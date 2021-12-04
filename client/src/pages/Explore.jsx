@@ -61,7 +61,7 @@ const Explore = () => {
         );
         const responseTwoData = await responseTwo.json();
 
-        // Team 23
+        /*         // Team 23
         credentials = getCredentialsHandler(
           "https://project-api-404.herokuapp.com/api/"
         );
@@ -73,7 +73,7 @@ const Explore = () => {
             },
           }
         );
-        const responseThreeData = await responseThree.json();
+        const responseThreeData = await responseThree.json(); */
 
         // Team 26
         credentials = getCredentialsHandler("https://plurr.herokuapp.com/");
@@ -94,7 +94,6 @@ const Explore = () => {
           ...responseFiveData.items,
           ...responseTwoData.items,
           ...responseOneData.items,
-          ...responseThreeData,
           ...responseFourData.items.filter(
             (key) => key.host === "https://plurr.herokuapp.com/"
           ),

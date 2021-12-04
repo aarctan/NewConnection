@@ -68,7 +68,10 @@ const ProfileFeed = (props) => {
       }
       // Get the credentials of the authors page we are viewing
       credentials = getCredentialsHandler(props.author.host);
-      const postsResponse = await fetch(`${props.author.id}/posts/`, {
+      let url = `${props.author.id}/posts/`;
+      if (props.author.host === "https://plurr.herokuapp.com/")
+        url = `${props.author.id.replace("/author", "/service/author")}/posts/`;
+      const postsResponse = await fetch(url, {
         headers: {
           Authorization: `Basic ` + btoa(credentials),
         },
@@ -76,9 +79,15 @@ const ProfileFeed = (props) => {
       const postsData = await postsResponse.json();
       // check if the host is from T20, if so we need to do postData.items instead of just postData
       if (
-        props.author.host === "https://cmput404-vgt-socialdist.herokuapp.com/"
+        props.author.host ===
+          "https://cmput404-vgt-socialdist.herokuapp.com/" ||
+        props.author.host === "https://plurr.herokuapp.com/"
       ) {
         for (let j = 0; j < postsData.items.length; j++) {
+          for (const property in postsData.items[j]) {
+            if (postsData.items[j][property] === null)
+              postsData.items[j][property] = "";
+          }
           setPosts((oldArray) => [...oldArray, postsData.items[j]]);
         }
       } else {

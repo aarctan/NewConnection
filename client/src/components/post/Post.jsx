@@ -118,8 +118,13 @@ const Post = (props) => {
       let credentials = getCredentialsHandler(props.author.host);
       let url = `${props.author.id}/inbox/`;
       let id = `${props.id}`;
+      let uuid = uuidv4();
+      // Fix for t26
+      if (props.author.host === "https://plurr.herokuapp.com/")
+        url = `${props.id.replace("/author", "/service/author")}/comments/`;
+      id = `${url}${uuid}`;
+      // Fix for t16
       if (props.author.host === "https://i-connect.herokuapp.com") {
-        let uuid = uuidv4();
         url = `${props.id}/comments/`;
         id = `${props.id}/comments/${uuid}`;
       }
@@ -156,15 +161,28 @@ const Post = (props) => {
     }
     try {
       let credentials = getCredentialsHandler(props.author.host);
-      const postResponse = await fetch(`${props.author.id}/inbox/`, {
-        method: "POST",
-        body: JSON.stringify({
-          "@context": "https://www.w3.org/ns/activitystreams",
+      let url = `${props.author.id}/inbox/`;
+      let body = {
+        "@context": "https://www.w3.org/ns/activitystreams",
+        type: "Like",
+        summary: `${authCtx.userdata.displayName} likes your post`,
+        author: authCtx.userdata,
+        object: props.id,
+      };
+      // Fix for t26
+      if (props.author.host === "https://plurr.herokuapp.com/") {
+        url = `${props.author.id.replace("/author", "/service/author")}/inbox/`;
+        body = {
+          context: "https://www.w3.org/ns/activitystreams",
           type: "Like",
           summary: `${authCtx.userdata.displayName} likes your post`,
           author: authCtx.userdata,
           object: props.id,
-        }),
+        };
+      }
+      const postResponse = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Basic ` + btoa(credentials),
@@ -184,17 +202,23 @@ const Post = (props) => {
   // Get comments for the post
   const fetchComments = useCallback(async () => {
     let credentials = getCredentialsHandler(props.author.host);
-    console.log(props);
     if (props.visibility === "PUBLIC") {
-      console.log(props.id);
-      const response = await fetch(`${props.id}/comments/`, {
+      let url = `${props.id}/comments/`;
+      // Fix for t26
+      if (props.author.host === "https://plurr.herokuapp.com/")
+        url = `${props.id.replace("/author", "/service/author")}/comments/`;
+      const response = await fetch(url, {
         headers: {
           Authorization: `Basic ` + btoa(credentials),
         },
       });
       if (response.ok) {
         const commentData = await response.json();
-        setComments(commentData["comments"]);
+        // If host is t26 then we need to set the comments to the items key
+        if (props.author.host === "https://plurr.herokuapp.com/")
+          setComments(commentData["items"]);
+        // else default to comments
+        else setComments(commentData["comments"]);
       } else {
         console.log("Post useEffect failed - fetching comments");
       }
@@ -215,7 +239,11 @@ const Post = (props) => {
 
   const fetchLikes = useCallback(async () => {
     let credentials = getCredentialsHandler(props.author.host);
-    const response = await fetch(`${props.id}/likes/`, {
+    let url = `${props.id}/likes/`;
+    // Fix for t26
+    if (props.author.host === "https://plurr.herokuapp.com/")
+      url = `${props.id.replace("/author", "/service/author")}/likes/`;
+    const response = await fetch(url, {
       headers: {
         Authorization: `Basic ` + btoa(credentials),
       },
@@ -224,7 +252,9 @@ const Post = (props) => {
       let likeData = await response.json();
       // if host is T20 we need to parse out items from their response
       if (
-        props.author.host === "https://cmput404-vgt-socialdist.herokuapp.com/"
+        props.author.host ===
+          "https://cmput404-vgt-socialdist.herokuapp.com/" ||
+        props.author.host === "https://plurr.herokuapp.com/"
       ) {
         setLikes(likeData["items"]);
         for (let i = 0; i < likeData["items"].length; i++) {

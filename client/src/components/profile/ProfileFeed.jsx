@@ -40,7 +40,7 @@ const ProfileFeed = (props) => {
         setGithubEvents(
           githubData
             .filter((event) => supportedGithubEvents.has(event.type))
-            .slice(0, 10)
+            .slice(0, 5)
         );
       } catch (error) {
         console.log(`Could not retrieve github data for ${github_name}`);
@@ -105,6 +105,7 @@ const ProfileFeed = (props) => {
   }, [props.author, authCtx.userdata, getCredentialsHandler]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchFeed();
   }, [fetchFeed]);
 

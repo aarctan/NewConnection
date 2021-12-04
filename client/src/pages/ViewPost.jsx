@@ -2,11 +2,16 @@ import Header from "src/components/header/Header";
 import { useLocation, Navigate } from "react-router-dom";
 import { Container } from "@mui/material";
 import Post from "src/components/post/Post";
+import { useEffect } from "react";
 // This page allows the user to view a specific post of a specified user
 
 const ViewPost = () => {
   const { state } = useLocation(); // State will be a post object
   const post = state;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <>

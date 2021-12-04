@@ -19,6 +19,7 @@ const Dashboard = () => {
         console.log(error.message);
       }
     };
+    window.scrollTo(0, 0);
     fetchAuthors();
   }, [getCredentialsHandler]);
 

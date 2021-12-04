@@ -91,13 +91,13 @@ const Explore = () => {
         const responseFive = await fetch(`${API_URL}/authors/`);
         const responseFiveData = await responseFive.json();
         setAuthors([
-          ...responseOneData.items,
+          ...responseFiveData.items,
           ...responseTwoData.items,
+          ...responseOneData.items,
           ...responseThreeData,
           ...responseFourData.items.filter(
             (key) => key.host === "https://plurr.herokuapp.com/"
           ),
-          ...responseFiveData.items,
         ]);
         setIsLoading(false);
       } catch (error) {

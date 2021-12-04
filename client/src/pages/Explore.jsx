@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import {
   Avatar,
+  Chip,
   Container,
   Grid,
   Link,
@@ -19,8 +20,7 @@ const hostColorMap = {
   "http://127.0.0.1:8000/": "black",
   "https://newconnection-server.herokuapp.com/": "black",
   "https://cmput404-vgt-socialdist.herokuapp.com/": "darkgreen",
-  "https://i-connect.herokuapp.com": "#663399",
-  "https://i-connect.herokuapp.com/": "#663399", // rebecca purple
+  "https://i-connect.herokuapp.com": "#663399", // rebecca purple
   "https://project-api-404.herokuapp.com/api/": "blue",
   "https://plurr.herokuapp.com/": "#0fa6dc", // cerulean blue
 };
@@ -115,64 +115,91 @@ const Explore = () => {
               <CircularProgress />
             </Box>
           ) : (
-            authors.map((author, idx) => (
-              <Grid key={idx} item xs={6} sm={4} md={2}>
-                <Stack alignItems="center" direction="column">
-                  <Link
-                    component="button"
-                    onClick={() => {
-                      const words = author.id.split("/");
-                      const word = words[words.length - 1];
-                      navigate(`/app/author/${word}`, { state: author });
-                    }}
-                  >
-                    <Avatar
-                      alt="Avatar"
-                      src={author.profileImage}
-                      sx={{
-                        width: 128,
-                        height: 128,
-                        border: 2,
-                        borderColor:
-                          author.host in hostColorMap
-                            ? hostColorMap[author.host]
-                            : "red",
+            <>
+              <Stack alignItems="center" direction="column" mt={5}>
+                {Object.keys(hostColorMap)
+                  .filter((key) => key !== "http://127.0.0.1:8000/")
+                  .map((key, idx) => (
+                    <Chip
+                      key={idx}
+                      label={key}
+                      variant="outlined"
+                      size="small"
+                      style={{
+                        color: hostColorMap[key],
+                        backgroundColor: "#ffffff",
                       }}
+                      sx={{ mt: 0.8 }}
                     />
-                  </Link>
-                  <Stack alignItems="center" direction="row" spacing={1}>
-                    <Link
-                      component="button"
-                      variant="body2"
-                      underline="hover"
-                      onClick={() => {
-                        const words = author.id.split("/");
-                        const word = words[words.length - 1];
-                        navigate(`/app/author/${word}`, { state: author });
-                      }}
-                    >
-                      <Typography variant="h6">
-                        {author.displayName.length > 10
-                          ? `${author.displayName.substring(0, 10)}...`
-                          : author.displayName}
-                      </Typography>
-                    </Link>
-                    {author.github && (
+                  ))}
+              </Stack>
+              {authors
+                .filter((author) => author.host in hostColorMap)
+                .map((author, idx) => (
+                  <Grid key={idx} item xs={6} sm={4} md={2}>
+                    <Stack alignItems="center" direction="column">
+                      <Link
+                        component="button"
+                        onClick={() => {
+                          const words = author.id.split("/");
+                          const word = words[words.length - 1];
+                          navigate(`/app/author/${word}`, { state: author });
+                        }}
+                      >
+                        <Avatar
+                          alt="Avatar"
+                          src={author.profileImage}
+                          sx={{
+                            width: 128,
+                            height: 128,
+                            border: 2,
+                            borderColor:
+                              author.host in hostColorMap
+                                ? hostColorMap[author.host]
+                                : "red",
+                          }}
+                        />
+                      </Link>
                       <Stack alignItems="center" direction="row" spacing={1}>
                         <Link
                           component="button"
+                          variant="body2"
+                          underline="hover"
                           onClick={() => {
-                            window.open(author.github);
+                            const words = author.id.split("/");
+                            const word = words[words.length - 1];
+                            navigate(`/app/author/${word}`, { state: author });
                           }}
                         >
-                          <GitHubIcon sx={{ width: "15pt", height: "15pt" }} />
+                          <Typography variant="h6">
+                            {author.displayName.length > 10
+                              ? `${author.displayName.substring(0, 10)}...`
+                              : author.displayName}
+                          </Typography>
                         </Link>
+                        {author.github && (
+                          <Stack
+                            alignItems="center"
+                            direction="row"
+                            spacing={1}
+                          >
+                            <Link
+                              component="button"
+                              onClick={() => {
+                                window.open(author.github);
+                              }}
+                            >
+                              <GitHubIcon
+                                sx={{ width: "15pt", height: "15pt" }}
+                              />
+                            </Link>
+                          </Stack>
+                        )}
                       </Stack>
-                    )}
-                  </Stack>
-                </Stack>
-              </Grid>
-            ))
+                    </Stack>
+                  </Grid>
+                ))}
+            </>
           )}
         </Grid>
       </Container>

@@ -337,9 +337,14 @@ const Post = (props) => {
               borderColor: "gray",
             }}
             onClick={() => {
+              let new_author = props.author;
+              // fix for team 26
+              if (props.author.host === "https://plurr.herokuapp.com/") {
+                new_author["id"] = new_author["id"].slice(0, -1);
+              }
               const words = props.author.id.split("/");
               const word = words[words.length - 1];
-              navigate(`/app/author/${word}`, { state: props.author });
+              navigate(`/app/author/${word}`, { state: new_author });
             }}
             style={{ cursor: "pointer" }}
           />
@@ -506,9 +511,14 @@ const Post = (props) => {
             fontSize="9pt"
             underline="hover"
             onClick={() => {
+              let new_author = props.author;
+
+              if (props.author.host === "https://plurr.herokuapp.com/") {
+                new_author["id"] = new_author["id"].slice(0, -1);
+              }
               const words = props.author.id.split("/");
               const word = words[words.length - 1];
-              navigate(`/app/author/${word}`, { state: props.author });
+              navigate(`/app/author/${word}`, { state: new_author });
             }}
           >
             {props.author.displayName}

@@ -58,7 +58,6 @@ const InboxMenu = (props) => {
           return item.author.id !== authCtx.userdata.id;
         })
         .map((item, idx) => {
-          console.log(item);
           return (
             <MenuItem key={idx} sx={{ height: 55 }}>
               {item.type === "Follow" && (

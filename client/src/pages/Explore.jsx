@@ -35,69 +35,109 @@ const Explore = () => {
     const fetchAuthors = async () => {
       try {
         setIsLoading(true);
+
+        const fetches = [];
+
         // Team 20
         let credentials = getCredentialsHandler(
           "https://cmput404-vgt-socialdist.herokuapp.com/"
         );
-        const responseOne = await fetch(
+        const responseOne = fetch(
           `https://cmput404-vgt-socialdist.herokuapp.com/service/authors/`,
           {
             headers: {
               Authorization: `Basic ` + btoa(credentials),
             },
           }
-        );
-        const responseOneData = await responseOne.json();
+        ).then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw Error("Invalid response");
+          }
+        });
+
+        fetches.push(responseOne);
 
         // Team 16
         credentials = getCredentialsHandler("https://i-connect.herokuapp.com/");
-        const responseTwo = await fetch(
+        const responseTwo = fetch(
           `https://i-connect.herokuapp.com/service/authors/`,
           {
             headers: {
               Authorization: `Basic ` + btoa(credentials),
             },
           }
-        );
-        const responseTwoData = await responseTwo.json();
+        ).then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw Error("Invalid response");
+          }
+        });
 
-        /*         // Team 23
+        fetches.push(responseTwo);
+
+        // Team 23
         credentials = getCredentialsHandler(
           "https://project-api-404.herokuapp.com/api/"
         );
-        const responseThree = await fetch(
+        const responseThree = fetch(
           `https://project-api-404.herokuapp.com/api/authors`,
           {
             headers: {
               Authorization: `Basic ` + btoa(credentials),
             },
           }
-        );
-        const responseThreeData = await responseThree.json(); */
+        ).then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw Error("Invalid response");
+          }
+        });
+        fetches.push(responseThree);
 
         // Team 26
         credentials = getCredentialsHandler("https://plurr.herokuapp.com/");
-        const responseFour = await fetch(
+        const responseFour = fetch(
           `https://plurr.herokuapp.com/service/authors/`,
           {
             headers: {
               Authorization: `Basic ` + btoa(credentials),
             },
           }
-        );
-        let responseFourData = await responseFour.json();
+        ).then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw Error("Invalid response");
+          }
+        });
+        fetches.push(responseFour);
 
         // Team 06 (us)
-        const responseFive = await fetch(`${API_URL}/authors/`);
-        const responseFiveData = await responseFive.json();
-        setAuthors([
-          ...responseFiveData.items,
-          ...responseTwoData.items,
-          ...responseOneData.items,
-          ...responseFourData.items.filter(
-            (key) => key.host === "https://plurr.herokuapp.com/"
-          ),
-        ]);
+        const responseFive = fetch(`${API_URL}/authors/`).then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw Error("Invalid response");
+          }
+        });
+        fetches.push(responseFive);
+
+        const data = await Promise.allSettled(fetches);
+        const validAuthors = [];
+
+        for (const response of data) {
+          if (response.status === "fulfilled" && response.value.items) {
+            validAuthors.push(response.value.items);
+          } else {
+            validAuthors.push(response.value);
+          }
+        }
+
+        setAuthors(validAuthors.flat());
         setIsLoading(false);
       } catch (error) {
         console.log(error.message);

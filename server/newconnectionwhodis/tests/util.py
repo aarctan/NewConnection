@@ -1,10 +1,12 @@
 import json
 
 from django.contrib.auth.models import User
+from rest_framework.test import APIClient
 
 from .. import models
 
 DEFAULT_PASSWORD = 'Thequickbrownfox23'
+
 
 def validate_reponse_with_serializer(serialized_obj, response):
     """
@@ -22,6 +24,7 @@ def validate_reponse_with_serializer(serialized_obj, response):
             return False
     return True
 
+
 def create_author(displayName, github):
     """
     Create a new author given a name and github username.
@@ -32,6 +35,7 @@ def create_author(displayName, github):
     author.save()
     return author
 
+
 def create_post(author, content):
     """
     Create a new post given an author and content
@@ -40,7 +44,10 @@ def create_post(author, content):
         author=author,
         content=content,
         title="Title",
-        description="Description")
+        description="Description",
+        categories=[],
+    )
+
 
 def create_comment(author, post, comment):
     """
@@ -48,17 +55,20 @@ def create_comment(author, post, comment):
     """
     return models.Comment.objects.create(author=author, post=post, comment=comment)
 
+
 def create_post_like(author, post):
     """
     Create a new post like given an author and post
     """
     return models.Like.objects.create(author=author, post=post)
 
+
 def create_comment_like(author, post, comment):
     """
     Create a new comment like given an author, post, and comment
     """
     return models.Like.objects.create(author=author, post=post, comment=comment)
+
 
 def response_to_json(response):
     """
@@ -67,8 +77,14 @@ def response_to_json(response):
     json_str = response.content.decode('utf-8').replace("'", "\"")
     return json.loads(json_str)
 
+
 def add_follower(sender, receiver):
     """
     Makes author 'sender' a follower of author 'receiver'
     """
+    client = APIClient()
+    sender_response = client.get(
+        f"/api/v1/author/{sender.id}/"
+    )
+    sender = response_to_json(sender_response)
     models.Follower.objects.create(sender=sender, receiver=receiver)

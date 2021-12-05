@@ -33,7 +33,7 @@ class InboxViewTests(TestCase):
         data = {
             "summary": f"{liker.displayName} Likes your post",
             "type": "Like",
-            "actor": serializers.AuthorSerializer(
+            "author": serializers.AuthorSerializer(
                 self.author, context={"request": self.request}).data,
             "object": serializers.PostSerializer(
                 post, context={"request": self.request}).data['id'],
@@ -47,7 +47,8 @@ class InboxViewTests(TestCase):
         response = self.client.get(f"/api/v1/author/{self.author.id}/inbox/")
         d = util.response_to_json(response)
         self.assertEquals(len(d['items']), 1)
-        response = self.client.get(f"/api/v1/author/{self.author.id}/posts/{post.id}/likes/")
+        response = self.client.get(
+            f"/api/v1/author/{self.author.id}/posts/{post.id}/likes/")
         d = util.response_to_json(response)
         self.assertEquals(len(d), 1)
 
@@ -73,15 +74,19 @@ class InboxViewTests(TestCase):
         )
         response = self.client.get(f"/api/v1/author/{self.author.id}/inbox/")
         self.assertEquals(response.status_code, 401)
-    
+
     def test_comment_like(self):
         liker = util.create_author("jennie", "jennierubyjane")
-        post = util.create_post(self.author, "content")
-        comment = util.create_comment(self.author, post, "comment")
+        post = util.create_post(self.author, "Content")
+        post_response = self.client.get(
+            f"/api/v1/author/{self.author.id}/posts/{post.id}/"
+        )
+        author = util.response_to_json(post_response)["author"]
+        comment = util.create_comment(author, post, "Comment")
         data = {
             "summary": f"{liker.displayName} Likes your comment",
             "type": "Like",
-            "actor": serializers.AuthorSerializer(
+            "author": serializers.AuthorSerializer(
                 self.author, context={"request": self.request}).data,
             "object": serializers.CommentSerializer(
                 comment, context={"request": self.request}).data['id'],
@@ -95,7 +100,8 @@ class InboxViewTests(TestCase):
         response = self.client.get(f"/api/v1/author/{self.author.id}/inbox/")
         d = util.response_to_json(response)
         self.assertEquals(len(d['items']), 1)
-        response = self.client.get(f"/api/v1/author/{self.author.id}/posts/{post.id}/comments/{comment.id}/likes/")
+        response = self.client.get(
+            f"/api/v1/author/{self.author.id}/posts/{post.id}/comments/{comment.id}/likes/")
         d = util.response_to_json(response)
         self.assertEquals(len(d), 1)
 
@@ -105,8 +111,12 @@ class InboxViewTests(TestCase):
         """
         self.client.force_authenticate(None)
         liker = util.create_author("jennie", "jennierubyjane")
-        post = util.create_post(self.author, "content")
-        comment = util.create_comment(self.author, post, "comment")
+        post = util.create_post(self.author, "Content")
+        post_response = self.client.get(
+            f"/api/v1/author/{self.author.id}/posts/{post.id}/"
+        )
+        author = util.response_to_json(post_response)["author"]
+        comment = util.create_comment(author, post, "Comment")
         data = {
             "summary": f"{liker.displayName} Likes your comment",
             "type": "Like",
@@ -167,7 +177,7 @@ class InboxViewTests(TestCase):
         )
         response = self.client.get(f"/api/v1/author/{self.author.id}/inbox/")
         self.assertEquals(response.status_code, 401)
-    
+
     '''
     def test_receive_multiple_items(self):
         """
@@ -208,7 +218,7 @@ class InboxViewTests(TestCase):
         data = {
             "summary": f"{liker.displayName} Likes your post",
             "type": "Like",
-            "actor": serializers.AuthorSerializer(
+            "author": serializers.AuthorSerializer(
                 self.author, context={"request": self.request}).data,
             "object": serializers.PostSerializer(
                 post, context={"request": self.request}).data['id'],
@@ -218,6 +228,7 @@ class InboxViewTests(TestCase):
             data=json.dumps(data),
             content_type="application/json",
         )
-        response = self.client.delete(f"/api/v1/author/{self.author.id}/inbox/")
+        response = self.client.delete(
+            f"/api/v1/author/{self.author.id}/inbox/")
         d = util.response_to_json(response)
         self.assertEqual(d["items"], [])

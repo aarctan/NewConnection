@@ -28,14 +28,16 @@ class PostViewTests(TestCase):
         """
         post = util.create_post(self.author, "Placeholder")
         post_id = post.id
-        response = self.client.get(f"/api/v1/author/{self.author_id}/posts/{post_id}/")
+        response = self.client.get(
+            f"/api/v1/author/{self.author_id}/posts/{post_id}/")
         self.assertEqual(response.status_code, 200)
         d = util.response_to_json(response)
         self.assertEqual(d["type"], "post")
         self.assertEquals(len(d["author"]), 7)  # author has 6 fields
         host = d["author"]["host"]
         self.assertTrue("http" in host)
-        self.assertEquals(d["id"], f"{host}api/v1/author/{self.author_id}/posts/{post_id}")
+        self.assertEquals(
+            d["id"], f"{host}api/v1/author/{self.author_id}/posts/{post_id}")
         # TODO: Test content with various content types
 
     def test_post_belongs_to_author(self):
@@ -46,8 +48,10 @@ class PostViewTests(TestCase):
         util.create_post(self.author, "post1")
         util.create_post(author2, "post2")
         util.create_post(author2, "post3")
-        response1 = self.client.get("/api/v1/author/{}/posts/".format(self.author_id))
-        response2 = self.client.get("/api/v1/author/{}/posts/".format(author2.id))
+        response1 = self.client.get(
+            "/api/v1/author/{}/posts/".format(self.author_id))
+        response2 = self.client.get(
+            "/api/v1/author/{}/posts/".format(author2.id))
         self.assertEquals(len(util.response_to_json(response1)), 1)
         self.assertEquals(len(util.response_to_json(response2)), 2)
 
@@ -61,6 +65,8 @@ class PostViewTests(TestCase):
             "contentType": "text/plain",
             "title": "Title",
             "description": "Description",
+            "visibility": "PUBLIC",
+            "unlisted": False
         }
         response = self.client.post(
             f"/api/v1/author/{self.author_id}/posts/",
@@ -89,6 +95,8 @@ class PostViewTests(TestCase):
             "contentType": "text/plain",
             "title": "Title",
             "description": "Description",
+            "visibility": "PUBLIC",
+            "unlisted": False
         }
         response = self.client.put(
             f"/api/v1/author/{self.author_id}/posts/{ID}/",

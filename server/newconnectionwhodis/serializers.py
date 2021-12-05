@@ -30,6 +30,7 @@ class NodeSerializer(HyperlinkedModelSerializer):
         model = Node
         fields = ["host_uri", "username", "password"]
 
+
 class AuthorSerializer(HyperlinkedModelSerializer):
     id = SerializerMethodField('get_id_url')
     host = SerializerMethodField('get_host_url')
@@ -37,7 +38,8 @@ class AuthorSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = Author
-        fields = ('type', 'id', 'host', 'displayName', 'url', 'github', 'profileImage')
+        fields = ('type', 'id', 'host', 'displayName',
+                  'url', 'github', 'profileImage')
 
     def get_host_url(self, obj):
         uri = self.context['request'].build_absolute_uri('/')
@@ -54,9 +56,10 @@ class FollowerSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Follower
         fields = ('sender',)
-    
+
     def get_sender_keys(self, obj):
         return obj.sender['type']
+
 
 class PostSerializer(HyperlinkedModelSerializer):
     id = SerializerMethodField('get_id_url')
@@ -68,18 +71,18 @@ class PostSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Post
         fields = ('type', 'id', 'contentType',
-            'content', 'author', 'title', 'description',
-            'source', 'origin', 'published', 'categories', 'visibility',
-            'count', 'comments', 'unlisted')
-    
+                  'content', 'author', 'title', 'description',
+                  'source', 'origin', 'published', 'categories', 'visibility',
+                  'count', 'comments', 'unlisted')
+
     def get_id_url(self, obj):
         uri = self.context['request'].build_absolute_uri('/')
         return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.id}'
-    
+
     def get_comments_url(self, obj):
         uri = self.context['request'].build_absolute_uri('/')
         return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.id}/comments'
-    
+
     def get_origin_url(self, obj):
         if obj.origin:
             return obj.origin
@@ -94,19 +97,21 @@ class PostSerializer(HyperlinkedModelSerializer):
             uri = self.context['request'].build_absolute_uri('/')
             return f'{uri}{SERVICE}author/{obj.author.id}/posts/{obj.id}'
 
+
 class CommentSerializer(HyperlinkedModelSerializer):
     id = SerializerMethodField('get_id_url')
 
     class Meta:
         model = Comment
-        fields = ('type', 'author', 'comment', 'contentType', 'published', 'id')
+        fields = ('type', 'author', 'comment',
+                  'contentType', 'published', 'id')
 
     def get_id_url(self, obj):
         uri = self.context['request'].build_absolute_uri('/')
         author_id = obj.author['id']
         return f'{uri}{SERVICE}author/{author_id}/posts/{obj.post.id}/comments/{obj.id}'
-        
-        
+
+
 class LikeSerializer(HyperlinkedModelSerializer):
     summary = SerializerMethodField('get_liker')
     object = SerializerMethodField('get_id_url')
@@ -137,11 +142,10 @@ class InboxSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Inbox
         fields = ('type', 'author', 'items')
-    
+
     def get_id_url(self, obj):
         uri = self.context['request'].build_absolute_uri('/')
         return f'{uri}{SERVICE}author/{obj.author.id}'
 
     def get_items(self, obj):
         return obj.get_items()
-        

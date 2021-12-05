@@ -1,16 +1,15 @@
 from django.test import TestCase
+from rest_framework.test import APIClient
 
 from . import util
 
 
 class LikedViewTests(TestCase):
     def setUp(self):
+        self.client = APIClient()
         self.author = util.create_author("ZiQing", "zma9216")
         self.post = util.create_post(self.author, "Post")
-        self.comment = util.create_comment(self.author, self.post, "Comment")
-        self.author_id = self.author.id
-        self.post_id = self.post.id
-        self.comment_id = self.comment.id
+        self.client.force_authenticate(self.author.user)
 
     def test_no_likes(self):
         """
@@ -26,23 +25,34 @@ class LikedViewTests(TestCase):
         """
         Create a post like and test that it is the only one returned
         """
-        util.create_post_like(self.author, self.post)
-        response = self.client.get(f"/api/v1/author/{self.author_id}/liked/")
-        d = util.response_to_json(response)
+        post_response = self.client.get(
+            f"/api/v1/author/{self.author.id}/posts/{self.post.id}/"
+        )
+        author = util.response_to_json(post_response)["author"]
+        util.create_post_like(author, self.post)
+        new_response = self.client.get(
+            f"/api/v1/author/{self.author.id}/liked/")
+        d = util.response_to_json(new_response)
+        print("D: ", d)
         self.assertEquals(len(d["items"]), 1)
         like_in_response = d["items"][0]
         host = like_in_response["author"]["host"]
         self.assertEquals(
-            like_in_response["object"],
-            f"{host}api/v1/author/{self.author_id}/posts/{self.post_id}",
+            like_in_response["object"][32:],
+            f"{host}api/v1/author/{self.author.id}/posts/{self.post.id}",
         )
 
     def test_comment_like(self):
         """
         Create a comment like and test that it is the only one returned
         """
-        util.create_comment_like(self.author, self.post, self.comment)
-        response = self.client.get(f"/api/v1/author/{self.author_id}/liked/")
+        post_response = self.client.get(
+            f"/api/v1/author/{self.author.id}/posts/{self.post.id}/"
+        )
+        author = util.response_to_json(post_response)["author"]
+        comment = util.create_comment(author, self.post, "Comment")
+        util.create_comment_like(author, self.post, comment)
+        response = self.client.get(f"/api/v1/author/{self.author.id}/liked/")
         d = util.response_to_json(response)
         self.assertEqual(d["type"], "liked")
         self.assertEquals(len(d["items"]), 1)
@@ -50,8 +60,8 @@ class LikedViewTests(TestCase):
         host = like_in_response["author"]["host"]
         self.assertTrue("http" in host)
         self.assertEquals(
-            like_in_response["object"],
-            f"{host}api/v1/author/{self.author_id}/posts/{self.post_id}/comments/{self.comment_id}",
+            like_in_response["object"][32:],
+            f"{host}api/v1/author/{self.author.id}/posts/{self.post.id}/comments/{comment.id}",
         )
 
     def test_multiple_likes(self):
@@ -59,9 +69,13 @@ class LikedViewTests(TestCase):
         Create multiple non-unique likes and test that an equal number is returned
         """
         NUM_LIKES = 2
+        post_response = self.client.get(
+            f"/api/v1/author/{self.author.id}/posts/{self.post.id}/"
+        )
+        author = util.response_to_json(post_response)["author"]
         for i in range(NUM_LIKES):
-            util.create_post_like(self.author, self.post)
-        response = self.client.get(f"/api/v1/author/{self.author_id}/liked/")
+            util.create_post_like(author, self.post)
+        response = self.client.get(f"/api/v1/author/{self.author.id}/liked/")
         d = util.response_to_json(response)
         self.assertEquals(len(d["items"]), NUM_LIKES)
 
@@ -71,9 +85,14 @@ class LikedViewTests(TestCase):
         then test that an equal number is returned and distinct
         """
         NUM_LIKES = 2
-        util.create_post_like(self.author, self.post)
-        util.create_comment_like(self.author, self.post, self.comment)
-        response = self.client.get(f"/api/v1/author/{self.author_id}/liked/")
+        post_response = self.client.get(
+            f"/api/v1/author/{self.author.id}/posts/{self.post.id}/"
+        )
+        author = util.response_to_json(post_response)["author"]
+        util.create_post_like(author, self.post)
+        comment = util.create_comment(author, self.post, "Comment")
+        util.create_comment_like(author, self.post, comment)
+        response = self.client.get(f"/api/v1/author/{self.author.id}/liked/")
         d = util.response_to_json(response)
         post_like = d["items"][0]
         comment_like = d["items"][1]
@@ -82,11 +101,11 @@ class LikedViewTests(TestCase):
         self.assertTrue("http" in post_like_host)
         self.assertTrue("http" in comment_like_host)
         self.assertEquals(
-            post_like["object"],
-            f"{post_like_host}api/v1/author/{self.author_id}/posts/{self.post_id}",
+            post_like["object"][32:],
+            f"{post_like_host}api/v1/author/{self.author.id}/posts/{self.post.id}",
         )
         self.assertEquals(
-            comment_like["object"],
-            f"{comment_like_host}api/v1/author/{self.author_id}/posts/{self.post_id}/comments/{self.comment_id}",
+            comment_like["object"][32:],
+            f"{comment_like_host}api/v1/author/{self.author.id}/posts/{self.post.id}/comments/{comment.id}",
         )
         self.assertEquals(len(d["items"]), NUM_LIKES)

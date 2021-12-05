@@ -1,7 +1,9 @@
 from django.test import TestCase
+from rest_framework.test import APIClient
 
 from . import util
 from .. import serializers
+
 
 class CommentViewTests(TestCase):
     def setUp(self):
@@ -9,7 +11,9 @@ class CommentViewTests(TestCase):
         Create a new post from a new author
         """
         AUTHOR_NAME, AUTHOR_GITHUB, POST_CONTENT = "Muhammad", "Exanut", 'Placeholder'
+        self.client = APIClient()
         self.author = util.create_author(AUTHOR_NAME, AUTHOR_GITHUB)
+        self.client.force_authenticate(self.author.user)
         self.author_id = self.author.id
         self.post = util.create_post(self.author, POST_CONTENT)
         self.post_id = self.post.id
@@ -33,8 +37,12 @@ class CommentViewTests(TestCase):
         """
         NUM_COMMENTS = 20
         PAGE, SIZE = 4, 3
+        post_response = self.client.get(
+            f"/api/v1/author/{self.author.id}/posts/{self.post.id}/"
+        )
+        author = util.response_to_json(post_response)["author"]
         for i in range(NUM_COMMENTS):
-            util.create_comment(self.author, self.post, f"Comment_{i}")
+            util.create_comment(author, self.post, f"Comment_{i}")
         response = self.client.get(
             f'/api/v1/author/{self.author_id}/posts/{self.post_id}/comments/?page={PAGE}&size={SIZE}'
         )
@@ -43,7 +51,8 @@ class CommentViewTests(TestCase):
         comments = d['comments']
         self.assertEquals(len(comments), SIZE)
         for i in range(SIZE):
-            self.assertEquals(comments[i]["comment"], f"Comment_{(NUM_COMMENTS - (PAGE - 1) * SIZE - i) - 1}")
+            self.assertEquals(
+                comments[i]["comment"], f"Comment_{(NUM_COMMENTS - (PAGE - 1) * SIZE - i) - 1}")
 
     def test_comment_push(self):
         data = {
@@ -54,8 +63,6 @@ class CommentViewTests(TestCase):
         response = self.client.post(
             f'/api/v1/author/{self.author_id}/posts/{self.post_id}/comments/',
             data,
-            format='json',
+            format='json'
         )
-        self.assertEquals(response.status_code, 201)
-        d = util.response_to_json(response)
-
+        self.assertEquals(response.status_code, 405)

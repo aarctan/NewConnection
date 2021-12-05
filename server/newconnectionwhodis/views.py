@@ -69,7 +69,7 @@ class AuthorView(APIView):
 class FriendRequestView(APIView):
     http_method_names = ['post']
 
-    #POST: send another user a friend request to inbox
+    # POST: send another user a friend request to inbox
     def post(self, request, author_id, receiver_id):
         pass
 
@@ -94,7 +94,8 @@ class FollowerView(APIView):
     def delete(self, request, author_id, follower_id):
         receiver = Author.objects.get(pk=author_id)
         try:
-            Follower.objects.get(receiver=receiver, sender__id__endswith=follower_id).delete()
+            Follower.objects.get(
+                receiver=receiver, sender__id__endswith=follower_id).delete()
             return Response(status=status.HTTP_202_ACCEPTED)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -102,11 +103,13 @@ class FollowerView(APIView):
     # PUT: Add a follower (must be authenticated)
     def put(self, request, author_id, follower_id):
         receiver = Author.objects.get(pk=author_id)
-        req = FollowReq.objects.get(requestor__id__endswith=follower_id, requestee=receiver)
+        req = FollowReq.objects.get(
+            requestor__id__endswith=follower_id, requestee=receiver)
         if not req:
             return Response(status=status.HTTP_404_NOT_FOUND)
         req.delete()
-        follow = Follower.objects.create(sender=req.requestor, receiver=receiver)
+        follow = Follower.objects.create(
+            sender=req.requestor, receiver=receiver)
         follow.save()
         return Response(status=status.HTTP_201_CREATED)
 
@@ -114,11 +117,11 @@ class FollowerView(APIView):
     def get(self, request, author_id, follower_id):
         receiver = Author.objects.get(pk=author_id)
         if not Follower.objects.filter(receiver=receiver, sender__id__endswith=follower_id):
-            #return Response(status=status.HTTP_404_NOT_FOUND)
+            # return Response(status=status.HTTP_404_NOT_FOUND)
             return Response("false")
         else:
             #follower = Author.objects.get(id=follower_id)
-            #return Response(AuthorSerializer(follower, context={"request": request}).data)
+            # return Response(AuthorSerializer(follower, context={"request": request}).data)
             return Response("true")
 
 
@@ -195,7 +198,8 @@ class CommentView(APIView):
         post = Post.objects.get(pk=post_id)
         comments = view_util.paginate_queryset(
             self.request.query_params,
-            Comment.objects.order_by("-published").filter(post=post, post__visibility="PUBLIC"),
+            Comment.objects.order_by(
+                "-published").filter(post=post, post__visibility="PUBLIC"),
         )
         return Response(
             {
@@ -299,11 +303,13 @@ class InboxView(APIView):
             if 'comments' in like_obj_url:
                 comment_id = like_obj_url.split('/')[-1]
                 comment_obj = Comment.objects.get(pk=comment_id)
-            Like.objects.create(author=liker, post=post_obj, comment=comment_obj)
+            Like.objects.create(author=liker, post=post_obj,
+                                comment=comment_obj)
         elif item_type == "comment":
             post_id = data['id'].split('posts/')[-1].split('/')[0]
             post_obj = Post.objects.get(pk=post_id)
-            Comment.objects.create(author=data['author'], post=post_obj, comment=data['comment'])
+            Comment.objects.create(
+                author=data['author'], post=post_obj, comment=data['comment'])
         elif item_type == "follow":
             object_id = data['object']['id'].split('/')[-1]
             receiver = Author.objects.get(pk=object_id)
@@ -313,7 +319,7 @@ class InboxView(APIView):
                 save_inbox = False
             except:
                 FollowReq.objects.create(requestor=sender, requestee=receiver)
-    
+
         if save_inbox:
             items.append(data)
             inbox.set_items(items)

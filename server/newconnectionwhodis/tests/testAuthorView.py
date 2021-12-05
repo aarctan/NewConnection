@@ -45,7 +45,8 @@ class AuthorViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         d = util.response_to_json(response)
         self.author.refresh_from_db()
-        expected = AuthorSerializer(self.author, context={"request": self.request}).data
+        expected = AuthorSerializer(
+            self.author, context={"request": self.request}).data
         self.assertTrue(util.validate_reponse_with_serializer(expected, d))
 
     def test_single_field_update(self):
@@ -65,7 +66,8 @@ class AuthorViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         d = util.response_to_json(response)
         self.author.refresh_from_db()
-        expected = AuthorSerializer(self.author, context={"request": self.request}).data
+        expected = AuthorSerializer(
+            self.author, context={"request": self.request}).data
         self.assertTrue(util.validate_reponse_with_serializer(expected, d))
 
     def test_author_update_unauth(self):

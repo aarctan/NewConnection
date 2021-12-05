@@ -17,7 +17,11 @@ const InboxFollowItem = (props) => {
   // Gets info about the author sending the inbox item
   const fetchActor = useCallback(async () => {
     let credentials = getCredentialsHandler(item.actor.host);
-    const response = await fetch(`${item.actor.id}/`, {
+    let url = `${item.actor.id}/`;
+    // Fix for t26
+    if (item.actor.host === "https://plurr.herokuapp.com/")
+      url = `${item.actor.id.replace("/author", "/service/author")}/`;
+    const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Basic ` + btoa(credentials),
@@ -27,7 +31,7 @@ const InboxFollowItem = (props) => {
       const data = await response.json();
       setFollowerPic(data["profileImage"]);
       setFollowerName(data["displayName"]);
-    }  else {
+    } else {
       console.log("InboxFollowItem useEffect failed - fetching inbox");
     }
   }, [item.actor, getCredentialsHandler]);

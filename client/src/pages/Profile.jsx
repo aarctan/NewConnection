@@ -23,7 +23,15 @@ const Profile = () => {
         const words = authCtx.userdata.id.split("/");
         const authctxid = words[words.length - 1];
         let credentials = getCredentialsHandler(state.host);
-        const response = await fetch(`${state.id}/followers/${authctxid}/`, {
+        let url = `${state.id}/followers/${authctxid}/`;
+        // Fix for t26
+        if (state.host === "https://plurr.herokuapp.com/")
+          url = `${state.id.replace(
+            "/author",
+            "/service/author"
+          )}/followers/${authctxid}/`;
+
+        const response = await fetch(url, {
           headers: {
             Authorization: `Basic ` + btoa(credentials),
           },
@@ -39,7 +47,7 @@ const Profile = () => {
             else setFollowing(false);
           }
 
-          // If the host is us
+          // If the host is us or t26
           else setFollowing(data === "true" ? true : false);
         } else {
           // T20 sends back a 404 so if the response is NOT ok (404), set following to false

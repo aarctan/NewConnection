@@ -177,7 +177,7 @@ const Post = (props) => {
       };
       // Fix for t26
       if (props.author.host === "https://plurr.herokuapp.com/") {
-        url = `${props.author.id.replace("/author", "/service/author")}/inbox/`;
+        url = `${props.author.id.replace("/author", "/service/author")}inbox/`;
         body = {
           context: "https://www.w3.org/ns/activitystreams",
           type: "Like",

@@ -125,7 +125,7 @@ const Post = (props) => {
           url = `${props.author.id.replace(
             "/author",
             "/service/author"
-          )}/inbox/`;
+          )}inbox/`;
           id = `${props.id.replace("/author", "/service/author")}/`;
         }
         // Fix for t16

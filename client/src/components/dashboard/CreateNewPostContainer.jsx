@@ -82,7 +82,14 @@ const CreateNewPostContainer = (props) => {
             // Loop through the followers and send them the post to their inbox
             for (let follower of data["items"]) {
               let credentials = getCredentialsHandler(follower.host);
-              fetch(`${follower.id}/inbox/`, {
+              let url = `${follower.id}/inbox/`;
+              // if its team 26, need to add service to url
+              if (follower.host === "https://plurr.herokuapp.com/")
+                url = `${follower.id.replace(
+                  "/author",
+                  "/service/author"
+                )}/inbox/`;
+              fetch(url, {
                 method: "POST",
                 body: JSON.stringify(postData),
                 headers: {
@@ -92,7 +99,8 @@ const CreateNewPostContainer = (props) => {
               });
             }
             let credentials = getCredentialsHandler(authCtx.userdata.host);
-            fetch(`${authCtx.userdata.id}/inbox/`, {
+            let url = `${authCtx.userdata.id}/inbox/`;
+            fetch(url, {
               method: "POST",
               body: JSON.stringify(postData),
               headers: {
@@ -104,7 +112,14 @@ const CreateNewPostContainer = (props) => {
         } else if (postData.visibility === "PRIVATE") {
           postData["visibility"] = "FRIENDS";
           let credentials = getCredentialsHandler(privateReceiver.host);
-          fetch(`${privateReceiver.id}/inbox/`, {
+          let url = `${privateReceiver.id}/inbox/`;
+          // if team 26, add service to url
+          if (privateReceiver.host === "https://plurr.herokuapp.com/")
+            url = `${privateReceiver.id.replace(
+              "/author",
+              "/service/author"
+            )}/inbox/`;
+          fetch(url, {
             method: "POST",
             body: JSON.stringify(postData),
             headers: {

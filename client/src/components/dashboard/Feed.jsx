@@ -30,6 +30,11 @@ const Feed = (props) => {
     if (response.ok) {
       const inboxData = await response.json();
       const inbox = inboxData["items"].filter((item) => item.type === "post");
+      for (let j = 0; j < inbox.length; j++) {
+        for (const property in inbox[j]) {
+          if (inbox[j][property] === null) inbox[j][property] = "";
+        }
+      }
       setPostsLoading(false);
       setPosts(inbox);
     } else {

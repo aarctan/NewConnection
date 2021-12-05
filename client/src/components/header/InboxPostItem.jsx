@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const InboxPostItem = (props) => {
   console.log(props.item);
-  const item = props.item;
+  let item = props.item;
   const navigate = useNavigate();
 
   return (
@@ -18,9 +18,18 @@ const InboxPostItem = (props) => {
       }}
       onClick={() => {
         const author_array = item.author.id.split("/");
-        const author_id = author_array[author_array.length - 1];
+        let author_id;
+        // if T26 is the author, they have a slash at the end of the author id so we need to do -2 instead of -1
+        if (item.author.host === "https://plurr.herokuapp.com/")
+          author_id = author_array[author_array.length - 2];
+        else author_id = author_array[author_array.length - 1];
         const post_array = item.id.split("/");
         const post_id = post_array[post_array.length - 1];
+        if (item.author.host === "https://plurr.herokuapp.com/") {
+          for (const property in item) {
+            if (item[property] === null) item[property] = "";
+          }
+        }
         navigate(`/app/author/${author_id}/post/${post_id}`, { state: item }); // state contains the post
       }}
     >

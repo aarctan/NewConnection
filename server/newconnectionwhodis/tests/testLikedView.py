@@ -33,7 +33,6 @@ class LikedViewTests(TestCase):
         new_response = self.client.get(
             f"/api/v1/author/{self.author.id}/liked/")
         d = util.response_to_json(new_response)
-        print("D: ", d)
         self.assertEquals(len(d["items"]), 1)
         like_in_response = d["items"][0]
         host = like_in_response["author"]["host"]

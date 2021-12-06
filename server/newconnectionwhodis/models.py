@@ -1,5 +1,6 @@
 # models.py
-import json, uuid
+import json
+import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -52,7 +53,7 @@ class Follower(models.Model):
                 fields=["sender", "receiver"], name="userFollowedUnique"
             )
         ]
-    
+
     def __str__(self):
         return f'{self.sender} follows {self.receiver}'
 
@@ -65,7 +66,7 @@ class Post(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     published = models.DateTimeField(default=timezone.now)
     visibility = models.TextField(default="PUBLIC")
-    categories = models.JSONField() # just a list
+    categories = models.JSONField()  # just a list
     unlisted = models.BooleanField(default=False)
     contentType = models.TextField()
     title = models.TextField()

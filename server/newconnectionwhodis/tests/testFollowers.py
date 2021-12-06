@@ -24,7 +24,8 @@ class FollowerViewTests(TestCase):
         """
         util.add_follower(self.follower1, self.receiver)
         util.add_follower(self.follower2, self.receiver)
-        response = self.client.get(f"/api/v1/author/{self.receiver.id}/followers/")
+        response = self.client.get(
+            f"/api/v1/author/{self.receiver.id}/followers/")
         self.assertEqual(response.status_code, 200)
         d = util.response_to_json(response)
         self.assertEqual(d["type"], "followers")
@@ -35,8 +36,10 @@ class FollowerViewTests(TestCase):
         expected2 = serializers.AuthorSerializer(
             self.follower2, context={"request": self.request}
         ).data
-        self.assertTrue(util.validate_reponse_with_serializer(expected1, d["items"][0]))
-        self.assertTrue(util.validate_reponse_with_serializer(expected2, d["items"][1]))
+        self.assertTrue(util.validate_reponse_with_serializer(
+            expected1, d["items"][0]))
+        self.assertTrue(util.validate_reponse_with_serializer(
+            expected2, d["items"][1]))
 
     def test_get_follower_by_id(self):
         """
@@ -53,10 +56,11 @@ class FollowerViewTests(TestCase):
         """
         Test that an author that is not following another author does not get returned as a follower
         """
-        response = self.client.get(f"/api/v1/author/{self.receiver.id}/followers/{self.follower1.id}/")
+        response = self.client.get(
+            f"/api/v1/author/{self.receiver.id}/followers/{self.follower1.id}/")
         d = util.response_to_json(response)
         self.assertTrue(d, "false")
-        
+
     def test_delete_follower(self):
         """
         Test that an existing follower can be removed as a follower
@@ -67,7 +71,8 @@ class FollowerViewTests(TestCase):
             f"/api/v1/author/{self.receiver.id}/followers/{self.follower1.id}/"
         )
         self.assertEqual(response.status_code, 202)
-        response = self.client.get(f"/api/v1/author/{self.receiver.id}/followers/")
+        response = self.client.get(
+            f"/api/v1/author/{self.receiver.id}/followers/")
         d = util.response_to_json(response)
         self.assertEquals(len(d["items"]), 1)
 

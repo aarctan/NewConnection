@@ -2,6 +2,8 @@
 
 ### CMPUT 404 Fall 2021
 
+https://www.youtube.com/watch?v=vxiC2ZZK03w
+
 ![NewConnection sample dashboard](https://i.imgur.com/HRyt7vT.png)
 
 ## API / Webservice

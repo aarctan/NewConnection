@@ -15,6 +15,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import Footer from "../components/footer/Footer";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -100,7 +101,7 @@ const Login = () => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          height: "100vh",
+          height: "90vh",
         }}
       >
         <Container maxWidth="sm">
@@ -210,6 +211,8 @@ const Login = () => {
           Authentication failed!
         </Alert>
       </Snackbar>
+      <Footer />
+      
     </>
   );
 };

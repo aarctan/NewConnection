@@ -13,6 +13,7 @@ import Snackbar from "@mui/material/Snackbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import MuiAlert from "@mui/material/Alert";
+import Footer from "../components/footer/Footer";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -116,7 +117,7 @@ const Register = () => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          height: "100vh",
+          height: "90vh",
         }}
       >
         <Container maxWidth="sm">
@@ -244,6 +245,7 @@ const Register = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+      <Footer/>
     </>
   );
 };

@@ -1,5 +1,4 @@
 from rest_framework.serializers import *
-from django.db import transaction
 from dj_rest_auth.serializers import LoginSerializer
 from dj_rest_auth.registration.serializers import RegisterSerializer
 
@@ -16,13 +15,6 @@ class LoginSerializer(LoginSerializer):
 # https://stackoverflow.com/a/55537624
 class CustomRegisterSerializer(RegisterSerializer):
     email = None
-
-    @transaction.atomic
-    def save(self, request):
-        user = super().save(request)
-        user.is_active = False
-        user.save()
-        return user
 
 
 class NodeSerializer(HyperlinkedModelSerializer):

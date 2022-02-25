@@ -44,8 +44,6 @@ import remarkGfm from "remark-gfm";
 import EditTextPostModal from "./EditTextPostModal";
 import EditImagePostModal from "./EditImagePostModal";
 
-import { v4 as uuidv4 } from "uuid";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: "#fafafa",
@@ -119,20 +117,6 @@ const Post = (props) => {
         let credentials = getCredentialsHandler(props.author.host);
         let url = `${props.author.id}/inbox/`;
         let id = `${props.id}`;
-        let uuid = uuidv4();
-        // Fix for t26
-        if (props.author.host === "https://plurr.herokuapp.com/") {
-          url = `${props.author.id.replace(
-            "/author",
-            "/service/author"
-          )}inbox/`;
-          id = `${props.id.replace("/author", "/service/author")}/`;
-        }
-        // Fix for t16
-        if (props.author.host === "https://i-connect.herokuapp.com") {
-          url = `${props.id}/comments/`;
-          id = `${props.id}/comments/${uuid}`;
-        }
         const postResponse = await fetch(url, {
           method: "POST",
           body: JSON.stringify({
@@ -175,17 +159,6 @@ const Post = (props) => {
         author: authCtx.userdata,
         object: props.id,
       };
-      // Fix for t26
-      if (props.author.host === "https://plurr.herokuapp.com/") {
-        url = `${props.author.id.replace("/author", "/service/author")}inbox/`;
-        body = {
-          context: "https://www.w3.org/ns/activitystreams",
-          type: "Like",
-          summary: `${authCtx.userdata.displayName} likes your post`,
-          author: authCtx.userdata,
-          object: props.id,
-        };
-      }
       const postResponse = await fetch(url, {
         method: "POST",
         body: JSON.stringify(body),
@@ -210,9 +183,6 @@ const Post = (props) => {
     let credentials = getCredentialsHandler(props.author.host);
     if (props.visibility === "PUBLIC") {
       let url = `${props.id}/comments/`;
-      // Fix for t26
-      if (props.author.host === "https://plurr.herokuapp.com/")
-        url = `${props.id.replace("/author", "/service/author")}/comments/`;
       const response = await fetch(url, {
         headers: {
           Authorization: `Basic ` + btoa(credentials),
@@ -220,11 +190,7 @@ const Post = (props) => {
       });
       if (response.ok) {
         const commentData = await response.json();
-        // If host is t26 then we need to set the comments to the items key
-        if (props.author.host === "https://plurr.herokuapp.com/")
-          setComments(commentData["items"]);
-        // else default to comments
-        else setComments(commentData["comments"]);
+        setComments(commentData["comments"]);
       } else {
         console.log("Post useEffect failed - fetching comments");
       }
@@ -246,9 +212,6 @@ const Post = (props) => {
   const fetchLikes = useCallback(async () => {
     let credentials = getCredentialsHandler(props.author.host);
     let url = `${props.id}/likes/`;
-    // Fix for t26
-    if (props.author.host === "https://plurr.herokuapp.com/")
-      url = `${props.id.replace("/author", "/service/author")}/likes/`;
     const response = await fetch(url, {
       headers: {
         Authorization: `Basic ` + btoa(credentials),
@@ -256,28 +219,13 @@ const Post = (props) => {
     });
     if (response.ok) {
       let likeData = await response.json();
-      // if host is T20 we need to parse out items from their response
-      if (
-        props.author.host ===
-          "https://cmput404-vgt-socialdist.herokuapp.com/" ||
-        props.author.host === "https://plurr.herokuapp.com/"
-      ) {
-        setLikes(likeData["items"]);
-        for (let i = 0; i < likeData["items"].length; i++) {
-          if (likeData["items"][i].author.id === authCtx.userdata.id) {
-            setLikedPost(true);
-            break;
-          }
-        }
-      } else {
-        // This is our servers likes format
-        setLikes(likeData);
-        // see if the user liked this post
-        for (let i = 0; i < likeData.length; i++) {
-          if (likeData[i].author.id === authCtx.userdata.id) {
-            setLikedPost(true);
-            break;
-          }
+      // This is our server's likes format
+      setLikes(likeData);
+      // see if the user liked this post
+      for (let i = 0; i < likeData.length; i++) {
+        if (likeData[i].author.id === authCtx.userdata.id) {
+          setLikedPost(true);
+          break;
         }
       }
     } else {
@@ -338,10 +286,6 @@ const Post = (props) => {
             }}
             onClick={() => {
               let new_author = props.author;
-              // fix for team 26
-              if (props.author.host === "https://plurr.herokuapp.com/") {
-                new_author["id"] = new_author["id"].slice(0, -1);
-              }
               const words = props.author.id.split("/");
               const word = words[words.length - 1];
               navigate(`/app/author/${word}`, { state: new_author });
@@ -407,12 +351,7 @@ const Post = (props) => {
                 maxWidth: "100%",
                 width: "auto",
               }}
-              // T16 had a 'unique' way of sending back imaghes :)
-              image={
-                post.author.host === "https://i-connect.herokuapp.com"
-                  ? `data:${post.contentType},${post.content}`
-                  : content
-              }
+              image={content}
               alt="selfie"
             />
           </div>
@@ -512,10 +451,6 @@ const Post = (props) => {
             underline="hover"
             onClick={() => {
               let new_author = props.author;
-
-              if (props.author.host === "https://plurr.herokuapp.com/") {
-                new_author["id"] = new_author["id"].slice(0, -1);
-              }
               const words = props.author.id.split("/");
               const word = words[words.length - 1];
               navigate(`/app/author/${word}`, { state: new_author });

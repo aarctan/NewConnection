@@ -1,7 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import {
   Avatar,
-  Chip,
   Container,
   Grid,
   Link,
@@ -19,10 +18,6 @@ const API_URL = process.env.REACT_APP_API_URL;
 const hostColorMap = {
   "http://127.0.0.1:8000/": "black",
   "https://newconnection-server.herokuapp.com/": "black",
-  "https://cmput404-vgt-socialdist.herokuapp.com/": "darkgreen",
-  "https://i-connect.herokuapp.com": "#663399", // rebecca purple
-  "https://project-api-404.herokuapp.com/api/": "blue",
-  "https://plurr.herokuapp.com/": "#0fa6dc", // cerulean blue
 };
 
 const Explore = () => {
@@ -37,84 +32,6 @@ const Explore = () => {
         setIsLoading(true);
 
         const fetches = [];
-
-        // Team 20
-        let credentials = getCredentialsHandler(
-          "https://cmput404-vgt-socialdist.herokuapp.com/"
-        );
-        const responseOne = fetch(
-          `https://cmput404-vgt-socialdist.herokuapp.com/service/authors/`,
-          {
-            headers: {
-              Authorization: `Basic ` + btoa(credentials),
-            },
-          }
-        ).then((res) => {
-          if (res.ok) {
-            return res.json();
-          } else {
-            throw Error("Invalid response");
-          }
-        });
-
-        fetches.push(responseOne);
-
-        // Team 16
-        credentials = getCredentialsHandler("https://i-connect.herokuapp.com/");
-        const responseTwo = fetch(
-          `https://i-connect.herokuapp.com/service/authors/`,
-          {
-            headers: {
-              Authorization: `Basic ` + btoa(credentials),
-            },
-          }
-        ).then((res) => {
-          if (res.ok) {
-            return res.json();
-          } else {
-            throw Error("Invalid response");
-          }
-        });
-
-        fetches.push(responseTwo);
-
-        // Team 23
-        credentials = getCredentialsHandler(
-          "https://project-api-404.herokuapp.com/api/"
-        );
-        const responseThree = fetch(
-          `https://project-api-404.herokuapp.com/api/authors`,
-          {
-            headers: {
-              Authorization: `Basic ` + btoa(credentials),
-            },
-          }
-        ).then((res) => {
-          if (res.ok) {
-            return res.json();
-          } else {
-            throw Error("Invalid response");
-          }
-        });
-        fetches.push(responseThree);
-
-        // Team 26
-        credentials = getCredentialsHandler("https://plurr.herokuapp.com/");
-        const responseFour = fetch(
-          `https://plurr.herokuapp.com/service/authors/`,
-          {
-            headers: {
-              Authorization: `Basic ` + btoa(credentials),
-            },
-          }
-        ).then((res) => {
-          if (res.ok) {
-            return res.json();
-          } else {
-            throw Error("Invalid response");
-          }
-        });
-        fetches.push(responseFour);
 
         // Team 06 (us)
         const responseFive = fetch(`${API_URL}/authors/`).then((res) => {
@@ -158,23 +75,6 @@ const Explore = () => {
             </Box>
           ) : (
             <>
-              <Stack alignItems="center" direction="column" mt={5}>
-                {Object.keys(hostColorMap)
-                  .filter((key) => key !== "http://127.0.0.1:8000/")
-                  .map((key, idx) => (
-                    <Chip
-                      key={idx}
-                      label={key}
-                      variant="outlined"
-                      size="small"
-                      style={{
-                        color: hostColorMap[key],
-                        backgroundColor: "#ffffff",
-                      }}
-                      sx={{ mt: 0.8 }}
-                    />
-                  ))}
-              </Stack>
               {authors
                 .filter((author) => author.host in hostColorMap)
                 .map((author, idx) => (

@@ -68,13 +68,7 @@ const Feed = (props) => {
                     <Post
                       key={idx}
                       post={post}
-                      // T23 has id as post_id for posts
-                      id={
-                        post.author.host ===
-                        "https://project-api-404.herokuapp.com/api/"
-                          ? post.post_id
-                          : post.id
-                      }
+                      id={post.id}
                       title={post.title}
                       description={post.description}
                       author={post.author}

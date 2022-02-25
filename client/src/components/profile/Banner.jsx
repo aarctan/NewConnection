@@ -34,9 +34,6 @@ const Banner = (props) => {
     try {
       let credentials = getCredentialsHandler(props.author.host);
       let url = `${props.author.id}/inbox/`;
-      // Fix for t26
-      if (props.author.host === "https://plurr.herokuapp.com/")
-        url = `${props.author.id.replace("/author", "/service/author")}/inbox/`;
       const postResponse = await fetch(url, {
         method: "POST",
         body: JSON.stringify(body),
@@ -87,12 +84,6 @@ const Banner = (props) => {
       try {
         let credentials = getCredentialsHandler(props.author.host);
         let url = `${props.author.id}/followers`;
-        // Fix for t26
-        if (props.author.host === "https://plurr.herokuapp.com/")
-          url = `${props.author.id.replace(
-            "/author",
-            "/service/author"
-          )}/followers/`;
         const response = await fetch(url, {
           headers: {
             Authorization: `Basic ` + btoa(credentials),

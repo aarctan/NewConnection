@@ -69,32 +69,15 @@ const ProfileFeed = (props) => {
       // Get the credentials of the authors page we are viewing
       credentials = getCredentialsHandler(props.author.host);
       let url = `${props.author.id}/posts/`;
-      if (props.author.host === "https://plurr.herokuapp.com/")
-        url = `${props.author.id.replace("/author", "/service/author")}/posts/`;
       const postsResponse = await fetch(url, {
         headers: {
           Authorization: `Basic ` + btoa(credentials),
         },
       });
       const postsData = await postsResponse.json();
-      // check if the host is from T20, if so we need to do postData.items instead of just postData
-      if (
-        props.author.host ===
-          "https://cmput404-vgt-socialdist.herokuapp.com/" ||
-        props.author.host === "https://plurr.herokuapp.com/"
-      ) {
-        for (let j = 0; j < postsData.items.length; j++) {
-          for (const property in postsData.items[j]) {
-            if (postsData.items[j][property] === null)
-              postsData.items[j][property] = "";
-          }
-          setPosts((oldArray) => [...oldArray, postsData.items[j]]);
-        }
-      } else {
-        for (let j = 0; j < postsData.length; j++) {
-          if (postsData[j].categories == null) postsData[j].categories = []; // check if categories is null to avoid an uniterable error
-          setPosts((oldArray) => [...oldArray, postsData[j]]);
-        }
+      for (let j = 0; j < postsData.length; j++) {
+        if (postsData[j].categories == null) postsData[j].categories = []; // check if categories is null to avoid an uniterable error
+        setPosts((oldArray) => [...oldArray, postsData[j]]);
       }
     } catch (error) {
       console.log("NOT FOUND");
@@ -132,13 +115,7 @@ const ProfileFeed = (props) => {
               <Post
                 key={idx}
                 post={post}
-                // T23 has id as post_id for posts
-                id={
-                  post.author.host ===
-                  "https://project-api-404.herokuapp.com/api/"
-                    ? post.post_id
-                    : post.id
-                }
+                id={post.id}
                 title={post.title}
                 description={post.description}
                 author={props.author}

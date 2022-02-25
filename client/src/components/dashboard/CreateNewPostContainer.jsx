@@ -83,12 +83,6 @@ const CreateNewPostContainer = (props) => {
             for (let follower of data["items"]) {
               let credentials = getCredentialsHandler(follower.host);
               let url = `${follower.id}/inbox/`;
-              // if its team 26, need to add service to url
-              if (follower.host === "https://plurr.herokuapp.com/")
-                url = `${follower.id.replace(
-                  "/author",
-                  "/service/author"
-                )}/inbox/`;
               fetch(url, {
                 method: "POST",
                 body: JSON.stringify(postData),
@@ -113,12 +107,6 @@ const CreateNewPostContainer = (props) => {
           postData["visibility"] = "FRIENDS";
           let credentials = getCredentialsHandler(privateReceiver.host);
           let url = `${privateReceiver.id}/inbox/`;
-          // if team 26, add service to url
-          if (privateReceiver.host === "https://plurr.herokuapp.com/")
-            url = `${privateReceiver.id.replace(
-              "/author",
-              "/service/author"
-            )}/inbox/`;
           fetch(url, {
             method: "POST",
             body: JSON.stringify(postData),

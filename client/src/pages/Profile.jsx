@@ -24,13 +24,6 @@ const Profile = () => {
         const authctxid = words[words.length - 1];
         let credentials = getCredentialsHandler(state.host);
         let url = `${state.id}/followers/${authctxid}/`;
-        // Fix for t26
-        if (state.host === "https://plurr.herokuapp.com/")
-          url = `${state.id.replace(
-            "/author",
-            "/service/author"
-          )}/followers/${authctxid}/`;
-
         const response = await fetch(url, {
           headers: {
             Authorization: `Basic ` + btoa(credentials),
@@ -38,23 +31,7 @@ const Profile = () => {
         });
         if (response.ok) {
           const data = await response.json();
-          // if the host is T20, and the reponse is ok, set following to true
-          if (state.host === "https://cmput404-vgt-socialdist.herokuapp.com/")
-            setFollowing(true);
-          // if the host is T16, check if the result key is true, if it is set to True, otherwise false
-          else if (state.host === "https://i-connect.herokuapp.com") {
-            if (data["result"]) setFollowing(true);
-            else setFollowing(false);
-          }
-
-          // If the host is us or t26
-          else setFollowing(data === "true" ? true : false);
-        } else {
-          // T20 sends back a 404 so if the response is NOT ok (404), set following to false
-          if (state.host === "https://cmput404-vgt-socialdist.herokuapp.com/")
-            setFollowing(false);
-          else if (state.host === "https://project-api-404.herokuapp.com/api/")
-            setFollowing(false);
+          setFollowing(data === "true" ? true : false);
         }
       } catch (error) {
         setFollowing(false);

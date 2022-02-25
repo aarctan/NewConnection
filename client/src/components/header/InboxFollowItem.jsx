@@ -18,9 +18,6 @@ const InboxFollowItem = (props) => {
   const fetchActor = useCallback(async () => {
     let credentials = getCredentialsHandler(item.actor.host);
     let url = `${item.actor.id}/`;
-    // Fix for t26
-    if (item.actor.host === "https://plurr.herokuapp.com/")
-      url = `${item.actor.id.replace("/author", "/service/author")}/`;
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",

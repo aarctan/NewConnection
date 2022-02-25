@@ -147,12 +147,7 @@ const PostModal = ({ isModalOpen, setIsModalOpen, post, comments }) => {
                       maxWidth: "100%",
                       width: "auto",
                     }}
-                    // T16 had a 'unique' way of sending back imaghes :)
-                    src={
-                      post.author.host === "https://i-connect.herokuapp.com"
-                        ? `data:${post.contentType},${post.content}`
-                        : post.content
-                    }
+                    src={post.content}
                     alt=""
                   />
                 </Box>
